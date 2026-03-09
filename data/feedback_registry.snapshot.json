@@ -1,0 +1,16 @@
+{
+  "network": "ethereum-mainnet",
+  "blockNumber": 22000000,
+  "generatedAt": "2026-03-09T09:30:00Z",
+  "feedback": [
+    {"agentId": "0xA1", "rater": "0x111...aaa", "score": 4, "comment": "Fast answers", "txHash": "0xaaa1", "timestamp": "2026-03-02T09:00:00Z"},
+    {"agentId": "0xA1", "rater": "0x222...bbb", "score": 5, "comment": "Excellent quality", "txHash": "0xaaa2", "timestamp": "2026-03-04T11:20:00Z"},
+    {"agentId": "0xA1", "rater": "0x333...ccc", "score": 3, "comment": "Could be more concise", "txHash": "0xaaa3", "timestamp": "2026-03-08T16:45:00Z"},
+
+    {"agentId": "0xB2", "rater": "0x444...ddd", "score": 5, "comment": "Solved quickly", "txHash": "0xbbb1", "timestamp": "2026-03-03T14:15:00Z"},
+    {"agentId": "0xB2", "rater": "0x555...eee", "score": 4, "comment": "Good triage", "txHash": "0xbbb2", "timestamp": "2026-03-07T09:40:00Z"},
+
+    {"agentId": "0xC3", "rater": "0x666...fff", "score": 2, "comment": "Needs stricter checks", "txHash": "0xccc1", "timestamp": "2026-03-06T12:05:00Z"},
+    {"agentId": "0xC3", "rater": "0x777...999", "score": 3, "comment": "Useful but slow", "txHash": "0xccc2", "timestamp": "2026-03-08T08:25:00Z"}
+  ]
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'/>
+  <title>ERC8004 Agents - Research</title>
+  <link rel='stylesheet' href='./assets/styles.css'/>
+</head>
+<body>
+  <div class='container'>
+    <div id='nav'></div>
+    <section class='hero'>
+      <h1>Research Hub</h1>
+      <p>Working notes and analytical directions for ERC-8004 agent ecosystems.</p>
+    </section>
+
+    <div class='grid'>
+      <div class='card'>
+        <h3>What is ERC-8004?</h3>
+        <p>ERC-8004 standardizes identity + feedback registries for autonomous AI agents. It enables on-chain discoverability, portable reputation and transparent ownership transitions.</p>
+      </div>
+      <div class='card'>
+        <h3>Research Directions</h3>
+        <ul>
+          <li>Network structure: agent-client bipartite topology</li>
+          <li>Reputation dynamics: score stability and volatility</li>
+          <li>Behavioral patterns: retention and feedback cadence</li>
+        </ul>
+      </div>
+      <div class='card'>
+        <h3>Method</h3>
+        <p>Data are built from canonical on-chain events (<code>Registered</code>, <code>Transfer</code>, <code>NewFeedback</code>, <code>FeedbackRevoked</code>) with periodic refresh and checkpointed indexing.</p>
+      </div>
+      <div class='card'>
+        <h3>Current Caveats</h3>
+        <ul>
+          <li>Category metadata still partially unresolved</li>
+          <li>Workflow reliability under public RPC limits</li>
+          <li>Reorg-hardening to be extended</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class='footer'>
+      For collaboration or methodology details, contact project maintainers and reference repository documentation.
+    </div>
+  </div>
+  <script src='./assets/app.js'></script>
+  <script>document.getElementById('nav').innerHTML = NAV; setActiveNav();</script>
+</body>
+</html>

@@ -2,6 +2,7 @@ const NAV = `
 <nav>
   <a href="./index.html">Home</a>
   <a href="./agents.html">Agents</a>
+  <a href="./research.html">Research</a>
   <a href="./pipeline.html">Pipeline</a>
 </nav>`;
 

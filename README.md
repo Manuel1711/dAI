@@ -1,6 +1,6 @@
-# ERC8004 Agents dApp (Live + Fancy)
+# ERC8004 Agents Observatory (Production MVP)
 
-GitHub Pages dApp that shows ERC8004 agents and keeps dataset refreshed from Ethereum logs.
+Professional GitHub Pages web app for ERC-8004 visibility: agent identity, feedback reputation, ranking and indexer health from Ethereum logs.
 
 ## What changed
 - Fancy UI (hero, status chip, top agents, search/sort, pipeline page)
@@ -68,3 +68,17 @@ Then the workflow runs every 15 minutes, updates `data/agents.snapshot.json`, co
 - ABI strict decoding + topic allowlist
 - Reorg rollback strategy beyond confirmation window
 - More deterministic identity metadata enrichment
+
+## Incident prevention checklist (learned today)
+1. **Never trust partial backfill for rankings**
+   - Verify `lag=0` in indexer output before claiming final score ordering.
+2. **Mobile safety first for big datasets**
+   - Never render full table on load when rows can be >10k.
+   - Keep pagination/load-more enabled by default.
+3. **Workflow resilience**
+   - Scheduled jobs must have fallback RPC (public endpoint) if secret is missing.
+   - Keep clear log message when fallback is used.
+4. **Deploy verification**
+   - After each push: check both `/` and `/index.html` via external fetch.
+5. **Operational guardrail**
+   - If workflow is red, treat site as stale even if UI loads.

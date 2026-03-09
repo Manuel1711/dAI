@@ -15,6 +15,22 @@
       <div id='status-chip' class='status-chip'>Loading...</div>
     </section>
     <div id='home-kpis' class='grid'></div>
+
+    <section class='grid'>
+      <div class='card'>
+        <h3>About ERC-8004</h3>
+        <p>ERC-8004 introduces a composable on-chain identity layer for AI agents and a feedback registry for verifiable reputation. The goal is to make AI agents discoverable, auditable and interoperable across applications.</p>
+      </div>
+      <div class='card'>
+        <h3>Why this observatory</h3>
+        <p>This dashboard provides a live operational view of agent creation, ownership, feedback activity and ranking quality using event-driven indexing from Ethereum L1.</p>
+      </div>
+      <div class='card'>
+        <h3>Scoring model (v1)</h3>
+        <p><code>scoreV1 = arithmetic mean(feedback.score)</code>. Revoked feedback is excluded where detected. This gives a simple baseline before robust weighting and anti-spam controls.</p>
+      </div>
+    </section>
+
     <div class='card' id='top-agents'></div>
     <div class='footer' id='meta'></div>
   </div>

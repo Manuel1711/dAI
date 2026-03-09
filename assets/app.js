@@ -66,8 +66,12 @@ window.renderAgents = async function renderAgents(){
   const data = await loadSnapshot();
   const searchEl = document.getElementById('search');
   const sortEl = document.getElementById('sort');
+  const metaEl = document.getElementById('agents-meta');
+  const moreBtn = document.getElementById('load-more');
+  const PAGE_SIZE = 120;
+  let visible = PAGE_SIZE;
 
-  function renderRows() {
+  function applyFilters() {
     const q = (searchEl.value || '').toLowerCase().trim();
     const mode = sortEl.value;
     let rows = [...data.agents];
@@ -80,19 +84,33 @@ window.renderAgents = async function renderAgents(){
     if (mode === 'feedback') rows.sort((a,b)=>(b.feedbackCount||0)-(a.feedbackCount||0));
     if (mode === 'recent') rows.sort((a,b)=>new Date(b.lastActivityAt||0)-new Date(a.lastActivityAt||0));
     if (mode === 'name') rows.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    return rows;
+  }
 
-    document.getElementById('agents-table').innerHTML = rows.map((a)=>`<tr>
+  function renderRows(reset = false) {
+    if (reset) visible = PAGE_SIZE;
+    const rows = applyFilters();
+    const shown = rows.slice(0, visible);
+
+    document.getElementById('agents-table').innerHTML = shown.map((a)=>`<tr>
       <td><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small></td>
       <td>${a.category || '-'}</td>
       <td>${a.feedbackCount || 0}</td>
       <td>${Number(a.scoreV1 || 0).toFixed(2)}</td>
       <td>${fmtDate(a.lastActivityAt)}</td>
     </tr>`).join('') || `<tr><td colspan='5'>No agents for this filter</td></tr>`;
+
+    if (metaEl) metaEl.textContent = `Showing ${Math.min(shown.length, rows.length)} / ${rows.length} agents`;
+    if (moreBtn) {
+      moreBtn.style.display = rows.length > shown.length ? 'inline-block' : 'none';
+      moreBtn.textContent = `Load more (+${Math.min(PAGE_SIZE, rows.length - shown.length)})`;
+    }
   }
 
-  searchEl.addEventListener('input', renderRows);
-  sortEl.addEventListener('change', renderRows);
-  renderRows();
+  searchEl.addEventListener('input', () => renderRows(true));
+  sortEl.addEventListener('change', () => renderRows(true));
+  if (moreBtn) moreBtn.addEventListener('click', () => { visible += PAGE_SIZE; renderRows(false); });
+  renderRows(true);
 }
 
 window.renderAgentDetail = async function renderAgentDetail(){

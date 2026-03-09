@@ -31,5 +31,11 @@ p{color:var(--muted)}
 .status-live{color:var(--ok);border-color:#2f745f;background:rgba(53,208,159,.12)}
 .status-stale{color:var(--warn);border-color:#8a6a2c;background:rgba(255,200,87,.12)}
 pre{white-space:pre-wrap;word-break:break-word;color:#cfe0ff}
+.meta-row{margin:8px 0 10px;color:var(--muted);font-size:13px}
+.btn-secondary{margin-top:12px;background:#0f1a33;color:var(--text);border:1px solid #2a3a64;border-radius:10px;padding:10px 14px;cursor:pointer}
+.btn-secondary:hover{border-color:#4772bd;color:#d8e6ff}
 .footer{margin-top:18px;color:var(--muted);font-size:12px}
-@media (max-width:760px){.toolbar{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .toolbar{grid-template-columns:1fr}
+  .table{display:block;overflow-x:auto;white-space:nowrap}
+}

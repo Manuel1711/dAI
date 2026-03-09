@@ -19,10 +19,12 @@
         <option value='name'>Sort: Name (A-Z)</option>
       </select>
     </div>
+    <div id='agents-meta' class='meta-row'></div>
     <table class='table'>
       <thead><tr><th>Identity</th><th>Category</th><th>Feedback</th><th>Score v1</th><th>Last activity</th></tr></thead>
       <tbody id='agents-table'></tbody>
     </table>
+    <button id='load-more' class='btn-secondary' style='display:none;'>Load more</button>
   </div>
   <script src='./assets/app.js'></script>
   <script>renderAgents()</script>

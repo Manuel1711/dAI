@@ -34,9 +34,13 @@ jobs:
           START_BLOCK: ${{ vars.START_BLOCK }}
         run: |
           if [ -z "$ETH_RPC_URL" ]; then
-            echo "ETH_RPC_URL secret missing";
-            exit 1;
+            echo "ETH_RPC_URL secret missing, using public fallback endpoint";
+            export ETH_RPC_URL="https://ethereum-rpc.publicnode.com"
           fi
+          : "${CONFIRMATIONS:=12}"
+          : "${BLOCK_CHUNK:=1000}"
+          : "${MAX_CHUNKS_PER_TICK:=50}"
+          : "${START_BLOCK:=0}"
           node scripts/indexer-loop.mjs --once
 
       - name: Commit updated datasets

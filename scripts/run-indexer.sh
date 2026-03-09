@@ -7,4 +7,9 @@ if [[ -f "$ROOT/.env" ]]; then
   source "$ROOT/.env"
   set +a
 fi
-node "$ROOT/scripts/indexer-loop.mjs"
+
+if [[ "${1:-}" == "--once" ]]; then
+  node "$ROOT/scripts/indexer-loop.mjs" --once
+else
+  node "$ROOT/scripts/indexer-loop.mjs"
+fi

@@ -1,0 +1,48 @@
+name: Live Indexer Refresh
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Ensure live dirs
+        run: mkdir -p data/live
+
+      - name: Run one-shot indexer
+        env:
+          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+          IDENTITY_REGISTRY: ${{ vars.IDENTITY_REGISTRY }}
+          FEEDBACK_REGISTRY: ${{ vars.FEEDBACK_REGISTRY }}
+          CONFIRMATIONS: ${{ vars.CONFIRMATIONS }}
+          BLOCK_CHUNK: ${{ vars.BLOCK_CHUNK }}
+          MAX_CHUNKS_PER_TICK: ${{ vars.MAX_CHUNKS_PER_TICK }}
+          START_BLOCK: ${{ vars.START_BLOCK }}
+        run: |
+          if [ -z "$ETH_RPC_URL" ]; then
+            echo "ETH_RPC_URL secret missing";
+            exit 1;
+          fi
+          node scripts/indexer-loop.mjs --once
+
+      - name: Commit updated datasets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/agents.snapshot.json data/live/*.jsonl data/live/checkpoints.json || true
+          git diff --staged --quiet || git commit -m "chore: refresh live index snapshot"
+          git push

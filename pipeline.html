@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'/>
+  <title>ERC8004 Agents - Pipeline</title>
+  <link rel='stylesheet' href='./assets/styles.css'/>
+</head>
+<body>
+  <div class='container'>
+    <div id='nav'></div>
+    <h1>Pipeline Status</h1>
+    <div id='pipeline-kpis' class='grid'></div>
+    <div class='card'>
+      <h3>Checkpoint JSON</h3>
+      <pre id='checkpoint-raw'></pre>
+    </div>
+  </div>
+  <script src='./assets/app.js'></script>
+  <script>renderPipeline()</script>
+</body>
+</html>

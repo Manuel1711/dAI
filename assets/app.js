@@ -24,9 +24,57 @@ async function loadSnapshot() { return fetchJson('./data/agents.snapshot.json');
 async function loadCheckpoint() {
   try { return await fetchJson('./data/live/checkpoints.json'); } catch { return null; }
 }
+async function loadTagMap() {
+  try {
+    const j = await fetchJson('./data/tag1-category-map.json');
+    return j?.tags || {};
+  } catch {
+    return {};
+  }
+}
 
 function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
 function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
+
+function deriveAgentMetrics(agent, tagMap) {
+  const history = agent.feedbackHistory || [];
+  const nonCharacteristic = [];
+  const byCharacteristic = new Map();
+  const tagFreq = new Map();
+
+  for (const f of history) {
+    const n = Number(f.score);
+    if (!Number.isFinite(n)) continue;
+    const t = String(f.tag1 || '').trim().toLowerCase();
+    if (t) tagFreq.set(t, (tagFreq.get(t) || 0) + 1);
+    const cat = (tagMap[t]?.category) || 'unclassified';
+
+    if (cat === 'characteristic') {
+      const bucket = byCharacteristic.get(t) || [];
+      bucket.push(n);
+      byCharacteristic.set(t, bucket);
+    } else {
+      nonCharacteristic.push(n);
+    }
+  }
+
+  const characteristics = [...byCharacteristic.entries()]
+    .map(([tag, vals]) => ({ tag, count: vals.length, mean: Number(avg(vals).toFixed(2)) }))
+    .sort((a,b) => b.count - a.count || b.mean - a.mean);
+
+  const topTags = [...tagFreq.entries()]
+    .map(([tag,count]) => ({ tag, count, category: tagMap[tag]?.category || 'unclassified' }))
+    .sort((a,b) => b.count - a.count)
+    .slice(0, 8);
+
+  return {
+    scoreMain: Number(avg(nonCharacteristic).toFixed(2)),
+    scoreMainCount: nonCharacteristic.length,
+    characteristicCount: characteristics.reduce((s,x)=>s+x.count,0),
+    characteristics,
+    topTags,
+  };
+}
 
 window.renderHome = async function renderHome(){
   document.getElementById('nav').innerHTML = NAV;
@@ -34,11 +82,13 @@ window.renderHome = async function renderHome(){
 
   const data = await loadSnapshot();
   const cp = await loadCheckpoint();
+  const tagMap = await loadTagMap();
+  const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
 
-  const total = data.agents.length;
-  const allScores = data.agents.map((a)=>a.scoreV1 || 0);
+  const total = enriched.length;
+  const allScores = enriched.map((a)=>a._metrics.scoreMain || 0);
   const mean = avg(allScores).toFixed(2);
-  const feedback = data.agents.reduce((s,a)=>s+(a.feedbackCount||0),0);
+  const feedback = enriched.reduce((s,a)=>s+(a.feedbackCount||0),0);
   const now = Date.now();
   const ageMin = Math.floor((now - new Date(data.generatedAt).getTime()) / 60000);
   const live = ageMin <= 20;
@@ -49,12 +99,12 @@ window.renderHome = async function renderHome(){
   document.getElementById('home-kpis').innerHTML = `
     <div class='card'><h3>Agents indexed</h3><div class='kpi'>${total}</div></div>
     <div class='card'><h3>Network</h3><div class='kpi'>ETH L1</div></div>
-    <div class='card'><h3>Avg Score v1</h3><div class='kpi'>${mean}</div></div>
+    <div class='card'><h3>Avg Main Score (non-C1)</h3><div class='kpi'>${mean}</div></div>
     <div class='card'><h3>Total Feedback</h3><div class='kpi'>${feedback}</div></div>`;
 
-  const top = [...data.agents].sort((a,b)=>(b.scoreV1||0)-(a.scoreV1||0)).slice(0,5)
-    .map((a)=>`<li><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name}</a> — ${a.scoreV1?.toFixed?.(2) ?? a.scoreV1} (${a.feedbackCount} fb)</li>`).join('');
-  document.getElementById('top-agents').innerHTML = `<h3>Top agents by score</h3><ol>${top || '<li>No agents</li>'}</ol>`;
+  const top = [...enriched].sort((a,b)=>(b._metrics.scoreMain||0)-(a._metrics.scoreMain||0)).slice(0,5)
+    .map((a)=>`<li><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name}</a> — ${Number(a._metrics.scoreMain||0).toFixed(2)} (${a._metrics.scoreMainCount} fb used)</li>`).join('');
+  document.getElementById('top-agents').innerHTML = `<h3>Top agents by Main Score (non-C1)</h3><ol>${top || '<li>No agents</li>'}</ol>`;
 
   const cpText = cp ? ` | Last safe block: ${cp.lastSafeBlock ?? '-'} | Checkpoint updated: ${fmtDate(cp.updatedAt)}` : '';
   document.getElementById('meta').textContent = `Snapshot block: ${data.blockNumber} | Generated: ${fmtDate(data.generatedAt)}${cpText}`;
@@ -65,6 +115,8 @@ window.renderAgents = async function renderAgents(){
   setActiveNav();
 
   const data = await loadSnapshot();
+  const tagMap = await loadTagMap();
+  const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
   const searchEl = document.getElementById('search');
   const sortEl = document.getElementById('sort');
   const metaEl = document.getElementById('agents-meta');
@@ -75,13 +127,13 @@ window.renderAgents = async function renderAgents(){
   function applyFilters() {
     const q = (searchEl.value || '').toLowerCase().trim();
     const mode = sortEl.value;
-    let rows = [...data.agents];
+    let rows = [...enriched];
 
     if (q) {
       rows = rows.filter((a) => [a.name, a.agentId, a.owner, a.category].filter(Boolean).join(' ').toLowerCase().includes(q));
     }
 
-    if (mode === 'score') rows.sort((a,b)=>(b.scoreV1||0)-(a.scoreV1||0));
+    if (mode === 'score') rows.sort((a,b)=>(b._metrics.scoreMain||0)-(a._metrics.scoreMain||0));
     if (mode === 'feedback') rows.sort((a,b)=>(b.feedbackCount||0)-(a.feedbackCount||0));
     if (mode === 'recent') rows.sort((a,b)=>new Date(b.lastActivityAt||0)-new Date(a.lastActivityAt||0));
     if (mode === 'name') rows.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
@@ -97,7 +149,7 @@ window.renderAgents = async function renderAgents(){
       <td><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small></td>
       <td>${a.category || '-'}</td>
       <td>${a.feedbackCount || 0}</td>
-      <td>${Number(a.scoreV1 || 0).toFixed(2)}</td>
+      <td>${Number(a._metrics.scoreMain || 0).toFixed(2)}</td>
       <td>${fmtDate(a.lastActivityAt)}</td>
     </tr>`).join('') || `<tr><td colspan='5'>No agents for this filter</td></tr>`;
 
@@ -120,14 +172,24 @@ window.renderAgentDetail = async function renderAgentDetail(){
 
   const id = new URLSearchParams(location.search).get('id');
   const data = await loadSnapshot();
+  const tagMap = await loadTagMap();
   const a = data.agents.find((x)=>x.agentId===id);
   if (!a) {
     document.getElementById('agent-root').innerHTML = '<div class="card"><p>Agent not found</p></div>';
     return;
   }
 
-  const feedbackRows = (a.feedbackHistory || []).map((f)=>
-    `<tr><td>${fmtDate(f.timestamp)}</td><td>${f.score}</td><td>${f.comment || '-'}</td><td><small>${f.txHash}</small></td></tr>`).join('');
+  const metrics = deriveAgentMetrics(a, tagMap);
+  const characteristicsHtml = metrics.characteristics.slice(0, 8)
+    .map((x)=>`<li><b>${x.tag}</b>: ${x.mean.toFixed(2)} (n=${x.count})</li>`).join('');
+  const topTagsHtml = metrics.topTags
+    .map((x)=>`<li><b>${x.tag}</b> — ${x.count} (${x.category})</li>`).join('');
+
+  const feedbackRows = (a.feedbackHistory || []).map((f)=> {
+    const t = String(f.tag1 || '').trim().toLowerCase();
+    const cat = tagMap[t]?.category || 'unclassified';
+    return `<tr><td>${fmtDate(f.timestamp)}</td><td>${f.score}</td><td>${f.tag1 || '-'}</td><td>${cat}</td><td>${f.comment || '-'}</td><td><small>${f.txHash}</small></td></tr>`;
+  }).join('');
 
   document.getElementById('agent-root').innerHTML = `
     <div class='card'>
@@ -136,14 +198,19 @@ window.renderAgentDetail = async function renderAgentDetail(){
       <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span></p>
       <p>Owner: ${a.owner || '-'}</p>
       <p>Identity URI: ${a.identityURI || '-'}</p>
-      <p><b>Score v1:</b> ${Number(a.scoreV1 || 0).toFixed(2)} (${a.feedbackCount || 0} feedback)</p>
+      <p><b>Main Score (non-C1):</b> ${metrics.scoreMain.toFixed(2)} (${metrics.scoreMainCount} feedback used)</p>
+      <p><b>Characteristic feedback (C1):</b> ${metrics.characteristicCount}</p>
       <p><b>Unique raters:</b> ${a.uniqueRaters ?? '-'}</p>
       <p><b>Last activity:</b> ${fmtDate(a.lastActivityAt)}</p>
+      <h3 style='margin-top:14px;'>Characteristics evaluated (top)</h3>
+      <ol>${characteristicsHtml || '<li>No characteristic tags yet</li>'}</ol>
+      <h3 style='margin-top:14px;'>Most used tags</h3>
+      <ol>${topTagsHtml || '<li>No tags yet</li>'}</ol>
     </div>
     <h3 style='margin-top:16px;'>Feedback Registry History</h3>
     <table class='table'>
-      <thead><tr><th>Timestamp</th><th>Score</th><th>Comment</th><th>TxHash</th></tr></thead>
-      <tbody>${feedbackRows || '<tr><td colspan="4">No feedback</td></tr>'}</tbody>
+      <thead><tr><th>Timestamp</th><th>Score</th><th>tag1</th><th>Category</th><th>Comment</th><th>TxHash</th></tr></thead>
+      <tbody>${feedbackRows || '<tr><td colspan="6">No feedback</td></tr>'}</tbody>
     </table>`;
 }
 

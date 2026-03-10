@@ -23,6 +23,7 @@ fs.mkdirSync(LIVE_DIR, { recursive: true });
 const checkpointsPath = path.join(LIVE_DIR, 'checkpoints.json');
 const identityJsonlPath = path.join(LIVE_DIR, 'identity.events.jsonl');
 const feedbackJsonlPath = path.join(LIVE_DIR, 'feedback.events.jsonl');
+const ownersCachePath = path.join(LIVE_DIR, 'owners.cache.json');
 
 const readJson = (p, fb) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return fb; } };
 const writeJson = (p, obj) => fs.writeFileSync(p, JSON.stringify(obj, null, 2));
@@ -154,8 +155,47 @@ function readJsonl(p) {
   return fs.readFileSync(p, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
 }
 function normalizeAgentId(v) { try { return '0x' + BigInt(v).toString(16).toUpperCase(); } catch { return null; } }
+function pad64(hexNoPrefix) { return hexNoPrefix.padStart(64, '0'); }
 
-function buildMaterializedView(checkpoints) {
+async function resolveOwnerByAgentId(agentIdHex) {
+  try {
+    const id = BigInt(agentIdHex).toString(16);
+    const callData = '0x6352211e' + pad64(id); // ownerOf(uint256)
+    const out = await rpc('eth_call', [{ to: CFG.identityRegistry, data: callData }, 'latest']);
+    if (!out || out === '0x') return null;
+    const h = out.replace(/^0x/, '').toLowerCase();
+    if (h.length < 40) return null;
+    const addr = '0x' + h.slice(-40);
+    return /^0x[0-9a-f]{40}$/.test(addr) ? addr : null;
+  } catch {
+    return null;
+  }
+}
+
+async function fillMissingOwners(agents) {
+  const cache = readJson(ownersCachePath, {});
+  let unresolved = agents.filter((a) => !a.owner);
+
+  for (const a of unresolved) {
+    const cached = cache[a.agentId];
+    if (cached) a.owner = cached;
+  }
+
+  unresolved = agents.filter((a) => !a.owner);
+  const cap = ONCE ? unresolved.length : Math.min(unresolved.length, 200);
+  for (let i = 0; i < cap; i += 1) {
+    const a = unresolved[i];
+    const owner = await resolveOwnerByAgentId(a.agentId);
+    if (owner) {
+      a.owner = owner;
+      cache[a.agentId] = owner;
+    }
+  }
+
+  writeJson(ownersCachePath, cache);
+}
+
+async function buildMaterializedView(checkpoints) {
   const byAgent = new Map();
   const seen = new Set();
 
@@ -212,7 +252,10 @@ function buildMaterializedView(checkpoints) {
     byAgent.set(aid, a);
   }
 
-  const agents = [...byAgent.values()].map((a) => {
+  const pre = [...byAgent.values()];
+  await fillMissingOwners(pre);
+
+  const agents = pre.map((a) => {
     const scores = a.feedbackHistory.map((x) => x.score);
     const avg = scores.length ? scores.reduce((s, x) => s + x, 0) / scores.length : 0;
     a.feedbackHistory.sort((x, y) => new Date(y.timestamp) - new Date(x.timestamp));
@@ -280,7 +323,7 @@ async function tick(topics) {
   cp.updatedAt = new Date().toISOString();
   writeJson(checkpointsPath, cp);
 
-  buildMaterializedView(cp);
+  await buildMaterializedView(cp);
   const lag = Math.max(0, safe - Math.min(cp.identityFromBlock, cp.feedbackFromBlock));
   console.log(`[tick] safe=${safe} deploy(identity=${cp.identityDeployBlock},feedback=${cp.feedbackDeployBlock}) next(identity=${cp.identityFromBlock},feedback=${cp.feedbackFromBlock}) lag=${lag}`);
 }

@@ -1,0 +1,756 @@
+{
+  "generatedAt": "2026-03-10T17:43:10.737Z",
+  "source": "erc8004-specialist/tag1_category_membership.csv",
+  "tags": {
+    "6": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "trust": {
+      "category": "characteristic",
+      "frequency": 819,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "quality": {
+      "category": "characteristic",
+      "frequency": 408,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "liveness": {
+      "category": "characteristic",
+      "frequency": 397,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "reachable": {
+      "category": "verbal",
+      "frequency": 261,
+      "labels": "Adjectives only"
+    },
+    "starred": {
+      "category": "characteristic",
+      "frequency": 146,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "helpful": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "good": {
+      "category": "verbal",
+      "frequency": 17,
+      "labels": "Adjectives only"
+    },
+    "fast": {
+      "category": "verbal",
+      "frequency": 16,
+      "labels": "Adjectives only"
+    },
+    "reliable": {
+      "category": "verbal",
+      "frequency": 15,
+      "labels": "Adjectives only"
+    },
+    "useful": {
+      "category": "verbal",
+      "frequency": 15,
+      "labels": "Adjectives only"
+    },
+    "successrate": {
+      "category": "characteristic",
+      "frequency": 13,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "smart": {
+      "category": "verbal",
+      "frequency": 7,
+      "labels": "Adjectives only"
+    },
+    "defai": {
+      "category": "domain",
+      "frequency": 6,
+      "labels": "Work area (no adjectives)"
+    },
+    "good tech": {
+      "category": "verbal",
+      "frequency": 6,
+      "labels": "Adjectives only"
+    },
+    "x402": {
+      "category": "domain",
+      "frequency": 6,
+      "labels": "Work area (no adjectives)"
+    },
+    "gekko": {
+      "category": "domain",
+      "frequency": 5,
+      "labels": "Work area (no adjectives)"
+    },
+    "intelligent": {
+      "category": "verbal",
+      "frequency": 5,
+      "labels": "Adjectives only"
+    },
+    "nice": {
+      "category": "verbal",
+      "frequency": 5,
+      "labels": "Adjectives only"
+    },
+    "accurate": {
+      "category": "verbal",
+      "frequency": 4,
+      "labels": "Adjectives only"
+    },
+    "excellence": {
+      "category": "characteristic",
+      "frequency": 4,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "excellent": {
+      "category": "verbal",
+      "frequency": 4,
+      "labels": "Adjectives only"
+    },
+    "satisfaction": {
+      "category": "characteristic",
+      "frequency": 4,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "analytical": {
+      "category": "verbal",
+      "frequency": 3,
+      "labels": "Adjectives only"
+    },
+    "early adopter": {
+      "category": "unclassified",
+      "frequency": 3,
+      "labels": "Unclassified"
+    },
+    "efficient": {
+      "category": "verbal",
+      "frequency": 3,
+      "labels": "Adjectives only"
+    },
+    "experience": {
+      "category": "characteristic",
+      "frequency": 3,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "gamechanger": {
+      "category": "unclassified",
+      "frequency": 3,
+      "labels": "Unclassified"
+    },
+    "infrastructure": {
+      "category": "domain",
+      "frequency": 3,
+      "labels": "Work area (no adjectives)"
+    },
+    "privacy": {
+      "category": "characteristic",
+      "frequency": 3,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "rating": {
+      "category": "characteristic",
+      "frequency": 3,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "service": {
+      "category": "characteristic",
+      "frequency": 3,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "ai": {
+      "category": "domain",
+      "frequency": 2,
+      "labels": "Work area (no adjectives)"
+    },
+    "automatic": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "autopilot": {
+      "category": "domain",
+      "frequency": 2,
+      "labels": "Work area (no adjectives)"
+    },
+    "behavior": {
+      "category": "characteristic",
+      "frequency": 2,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "best ai": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "creative": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "defi": {
+      "category": "domain",
+      "frequency": 2,
+      "labels": "Work area (no adjectives)"
+    },
+    "ez use": {
+      "category": "unclassified",
+      "frequency": 2,
+      "labels": "Unclassified"
+    },
+    "great": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "inactive": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "nhanh": {
+      "category": "unclassified",
+      "frequency": 2,
+      "labels": "Unclassified"
+    },
+    "overall": {
+      "category": "characteristic",
+      "frequency": 2,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "ownerverified": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "performance": {
+      "category": "characteristic",
+      "frequency": 2,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "professional": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "pure alpha": {
+      "category": "unclassified",
+      "frequency": 2,
+      "labels": "Unclassified"
+    },
+    "smooth": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "trusted": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "uh oh": {
+      "category": "unclassified",
+      "frequency": 2,
+      "labels": "Unclassified"
+    },
+    "user friendly": {
+      "category": "verbal",
+      "frequency": 2,
+      "labels": "Adjectives only"
+    },
+    "vibe trading": {
+      "category": "domain",
+      "frequency": 2,
+      "labels": "Work area (no adjectives)"
+    },
+    "web3": {
+      "category": "domain",
+      "frequency": 2,
+      "labels": "Work area (no adjectives)"
+    },
+    "yes": {
+      "category": "unclassified",
+      "frequency": 2,
+      "labels": "Unclassified"
+    },
+    "accuracy": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "advanced": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "agent": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "ai agent": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "ai agents need": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "ai defi": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "all in one": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "alpha packed": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "awesome": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "ay ay capt": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "bad": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "based": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "beautiful": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "best": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "best rates": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "bold": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "bot": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "chat": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "cheap": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "composable": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "convenient to us": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "cool": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "deep research": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "easy for anybody": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "easy to use": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "ecosystem builder": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "engagement": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "erc 8004": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "erc8004": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "expecting": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "fast analysis": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "fastest": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "football": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "future": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "gas efficient": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "general": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "genesis": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "good agent": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "good value": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "good1": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "great ui ux": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "help": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "hola": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "innovation": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "innovative": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "insightful": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "interesting": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "jesus": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "liquidity pools": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "memory": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "minara": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "minara ai": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "nixon": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "okay": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "open": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "outstanding": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "powerful": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "powerfull": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "precise": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "pretty": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "prominent": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "research": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "responsetime": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "revenues": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "safe": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "secure": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "skam": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "skillful": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "smartest fin ai": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "smooth research": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "solid": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "spongebut": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "stable": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "standards compliant": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "task": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "thrustworthy": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "trading": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "transparent": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "unique": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "uptime": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "usefull": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "value": {
+      "category": "characteristic",
+      "frequency": 1,
+      "labels": "Characteristic to evaluate (no adjectives)"
+    },
+    "wallet": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "wonderful": {
+      "category": "verbal",
+      "frequency": 1,
+      "labels": "Adjectives only"
+    },
+    "wow": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "yap": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "yield": {
+      "category": "domain",
+      "frequency": 1,
+      "labels": "Work area (no adjectives)"
+    },
+    "zero stress": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "⭐️⭐️⭐️⭐️⭐️": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "🇺🇸": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "👍🏽": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "💎": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "🔥": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "🔥🔥": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    },
+    "🤓": {
+      "category": "unclassified",
+      "frequency": 1,
+      "labels": "Unclassified"
+    }
+  }
+}

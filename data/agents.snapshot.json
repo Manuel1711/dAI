@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24624423,
-  "generatedAt": "2026-03-10T03:37:56.136Z",
+  "blockNumber": 24624839,
+  "generatedAt": "2026-03-10T05:01:49.683Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,12 +9,56 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24624424,
-    "fromBlockFeedback": 24624424,
+    "fromBlockIdentity": 24624840,
+    "fromBlockFeedback": 24624840,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
   "agents": [
+    {
+      "agentId": "0x2FEB",
+      "name": "Agent 0x2FEB",
+      "owner": null,
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": null,
+      "feedbackHistory": [
+        {
+          "timestamp": "1979-05-14T01:57:00.000Z",
+          "score": 100,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2a24f0f091f1d77072d797e1aa56c91eb17e3663ae81f5ab41d527aa98011600",
+          "blockNumber": 24624585
+        }
+      ],
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "1979-05-14T01:57:00.000Z"
+    },
+    {
+      "agentId": "0x3000",
+      "name": "Agent 0x3000",
+      "owner": null,
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": null,
+      "feedbackHistory": [
+        {
+          "timestamp": "1979-05-14T02:00:00.000Z",
+          "score": 100,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x5186c89307495fceaa423b006e6d360ee4c6339e22ce5e962917d43ecb674b26",
+          "blockNumber": 24624600
+        }
+      ],
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "1979-05-14T02:00:00.000Z"
+    },
     {
       "agentId": "0x0",
       "name": "Agent 0x0",

@@ -18,6 +18,8 @@ const CFG = {
 
 if (!CFG.rpcUrl) { console.error('Missing ETH_RPC_URL env'); process.exit(1); }
 const ONCE = process.argv.includes('--once');
+const FULL_REINDEX_ONCE = ONCE && (process.env.FULL_REINDEX_ONCE || '1') !== '0';
+let oneShotPrepared = false;
 fs.mkdirSync(LIVE_DIR, { recursive: true });
 
 const checkpointsPath = path.join(LIVE_DIR, 'checkpoints.json');
@@ -289,7 +291,8 @@ async function fetchLogsRange(address, fromBlock, toBlock, topic) {
 async function pumpTopic({ address, fromStart, safe, topic, parser, outPath }) {
   let from = fromStart;
   let chunks = 0;
-  while (from <= safe && chunks < CFG.maxChunksPerTick) {
+  const cap = ONCE ? Number.POSITIVE_INFINITY : CFG.maxChunksPerTick;
+  while (from <= safe && chunks < cap) {
     const to = Math.min(from + CFG.chunkSize - 1, safe);
     const logs = await fetchLogsRange(address, from, to, topic);
     appendJsonl(outPath, logs.map(parser));
@@ -306,6 +309,14 @@ async function tick(topics) {
 
   if (cp.identityDeployBlock == null) cp.identityDeployBlock = await findDeployBlock(CFG.identityRegistry, safe);
   if (cp.feedbackDeployBlock == null) cp.feedbackDeployBlock = await findDeployBlock(CFG.feedbackRegistry, safe);
+
+  if (FULL_REINDEX_ONCE && !oneShotPrepared) {
+    cp.identityFromBlock = Math.max(CFG.startBlock, cp.identityDeployBlock);
+    cp.feedbackFromBlock = Math.max(CFG.startBlock, cp.feedbackDeployBlock);
+    fs.writeFileSync(identityJsonlPath, '');
+    fs.writeFileSync(feedbackJsonlPath, '');
+    oneShotPrepared = true;
+  }
 
   if (cp.identityFromBlock == null) cp.identityFromBlock = Math.max(CFG.startBlock, cp.identityDeployBlock);
   if (cp.feedbackFromBlock == null) cp.feedbackFromBlock = Math.max(CFG.startBlock, cp.feedbackDeployBlock);

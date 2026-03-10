@@ -1,8 +1,8 @@
 {
-  "identityFromBlock": 24626500,
-  "feedbackFromBlock": 24626500,
-  "lastSafeBlock": 24626499,
-  "updatedAt": "2026-03-10T10:36:27.240Z",
+  "identityFromBlock": 24626716,
+  "feedbackFromBlock": 24626716,
+  "lastSafeBlock": 24626715,
+  "updatedAt": "2026-03-10T11:19:32.123Z",
   "identityDeployBlock": 24339871,
   "feedbackDeployBlock": 24339873
 }

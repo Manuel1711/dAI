@@ -56,6 +56,18 @@ async function findDeployBlock(address, latest) {
 }
 
 function words(data) { return ((data || '0x').slice(2).match(/.{1,64}/g) || []); }
+function wordToBigInt(word) { try { return BigInt('0x' + (word || '0')); } catch { return null; } }
+function wordToNumber(word) { const b = wordToBigInt(word); return b == null ? null : Number(b); }
+function decodeAbiString(w, offsetWordIdx) {
+  const off = wordToNumber(w[offsetWordIdx]);
+  if (!Number.isFinite(off) || off < 0) return null;
+  const start = Math.floor(off / 32);
+  const len = wordToNumber(w[start]);
+  if (!Number.isFinite(len) || len < 0) return null;
+  const hexLen = len * 2;
+  const dataHex = w.slice(start + 1).join('').slice(0, hexLen);
+  try { return Buffer.from(dataHex, 'hex').toString('utf8'); } catch { return null; }
+}
 
 function parseIdentityRegistered(log) {
   const t = log.topics || [];
@@ -92,6 +104,11 @@ function parseIdentityTransfer(log) {
 function parseFeedbackNew(log) {
   const t = log.topics || [];
   const w = words(log.data);
+  const tag1 = decodeAbiString(w, 3);
+  const tag2 = decodeAbiString(w, 4);
+  const endpoint = decodeAbiString(w, 5);
+  const feedbackURI = decodeAbiString(w, 6);
+  const feedbackHash = w[7] ? ('0x' + w[7].toLowerCase()) : null;
   return {
     kind: 'feedback_new',
     blockNumber: hexToInt(log.blockNumber),
@@ -101,9 +118,15 @@ function parseFeedbackNew(log) {
     agentId: safeUint(t[1]),
     clientAddress: safeAddr(t[2]),
     indexedTag1Hash: t[3] || null,
+    indexedTag1: tag1,
     feedbackIndex: w[0] ? safeUint('0x' + w[0]) : null,
     valueRaw: w[1] ? safeUint('0x' + w[1]) : null,
     valueDecimals: w[2] ? Number(BigInt('0x' + w[2])) : null,
+    tag1,
+    tag2,
+    endpoint,
+    feedbackURI,
+    feedbackHash,
     rawData: log.data,
     ingestedAt: new Date().toISOString(),
   };
@@ -178,6 +201,8 @@ function buildMaterializedView(checkpoints) {
       a.feedbackHistory.push({
         timestamp: new Date((row.blockNumber || 0) * 12 * 1000).toISOString(),
         score: scaled,
+        tag1: row.tag1 || null,
+        tag2: row.tag2 || null,
         comment: 'on-chain NewFeedback',
         txHash: row.transactionHash,
         blockNumber: row.blockNumber,

@@ -48,6 +48,23 @@ function statusPill(status){
   const key = String(status || 'inactive').toLowerCase();
   return `<span class='status-pill ${key}'>${status}</span>`;
 }
+function ipfsToHttp(u){
+  if (!u) return null;
+  const s = String(u).trim();
+  if (!s) return null;
+  if (s.startsWith('ipfs://')) return `https://ipfs.io/ipfs/${s.slice('ipfs://'.length)}`;
+  return s;
+}
+function fallbackAvatar(agentId){
+  return `https://api.dicebear.com/9.x/identicon/svg?seed=${encodeURIComponent(agentId||'agent')}`;
+}
+function pickAgentImage(a){
+  const direct = ipfsToHttp(a.image || a.imageURI || a.avatar || null);
+  if (direct) return direct;
+  const uri = ipfsToHttp(a.identityURI || a.agentURI || null);
+  if (uri && /\.(png|jpg|jpeg|gif|webp|svg)(\?|$)/i.test(uri)) return uri;
+  return fallbackAvatar(a.agentId);
+}
 
 function deriveAgentMetrics(agent, tagMap) {
   const history = agent.feedbackHistory || [];
@@ -160,8 +177,16 @@ window.renderAgents = async function renderAgents(){
 
     document.getElementById('agents-table').innerHTML = shown.map((a)=>{
       const st = deriveStatus(a);
+      const img = pickAgentImage(a);
       return `<tr>
-      <td><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small></td>
+      <td>
+        <div class='agent-cell'>
+          <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div>
+            <a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small>
+          </div>
+        </div>
+      </td>
       <td>${a.category || '-'}</td>
       <td class='owner-short' title='${a.owner || '-'}'>${shortAddr(a.owner)}</td>
       <td>${Number(a._metrics.scoreMain || 0).toFixed(2)} /100</td>
@@ -211,7 +236,10 @@ window.renderAgentDetail = async function renderAgentDetail(){
 
   document.getElementById('agent-root').innerHTML = `
     <div class='card'>
-      <h2>${a.name || a.agentId}</h2>
+      <div class='agent-detail-head'>
+        <img class='agent-avatar-lg' src='${pickAgentImage(a)}' alt='${(a.name||a.agentId)}' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+        <h2>${a.name || a.agentId}</h2>
+      </div>
       <p>${a.description || 'No description'}</p>
       <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span></p>
       <p><b>Owner:</b> ${a.owner || '-'}</p>

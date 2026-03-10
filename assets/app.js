@@ -35,6 +35,15 @@ async function loadTagMap() {
 
 function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
 function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
+function shortAddr(a){ return a && a.startsWith('0x') && a.length>12 ? `${a.slice(0,6)}...${a.slice(-4)}` : (a || '-'); }
+function deriveStatus(a){
+  const t = new Date(a.lastActivityAt || a.createdAt || 0).getTime();
+  if (!Number.isFinite(t) || t<=0) return 'Unknown';
+  const days = (Date.now() - t) / (1000*60*60*24);
+  if (days <= 14) return 'Active';
+  if (days <= 60) return 'Warm';
+  return 'Inactive';
+}
 
 function deriveAgentMetrics(agent, tagMap) {
   const history = agent.feedbackHistory || [];
@@ -148,10 +157,12 @@ window.renderAgents = async function renderAgents(){
     document.getElementById('agents-table').innerHTML = shown.map((a)=>`<tr>
       <td><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small></td>
       <td>${a.category || '-'}</td>
+      <td title='${a.owner || '-'}'>${shortAddr(a.owner)}</td>
+      <td>${Number(a._metrics.scoreMain || 0).toFixed(2)} /100</td>
       <td>${a.feedbackCount || 0}</td>
-      <td>${Number(a._metrics.scoreMain || 0).toFixed(2)}</td>
+      <td>${deriveStatus(a)}</td>
       <td>${fmtDate(a.lastActivityAt)}</td>
-    </tr>`).join('') || `<tr><td colspan='5'>No agents for this filter</td></tr>`;
+    </tr>`).join('') || `<tr><td colspan='7'>No agents for this filter</td></tr>`;
 
     if (metaEl) metaEl.textContent = `Showing ${Math.min(shown.length, rows.length)} / ${rows.length} agents`;
     if (moreBtn) {
@@ -196,9 +207,13 @@ window.renderAgentDetail = async function renderAgentDetail(){
       <h2>${a.name || a.agentId}</h2>
       <p>${a.description || 'No description'}</p>
       <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span></p>
-      <p>Owner: ${a.owner || '-'}</p>
-      <p>Identity URI: ${a.identityURI || '-'}</p>
-      <p><b>Main Score (non-C1):</b> ${metrics.scoreMain.toFixed(2)} (${metrics.scoreMainCount} feedback used)</p>
+      <p><b>Owner:</b> ${a.owner || '-'}</p>
+      <p><b>Status:</b> ${deriveStatus(a)}</p>
+      <p><b>Identity URI:</b> ${a.identityURI || '-'}</p>
+      <p><b>Created At:</b> ${fmtDate(a.createdAt)}</p>
+      <p><b>Main Score (non-C1):</b> ${metrics.scoreMain.toFixed(2)} /100 (${metrics.scoreMainCount} feedback used)</p>
+      <p><b>Legacy Score v1:</b> ${Number(a.scoreV1 || 0).toFixed(2)} /100</p>
+      <p><b>Total Feedback:</b> ${a.feedbackCount || 0}</p>
       <p><b>Characteristic feedback (C1):</b> ${metrics.characteristicCount}</p>
       <p><b>Unique raters:</b> ${a.uniqueRaters ?? '-'}</p>
       <p><b>Last activity:</b> ${fmtDate(a.lastActivityAt)}</p>

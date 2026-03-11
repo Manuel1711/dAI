@@ -26,6 +26,7 @@ const checkpointsPath = path.join(LIVE_DIR, 'checkpoints.json');
 const identityJsonlPath = path.join(LIVE_DIR, 'identity.events.jsonl');
 const feedbackJsonlPath = path.join(LIVE_DIR, 'feedback.events.jsonl');
 const ownersCachePath = path.join(LIVE_DIR, 'owners.cache.json');
+const blockTimesCachePath = path.join(LIVE_DIR, 'block_times.cache.json');
 
 const readJson = (p, fb) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return fb; } };
 const writeJson = (p, obj) => fs.writeFileSync(p, JSON.stringify(obj, null, 2));
@@ -197,11 +198,39 @@ async function fillMissingOwners(agents) {
   writeJson(ownersCachePath, cache);
 }
 
+async function resolveBlockTimestamps(blockNumbers) {
+  const cache = readJson(blockTimesCachePath, {});
+  const missing = [...new Set(blockNumbers.filter((b) => Number.isFinite(b) && b >= 0))].filter((b) => cache[String(b)] == null);
+
+  for (const b of missing) {
+    try {
+      const blk = await rpc('eth_getBlockByNumber', [toHex(b), false]);
+      const ts = blk?.timestamp ? hexToInt(blk.timestamp) : null;
+      if (ts != null && Number.isFinite(ts)) cache[String(b)] = ts;
+    } catch {
+      // keep null; caller will fallback
+    }
+  }
+
+  writeJson(blockTimesCachePath, cache);
+  return cache;
+}
+
+function blockIsoFromCache(blockNumber, tsCache) {
+  const ts = tsCache[String(blockNumber)];
+  if (ts == null) return null;
+  return new Date(ts * 1000).toISOString();
+}
+
 async function buildMaterializedView(checkpoints) {
   const byAgent = new Map();
   const seen = new Set();
+  const identityRows = readJsonl(identityJsonlPath);
+  const feedbackRows = readJsonl(feedbackJsonlPath);
+  const allBlocks = [...identityRows, ...feedbackRows].map((r) => Number(r.blockNumber)).filter((n) => Number.isFinite(n) && n >= 0);
+  const blockTsCache = await resolveBlockTimestamps(allBlocks);
 
-  for (const row of readJsonl(identityJsonlPath)) {
+  for (const row of identityRows) {
     if (!row.eventKey || seen.has(`i:${row.eventKey}`)) continue;
     seen.add(`i:${row.eventKey}`);
 
@@ -211,7 +240,7 @@ async function buildMaterializedView(checkpoints) {
       const a = byAgent.get(aid) || { agentId: aid, name: `Agent ${aid}`, owner: null, category: 'Unknown', description: 'Derived from ERC8004 registries', identityURI: null, createdAt: null, feedbackHistory: [], raters: new Set() };
       if (row.kind === 'identity_registered') {
         if (row.owner) a.owner = row.owner;
-        if (!a.createdAt) a.createdAt = new Date((row.blockNumber || 0) * 12 * 1000).toISOString();
+        if (!a.createdAt) a.createdAt = blockIsoFromCache(row.blockNumber, blockTsCache);
       }
       if (row.kind === 'identity_transfer' && row.to) a.owner = row.to;
       byAgent.set(aid, a);
@@ -219,14 +248,14 @@ async function buildMaterializedView(checkpoints) {
   }
 
   const revoked = new Set();
-  for (const row of readJsonl(feedbackJsonlPath)) {
+  for (const row of feedbackRows) {
     if (row.kind !== 'feedback_revoked') continue;
     const aid = normalizeAgentId(row.agentId);
     if (!aid) continue;
     revoked.add(`${aid}:${(row.clientAddress || '').toLowerCase()}:${row.feedbackIndex || ''}`);
   }
 
-  for (const row of readJsonl(feedbackJsonlPath)) {
+  for (const row of feedbackRows) {
     if (!row.eventKey || seen.has(`f:${row.eventKey}`)) continue;
     seen.add(`f:${row.eventKey}`);
     if (row.kind !== 'feedback_new') continue;
@@ -241,7 +270,7 @@ async function buildMaterializedView(checkpoints) {
     const scaled = Number.isFinite(n) ? (row.valueDecimals != null && row.valueDecimals > 0 ? n / (10 ** row.valueDecimals) : n) : null;
     if (scaled != null && Number.isFinite(scaled)) {
       a.feedbackHistory.push({
-        timestamp: new Date((row.blockNumber || 0) * 12 * 1000).toISOString(),
+        timestamp: blockIsoFromCache(row.blockNumber, blockTsCache),
         score: scaled,
         tag1: row.tag1 || null,
         tag2: row.tag2 || null,

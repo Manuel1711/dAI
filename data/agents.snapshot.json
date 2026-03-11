@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24636744,
-  "generatedAt": "2026-03-11T21:02:46.167Z",
+  "blockNumber": 24636917,
+  "generatedAt": "2026-03-11T21:42:12.898Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24636745,
-    "fromBlockFeedback": 24636745,
+    "fromBlockIdentity": 24636918,
+    "fromBlockFeedback": 24636918,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -394572,6 +394572,48 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-11T20:02:35.000Z"
+    },
+    {
+      "agentId": "0x6F2C",
+      "name": "Agent 0x6F2C",
+      "owner": "0xb73a79cdca0e3e6429027e7d46f80a27b3a54fd6",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-11T21:14:35.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-11T21:14:35.000Z"
+    },
+    {
+      "agentId": "0x6F2D",
+      "name": "Agent 0x6F2D",
+      "owner": "0x52b812b8632bca0d5def444a77fa64ff162b3867",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-11T21:20:11.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-11T21:20:11.000Z"
+    },
+    {
+      "agentId": "0x6F2E",
+      "name": "Agent 0x6F2E",
+      "owner": "0x08a6f35fa405618a414a612c34938890dae9d96a",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-11T21:24:11.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-11T21:24:11.000Z"
     },
     {
       "agentId": "0x6F3",

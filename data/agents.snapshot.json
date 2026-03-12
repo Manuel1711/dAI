@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24640011,
-  "generatedAt": "2026-03-12T08:01:40.945Z",
+  "blockNumber": 24640207,
+  "generatedAt": "2026-03-12T08:40:01.517Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24640012,
-    "fromBlockFeedback": 24640012,
+    "fromBlockIdentity": 24640208,
+    "fromBlockFeedback": 24640208,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -12865,6 +12865,48 @@
       "lastActivityAt": "2026-02-26T08:18:11.000Z"
     },
     {
+      "agentId": "0x596A",
+      "name": "Agent 0x596A",
+      "owner": "0x42e9c498135431a48796b5ffe2cbc3d7a1811927",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-02-03T17:03:23.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-12T08:25:23.000Z",
+          "score": 82,
+          "tag1": "quality",
+          "tag2": "green",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xcf96081ae9627364a997d5cf8d1133c48aecc10f923daa5800984b49ce049358",
+          "blockNumber": 24640175
+        },
+        {
+          "timestamp": "2026-02-26T13:38:11.000Z",
+          "score": 72,
+          "tag1": "quality",
+          "tag2": "yellow",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x7203c6404b649430b8cd8b1d755b6a9157e4809034a8b5088d6542f25aba10f4",
+          "blockNumber": 24541440
+        },
+        {
+          "timestamp": "2026-02-05T00:11:35.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x80d656c3056ab8cd8444dfe2e7625c66c7f53326488bbb1c920c702e979b9632",
+          "blockNumber": 24386971
+        }
+      ],
+      "uniqueRaters": 2,
+      "scoreV1": 84.6667,
+      "feedbackCount": 3,
+      "lastActivityAt": "2026-03-12T08:25:23.000Z"
+    },
+    {
       "agentId": "0x5973",
       "name": "Agent 0x5973",
       "owner": "0x72a6c33e1eb6ba0862f8702e778d4e7c955c41d5",
@@ -17198,39 +17240,6 @@
       "scoreV1": 18,
       "feedbackCount": 2,
       "lastActivityAt": "2026-02-25T21:08:47.000Z"
-    },
-    {
-      "agentId": "0x596A",
-      "name": "Agent 0x596A",
-      "owner": "0x42e9c498135431a48796b5ffe2cbc3d7a1811927",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-02-03T17:03:23.000Z",
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-02-26T13:38:11.000Z",
-          "score": 72,
-          "tag1": "quality",
-          "tag2": "yellow",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x7203c6404b649430b8cd8b1d755b6a9157e4809034a8b5088d6542f25aba10f4",
-          "blockNumber": 24541440
-        },
-        {
-          "timestamp": "2026-02-05T00:11:35.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x80d656c3056ab8cd8444dfe2e7625c66c7f53326488bbb1c920c702e979b9632",
-          "blockNumber": 24386971
-        }
-      ],
-      "uniqueRaters": 2,
-      "scoreV1": 86,
-      "feedbackCount": 2,
-      "lastActivityAt": "2026-02-26T13:38:11.000Z"
     },
     {
       "agentId": "0x596F",
@@ -394940,6 +394949,20 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-12T07:48:35.000Z"
+    },
+    {
+      "agentId": "0x6F43",
+      "name": "Agent 0x6F43",
+      "owner": "0xc2f004a6a246b1e3bcaea3e041f928b6ff3cd7be",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-12T07:58:59.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-12T07:58:59.000Z"
     },
     {
       "agentId": "0x6F5",

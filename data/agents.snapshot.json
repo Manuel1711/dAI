@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24648229,
-  "generatedAt": "2026-03-13T11:33:43.207Z",
+  "blockNumber": 24648354,
+  "generatedAt": "2026-03-13T11:58:12.109Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24648230,
-    "fromBlockFeedback": 24648230,
+    "fromBlockIdentity": 24648355,
+    "fromBlockFeedback": 24648355,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -40589,6 +40589,30 @@
       "scoreV1": 85,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-05T20:19:47.000Z"
+    },
+    {
+      "agentId": "0x6F5F",
+      "name": "Agent 0x6F5F",
+      "owner": "0x1089e1c613db8cb91db72be4818632153e62557a",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-12T22:50:59.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-13T11:25:11.000Z",
+          "score": 80,
+          "tag1": "starred",
+          "tag2": "Autonomous",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x1cea0b5158abd3caa8f80cd6a2c14dd79fa7dfe0fadb5c6a31d889a2e0469255",
+          "blockNumber": 24648232
+        }
+      ],
+      "uniqueRaters": 1,
+      "scoreV1": 80,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-13T11:25:11.000Z"
     },
     {
       "agentId": "0x70B",
@@ -395373,20 +395397,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-12T21:37:11.000Z"
-    },
-    {
-      "agentId": "0x6F5F",
-      "name": "Agent 0x6F5F",
-      "owner": "0x1089e1c613db8cb91db72be4818632153e62557a",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-03-12T22:50:59.000Z",
-      "feedbackHistory": [],
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-12T22:50:59.000Z"
     },
     {
       "agentId": "0x6F6",

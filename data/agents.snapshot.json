@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24645399,
-  "generatedAt": "2026-03-13T02:05:22.708Z",
+  "blockNumber": 24646081,
+  "generatedAt": "2026-03-13T04:22:39.329Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24645400,
-    "fromBlockFeedback": 24645400,
+    "fromBlockIdentity": 24646082,
+    "fromBlockFeedback": 24646082,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -6379,6 +6379,342 @@
       "lastActivityAt": "2026-02-26T06:47:11.000Z"
     },
     {
+      "agentId": "0x2FEB",
+      "name": "Agent 0x2FEB",
+      "owner": "0x993f37bf44a204f7e5485bddd502cc6bd6dc30e6",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-01-29T20:57:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-13T03:09:47.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xb9c4166b36d8eb4512cc1ef5b42bd34e7dc58cdf3506a77b393fabb4043fde76",
+          "blockNumber": 24645763
+        },
+        {
+          "timestamp": "2026-03-12T05:48:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xb6d99ba766cab136bc659e43ca41753b651d039e5dbb9de6d99cb3fa775a197e",
+          "blockNumber": 24639398
+        },
+        {
+          "timestamp": "2026-03-11T03:19:23.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xcb868338ee1899a54cd4e6eb5f3ffa58a5f35787b2142f2e85f6de437d8f1612",
+          "blockNumber": 24631499
+        },
+        {
+          "timestamp": "2026-03-10T04:07:47.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2a24f0f091f1d77072d797e1aa56c91eb17e3663ae81f5ab41d527aa98011600",
+          "blockNumber": 24624585
+        },
+        {
+          "timestamp": "2026-03-09T03:28:35.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x1cc8d218cde17d4ad6fdec3140035f7fb3517e965ee284cd39071a73b74f6eeb",
+          "blockNumber": 24617227
+        },
+        {
+          "timestamp": "2026-03-05T00:42:35.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd8a739d338a0528e3ddc98045dff1a64f97f990c1f5e4c5c67e017620ef6f194",
+          "blockNumber": 24587749
+        },
+        {
+          "timestamp": "2026-03-04T06:22:11.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x1114445b69022f56953eda8733e5268b1a1257dd20f515f1e418d12ad606f61e",
+          "blockNumber": 24582271
+        },
+        {
+          "timestamp": "2026-03-03T07:46:23.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": "outstanding",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xcc186fd2ae6255be8522277e75e94c611f9d72cd4c53f7e414b8b1b171cb111e",
+          "blockNumber": 24575528
+        },
+        {
+          "timestamp": "2026-02-28T01:42:59.000Z",
+          "score": 100,
+          "tag1": "outstanding",
+          "tag2": "professional",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x769e8536fd1016699a78e2395f5715face8a283f2163b47d31b4f630813f9b4d",
+          "blockNumber": 24552223
+        },
+        {
+          "timestamp": "2026-02-25T07:02:47.000Z",
+          "score": 99,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2c93edcd797ac1064b558d9cd164648057e30675fe1e8d8ee23a6cf18bede7b7",
+          "blockNumber": 24532307
+        },
+        {
+          "timestamp": "2026-02-19T12:02:47.000Z",
+          "score": 83,
+          "tag1": "quality",
+          "tag2": "green",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x865bfc80a97ede534b2d2ffb08baecaceace3838e561eafc2204ca89c2239a87",
+          "blockNumber": 24490766
+        },
+        {
+          "timestamp": "2026-02-10T01:31:11.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x5d5f3b2adc72cb977a894b4bf78ada7397d6aa03f2e20e23ea63871b9726c504",
+          "blockNumber": 24423107
+        },
+        {
+          "timestamp": "2026-02-08T01:35:47.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd2758902c73bb3ec39cfd05a2d43a4d54d1bb004d58debfefe3f92d03479920a",
+          "blockNumber": 24408852
+        },
+        {
+          "timestamp": "2026-02-05T17:37:35.000Z",
+          "score": 60,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x1f410488c869f5fc8faf2008440184db4606c480535dc92fa0f358aa0468bd35",
+          "blockNumber": 24392165
+        },
+        {
+          "timestamp": "2026-02-02T10:15:23.000Z",
+          "score": 100,
+          "tag1": "secure",
+          "tag2": "fast",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x6dbae44c711d3573665555b89cb8b29c9e76c442b2cd82a0600beb590cc82c47",
+          "blockNumber": 24368512
+        },
+        {
+          "timestamp": "2026-02-02T09:23:47.000Z",
+          "score": 100,
+          "tag1": "trusted",
+          "tag2": "fast",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x71688bc337bb4c02beaf73e17efc253c49403f8ffd4788364d5a3ed8c6ca0504",
+          "blockNumber": 24368255
+        },
+        {
+          "timestamp": "2026-02-02T09:08:11.000Z",
+          "score": 100,
+          "tag1": "good agent",
+          "tag2": "premium",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xc7c1755a0491c480778ae88dd26a905c5e021549204a19177a75b0e136044186",
+          "blockNumber": 24368178
+        }
+      ],
+      "uniqueRaters": 15,
+      "scoreV1": 96.5882,
+      "feedbackCount": 17,
+      "lastActivityAt": "2026-03-13T03:09:47.000Z"
+    },
+    {
+      "agentId": "0x3000",
+      "name": "Agent 0x3000",
+      "owner": "0x34b206b5df38a1636aa248038f64e035530ece05",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-01-29T21:01:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-13T03:10:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x90a6523d6efa10742540a5cce230966cf6aa396d2a79450b541935d8935d1de9",
+          "blockNumber": 24645769
+        },
+        {
+          "timestamp": "2026-03-12T05:50:11.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xb2608b10fbf37dd6e497b54a82a902d2c77412e97529dfa7b4a123a411fa4962",
+          "blockNumber": 24639404
+        },
+        {
+          "timestamp": "2026-03-11T03:19:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xa70830afc33c734446ef1edc9da05c52342eeebb9997b83803f278636305219a",
+          "blockNumber": 24631502
+        },
+        {
+          "timestamp": "2026-03-10T04:10:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x5186c89307495fceaa423b006e6d360ee4c6339e22ce5e962917d43ecb674b26",
+          "blockNumber": 24624600
+        },
+        {
+          "timestamp": "2026-03-09T03:29:47.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x31752288291da70bf86c8ba1e15e9e4662fb88a4c6e9632310d56ba5520629a9",
+          "blockNumber": 24617233
+        },
+        {
+          "timestamp": "2026-03-05T00:43:35.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x65162ec550e3159a4dbaf02bd5331f7a41aff90d9beea0f121c381f838375b54",
+          "blockNumber": 24587754
+        },
+        {
+          "timestamp": "2026-03-04T06:24:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2d61a8f4ec1f3c591331e2bdfcd3abda0af7bf11f63034fd706bb84ce321dcd1",
+          "blockNumber": 24582285
+        },
+        {
+          "timestamp": "2026-03-03T07:49:47.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x026761c7fe390748647e9cda354dfb21b9e883f81225bcc41ec9b8895eb1de2d",
+          "blockNumber": 24575545
+        },
+        {
+          "timestamp": "2026-02-28T01:44:23.000Z",
+          "score": 100,
+          "tag1": "fast",
+          "tag2": "reliable",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x1bda8ea74dc95d356480092ecb9ccccac2f075c845387b165a612761a8584b1b",
+          "blockNumber": 24552230
+        },
+        {
+          "timestamp": "2026-02-25T07:03:47.000Z",
+          "score": 99,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x489a86563876afa9d2f8564ef61c1fb29945069bf99e74338132cb190648bd09",
+          "blockNumber": 24532312
+        },
+        {
+          "timestamp": "2026-02-19T14:54:47.000Z",
+          "score": 86,
+          "tag1": "quality",
+          "tag2": "green",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x4e9694016a238d03eb2ba218c5795886093584d324ce8d96be89c42ceed8b13d",
+          "blockNumber": 24491623
+        },
+        {
+          "timestamp": "2026-02-10T01:31:35.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x4a881992ebcb8b2098d6c829270e7662df9f4fec2bcddf6dab1dbc962edd0f02",
+          "blockNumber": 24423109
+        },
+        {
+          "timestamp": "2026-02-08T01:37:23.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x6349c290e77c6c3a381214840d0c82047b99f6311b0579659dad38484efc45b3",
+          "blockNumber": 24408860
+        },
+        {
+          "timestamp": "2026-02-05T17:37:47.000Z",
+          "score": 60,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2ea86f5aa7287b35e727f35c194e77b8b31dd1523f40e73e792bde3dc6e8d679",
+          "blockNumber": 24392166
+        },
+        {
+          "timestamp": "2026-02-02T09:52:47.000Z",
+          "score": 100,
+          "tag1": "reliable",
+          "tag2": "validation",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x9bef58477987d7bea2902ca8d27665d7e6af326262b7f5a588db2a8190d47023",
+          "blockNumber": 24368399
+        },
+        {
+          "timestamp": "2026-02-02T09:17:11.000Z",
+          "score": 100,
+          "tag1": "trusted",
+          "tag2": "fast",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xea6912ece9e751c10d7222c9e8511e3a3f54274f3ca0b1d6e643317753aeea1c",
+          "blockNumber": 24368223
+        },
+        {
+          "timestamp": "2026-02-02T09:06:23.000Z",
+          "score": 100,
+          "tag1": "powerfull",
+          "tag2": "fast",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x5caa179ef57f739dcc70e176cb7c9383888ce0cb1ead2a7a8b87daeea9b89b2c",
+          "blockNumber": 24368169
+        }
+      ],
+      "uniqueRaters": 15,
+      "scoreV1": 96.7647,
+      "feedbackCount": 17,
+      "lastActivityAt": "2026-03-13T03:10:59.000Z"
+    },
+    {
       "agentId": "0x58A0",
       "name": "Agent 0x58A0",
       "owner": "0xcc28cee3a1433493de119efe8cd218ff7c0e4821",
@@ -6545,324 +6881,6 @@
       "scoreV1": 82.2941,
       "feedbackCount": 17,
       "lastActivityAt": "2026-02-19T01:48:47.000Z"
-    },
-    {
-      "agentId": "0x2FEB",
-      "name": "Agent 0x2FEB",
-      "owner": "0x993f37bf44a204f7e5485bddd502cc6bd6dc30e6",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-01-29T20:57:11.000Z",
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-03-12T05:48:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xb6d99ba766cab136bc659e43ca41753b651d039e5dbb9de6d99cb3fa775a197e",
-          "blockNumber": 24639398
-        },
-        {
-          "timestamp": "2026-03-11T03:19:23.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xcb868338ee1899a54cd4e6eb5f3ffa58a5f35787b2142f2e85f6de437d8f1612",
-          "blockNumber": 24631499
-        },
-        {
-          "timestamp": "2026-03-10T04:07:47.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x2a24f0f091f1d77072d797e1aa56c91eb17e3663ae81f5ab41d527aa98011600",
-          "blockNumber": 24624585
-        },
-        {
-          "timestamp": "2026-03-09T03:28:35.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x1cc8d218cde17d4ad6fdec3140035f7fb3517e965ee284cd39071a73b74f6eeb",
-          "blockNumber": 24617227
-        },
-        {
-          "timestamp": "2026-03-05T00:42:35.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xd8a739d338a0528e3ddc98045dff1a64f97f990c1f5e4c5c67e017620ef6f194",
-          "blockNumber": 24587749
-        },
-        {
-          "timestamp": "2026-03-04T06:22:11.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x1114445b69022f56953eda8733e5268b1a1257dd20f515f1e418d12ad606f61e",
-          "blockNumber": 24582271
-        },
-        {
-          "timestamp": "2026-03-03T07:46:23.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": "outstanding",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xcc186fd2ae6255be8522277e75e94c611f9d72cd4c53f7e414b8b1b171cb111e",
-          "blockNumber": 24575528
-        },
-        {
-          "timestamp": "2026-02-28T01:42:59.000Z",
-          "score": 100,
-          "tag1": "outstanding",
-          "tag2": "professional",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x769e8536fd1016699a78e2395f5715face8a283f2163b47d31b4f630813f9b4d",
-          "blockNumber": 24552223
-        },
-        {
-          "timestamp": "2026-02-25T07:02:47.000Z",
-          "score": 99,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x2c93edcd797ac1064b558d9cd164648057e30675fe1e8d8ee23a6cf18bede7b7",
-          "blockNumber": 24532307
-        },
-        {
-          "timestamp": "2026-02-19T12:02:47.000Z",
-          "score": 83,
-          "tag1": "quality",
-          "tag2": "green",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x865bfc80a97ede534b2d2ffb08baecaceace3838e561eafc2204ca89c2239a87",
-          "blockNumber": 24490766
-        },
-        {
-          "timestamp": "2026-02-10T01:31:11.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x5d5f3b2adc72cb977a894b4bf78ada7397d6aa03f2e20e23ea63871b9726c504",
-          "blockNumber": 24423107
-        },
-        {
-          "timestamp": "2026-02-08T01:35:47.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xd2758902c73bb3ec39cfd05a2d43a4d54d1bb004d58debfefe3f92d03479920a",
-          "blockNumber": 24408852
-        },
-        {
-          "timestamp": "2026-02-05T17:37:35.000Z",
-          "score": 60,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x1f410488c869f5fc8faf2008440184db4606c480535dc92fa0f358aa0468bd35",
-          "blockNumber": 24392165
-        },
-        {
-          "timestamp": "2026-02-02T10:15:23.000Z",
-          "score": 100,
-          "tag1": "secure",
-          "tag2": "fast",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x6dbae44c711d3573665555b89cb8b29c9e76c442b2cd82a0600beb590cc82c47",
-          "blockNumber": 24368512
-        },
-        {
-          "timestamp": "2026-02-02T09:23:47.000Z",
-          "score": 100,
-          "tag1": "trusted",
-          "tag2": "fast",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x71688bc337bb4c02beaf73e17efc253c49403f8ffd4788364d5a3ed8c6ca0504",
-          "blockNumber": 24368255
-        },
-        {
-          "timestamp": "2026-02-02T09:08:11.000Z",
-          "score": 100,
-          "tag1": "good agent",
-          "tag2": "premium",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xc7c1755a0491c480778ae88dd26a905c5e021549204a19177a75b0e136044186",
-          "blockNumber": 24368178
-        }
-      ],
-      "uniqueRaters": 15,
-      "scoreV1": 96.375,
-      "feedbackCount": 16,
-      "lastActivityAt": "2026-03-12T05:48:59.000Z"
-    },
-    {
-      "agentId": "0x3000",
-      "name": "Agent 0x3000",
-      "owner": "0x34b206b5df38a1636aa248038f64e035530ece05",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-01-29T21:01:47.000Z",
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-03-12T05:50:11.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xb2608b10fbf37dd6e497b54a82a902d2c77412e97529dfa7b4a123a411fa4962",
-          "blockNumber": 24639404
-        },
-        {
-          "timestamp": "2026-03-11T03:19:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xa70830afc33c734446ef1edc9da05c52342eeebb9997b83803f278636305219a",
-          "blockNumber": 24631502
-        },
-        {
-          "timestamp": "2026-03-10T04:10:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x5186c89307495fceaa423b006e6d360ee4c6339e22ce5e962917d43ecb674b26",
-          "blockNumber": 24624600
-        },
-        {
-          "timestamp": "2026-03-09T03:29:47.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x31752288291da70bf86c8ba1e15e9e4662fb88a4c6e9632310d56ba5520629a9",
-          "blockNumber": 24617233
-        },
-        {
-          "timestamp": "2026-03-05T00:43:35.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x65162ec550e3159a4dbaf02bd5331f7a41aff90d9beea0f121c381f838375b54",
-          "blockNumber": 24587754
-        },
-        {
-          "timestamp": "2026-03-04T06:24:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x2d61a8f4ec1f3c591331e2bdfcd3abda0af7bf11f63034fd706bb84ce321dcd1",
-          "blockNumber": 24582285
-        },
-        {
-          "timestamp": "2026-03-03T07:49:47.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x026761c7fe390748647e9cda354dfb21b9e883f81225bcc41ec9b8895eb1de2d",
-          "blockNumber": 24575545
-        },
-        {
-          "timestamp": "2026-02-28T01:44:23.000Z",
-          "score": 100,
-          "tag1": "fast",
-          "tag2": "reliable",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x1bda8ea74dc95d356480092ecb9ccccac2f075c845387b165a612761a8584b1b",
-          "blockNumber": 24552230
-        },
-        {
-          "timestamp": "2026-02-25T07:03:47.000Z",
-          "score": 99,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x489a86563876afa9d2f8564ef61c1fb29945069bf99e74338132cb190648bd09",
-          "blockNumber": 24532312
-        },
-        {
-          "timestamp": "2026-02-19T14:54:47.000Z",
-          "score": 86,
-          "tag1": "quality",
-          "tag2": "green",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x4e9694016a238d03eb2ba218c5795886093584d324ce8d96be89c42ceed8b13d",
-          "blockNumber": 24491623
-        },
-        {
-          "timestamp": "2026-02-10T01:31:35.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x4a881992ebcb8b2098d6c829270e7662df9f4fec2bcddf6dab1dbc962edd0f02",
-          "blockNumber": 24423109
-        },
-        {
-          "timestamp": "2026-02-08T01:37:23.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x6349c290e77c6c3a381214840d0c82047b99f6311b0579659dad38484efc45b3",
-          "blockNumber": 24408860
-        },
-        {
-          "timestamp": "2026-02-05T17:37:47.000Z",
-          "score": 60,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x2ea86f5aa7287b35e727f35c194e77b8b31dd1523f40e73e792bde3dc6e8d679",
-          "blockNumber": 24392166
-        },
-        {
-          "timestamp": "2026-02-02T09:52:47.000Z",
-          "score": 100,
-          "tag1": "reliable",
-          "tag2": "validation",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x9bef58477987d7bea2902ca8d27665d7e6af326262b7f5a588db2a8190d47023",
-          "blockNumber": 24368399
-        },
-        {
-          "timestamp": "2026-02-02T09:17:11.000Z",
-          "score": 100,
-          "tag1": "trusted",
-          "tag2": "fast",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xea6912ece9e751c10d7222c9e8511e3a3f54274f3ca0b1d6e643317753aeea1c",
-          "blockNumber": 24368223
-        },
-        {
-          "timestamp": "2026-02-02T09:06:23.000Z",
-          "score": 100,
-          "tag1": "powerfull",
-          "tag2": "fast",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x5caa179ef57f739dcc70e176cb7c9383888ce0cb1ead2a7a8b87daeea9b89b2c",
-          "blockNumber": 24368169
-        }
-      ],
-      "uniqueRaters": 15,
-      "scoreV1": 96.5625,
-      "feedbackCount": 16,
-      "lastActivityAt": "2026-03-12T05:50:11.000Z"
     },
     {
       "agentId": "0x30E6",
@@ -395425,6 +395443,48 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-13T01:37:59.000Z"
+    },
+    {
+      "agentId": "0x6F63",
+      "name": "Agent 0x6F63",
+      "owner": "0xa883518d2ba8224c6d8392621628228dff956b9b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-13T03:02:47.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-13T03:02:47.000Z"
+    },
+    {
+      "agentId": "0x6F64",
+      "name": "Agent 0x6F64",
+      "owner": "0x63c078eb235d99ae763a9b0b6b21e161de8e0dc1",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-13T03:06:47.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-13T03:06:47.000Z"
+    },
+    {
+      "agentId": "0x6F65",
+      "name": "Agent 0x6F65",
+      "owner": "0x5ccf158dd7ccc7829cc4e7cdb9b8d5029331488e",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-13T03:47:59.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-13T03:47:59.000Z"
     },
     {
       "agentId": "0x6F7",

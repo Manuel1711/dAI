@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24657163,
-  "generatedAt": "2026-03-14T17:27:12.630Z",
+  "blockNumber": 24657309,
+  "generatedAt": "2026-03-14T17:57:49.080Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24657164,
-    "fromBlockFeedback": 24657164,
+    "fromBlockIdentity": 24657310,
+    "fromBlockFeedback": 24657310,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -398025,6 +398025,34 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-14T14:12:11.000Z"
+    },
+    {
+      "agentId": "0x700E",
+      "name": "Agent 0x700E",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-14T17:38:35.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-14T17:38:35.000Z"
+    },
+    {
+      "agentId": "0x700F",
+      "name": "Agent 0x700F",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-14T17:43:35.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-14T17:43:35.000Z"
     },
     {
       "agentId": "0x701",

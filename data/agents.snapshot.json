@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24653634,
-  "generatedAt": "2026-03-14T05:39:24.583Z",
+  "blockNumber": 24653914,
+  "generatedAt": "2026-03-14T06:34:20.835Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24653635,
-    "fromBlockFeedback": 24653635,
+    "fromBlockIdentity": 24653915,
+    "fromBlockFeedback": 24653915,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -396023,6 +396023,62 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-14T04:59:35.000Z"
+    },
+    {
+      "agentId": "0x6F89",
+      "name": "Agent 0x6F89",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-14T05:57:47.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-14T05:57:47.000Z"
+    },
+    {
+      "agentId": "0x6F8A",
+      "name": "Agent 0x6F8A",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-14T05:58:59.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-14T05:58:59.000Z"
+    },
+    {
+      "agentId": "0x6F8B",
+      "name": "Agent 0x6F8B",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-14T06:00:23.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-14T06:00:23.000Z"
+    },
+    {
+      "agentId": "0x6F8C",
+      "name": "Agent 0x6F8C",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-14T06:00:35.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-14T06:00:35.000Z"
     },
     {
       "agentId": "0x6F9",

@@ -2,6 +2,7 @@ const NAV = `
 <nav>
   <a href="./index.html">Home</a>
   <a href="./agents.html">Agents</a>
+  <a href="./analytics.html">Analytics</a>
   <a href="./research.html">Research</a>
   <a href="./pipeline.html">Pipeline</a>
 </nav>`;
@@ -184,6 +185,7 @@ window.renderAgents = async function renderAgents(){
           <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
           <div>
             <a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small>
+            <div class='agent-desc'>${(a.description || '').slice(0, 120) || 'No description yet'}</div>
           </div>
         </div>
       </td>
@@ -281,4 +283,68 @@ window.renderPipeline = async function renderPipeline(){
     <div class='card'><h3>Updated at</h3><div>${fmtDate(cp.updatedAt)}</div></div>`;
 
   document.getElementById('checkpoint-raw').textContent = JSON.stringify(cp, null, 2);
+}
+
+function giniFromArray(values){
+  const x = (values || []).map(Number).filter((v) => Number.isFinite(v) && v >= 0).sort((a,b) => a - b);
+  if (!x.length) return 0;
+  const sum = x.reduce((a,b)=>a+b,0);
+  if (sum <= 0) return 0;
+  let weighted = 0;
+  for (let i = 0; i < x.length; i++) weighted += (i + 1) * x[i];
+  return (2 * weighted) / (x.length * sum) - (x.length + 1) / x.length;
+}
+
+window.renderAnalytics = async function renderAnalytics(){
+  document.getElementById('nav').innerHTML = NAV;
+  setActiveNav();
+
+  const data = await loadSnapshot();
+  const tagMap = await loadTagMap();
+  const agents = data.agents || [];
+  const enriched = agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+
+  const feedbackCounts = enriched.map((a) => Number(a.feedbackCount || 0));
+  const scoreMain = enriched.map((a) => Number(a._metrics.scoreMain || 0)).filter((v) => Number.isFinite(v) && v > 0);
+  const active = enriched.filter((a) => deriveStatus(a) === 'Active').length;
+  const warm = enriched.filter((a) => deriveStatus(a) === 'Warm').length;
+  const inactive = Math.max(0, enriched.length - active - warm);
+
+  const topByFeedback = [...enriched]
+    .sort((a,b) => (b.feedbackCount || 0) - (a.feedbackCount || 0))
+    .slice(0, 8);
+
+  const allTags = new Map();
+  for (const a of enriched) {
+    for (const t of a._metrics.topTags || []) {
+      allTags.set(t.tag, (allTags.get(t.tag) || 0) + Number(t.count || 0));
+    }
+  }
+  const topTags = [...allTags.entries()].sort((a,b) => b[1] - a[1]).slice(0, 10);
+
+  const avgScore = scoreMain.length ? avg(scoreMain).toFixed(2) : '0.00';
+  const p90Feedback = feedbackCounts.length
+    ? [...feedbackCounts].sort((a,b)=>a-b)[Math.floor(0.9 * (feedbackCounts.length - 1))]
+    : 0;
+  const giniFeedback = giniFromArray(feedbackCounts).toFixed(3);
+
+  document.getElementById('analytics-kpis').innerHTML = `
+    <div class='card'><h3>Agents indexed</h3><div class='kpi'>${enriched.length}</div></div>
+    <div class='card'><h3>Avg Main Score</h3><div class='kpi'>${avgScore}</div></div>
+    <div class='card'><h3>Feedback concentration (Gini)</h3><div class='kpi'>${giniFeedback}</div></div>
+    <div class='card'><h3>P90 feedback / agent</h3><div class='kpi'>${p90Feedback}</div></div>`;
+
+  document.getElementById('analytics-status').innerHTML = `
+    <div class='card'><h3>Activity status mix</h3>
+      <p>Active: <b>${active}</b> · Warm: <b>${warm}</b> · Inactive: <b>${inactive}</b></p>
+      <p class='meta-row'>Snapshot generated: ${fmtDate(data.generatedAt)} · Block ${data.blockNumber}</p>
+    </div>`;
+
+  document.getElementById('analytics-top-feedback').innerHTML = `
+    <h3>Top agents by feedback volume</h3>
+    <ol>${topByFeedback.map((a)=>`<li><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || shortAddr(a.agentId)}</a> — ${a.feedbackCount || 0} feedback</li>`).join('') || '<li>No data</li>'}</ol>`;
+
+  document.getElementById('analytics-top-tags').innerHTML = `
+    <h3>Most used tags (network-wide)</h3>
+    <ol>${topTags.map(([tag,n])=>`<li><code>${tag}</code> — ${n}</li>`).join('') || '<li>No tags</li>'}</ol>`;
 }

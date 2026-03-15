@@ -717,16 +717,54 @@ function renderFig07(fig){
 
   const q50 = Number(fig?.q50 || 0);
   const q50x = xToPx(q50);
-  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='First feedback delay distribution'>
-    ${yTickSvg}${xTickSvg}
-    <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
-    <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
-    ${bars}
-    <line x1='${q50x}' y1='${margin.top}' x2='${q50x}' y2='${height - margin.bottom}' stroke='#8a6a2d' stroke-width='2.2' stroke-dasharray='6 5'/>
-    <text x='${Math.min(width - margin.right - 10, q50x + 8)}' y='${margin.top + 18}' font-size='12' font-weight='700' fill='#8a6a2d'>Median: ${Math.round(q50).toLocaleString()}</text>
-    <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delay from registration (blocks)</text>
-    <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Number of agents</text>
-  </svg></div>`;
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='First feedback delay distribution'>
+        ${yTickSvg}${xTickSvg}
+        <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        ${bars}
+        <line x1='${q50x}' y1='${margin.top}' x2='${q50x}' y2='${height - margin.bottom}' stroke='#8a6a2d' stroke-width='2.2' stroke-dasharray='6 5'/>
+        <line id='fig07-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+        <rect id='fig07-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+        <text x='${Math.min(width - margin.right - 10, q50x + 8)}' y='${margin.top + 18}' font-size='12' font-weight='700' fill='#8a6a2d'>Median: ${Math.round(q50).toLocaleString()}</text>
+        <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delay from registration (blocks)</text>
+        <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Number of agents</text>
+      </svg>
+      <div id='fig07-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig07-hitbox');
+  const cross = root.querySelector('#fig07-cross');
+  const tip = root.querySelector('#fig07-tooltip');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(bins - 1, Math.floor(t * bins)));
+    const xStart = idx * step;
+    const xEnd = (idx + 1) * step;
+    const px = margin.left + (idx + 0.5) * (plotW / bins);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 220, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    tip.innerHTML = `Delay bin <b>${Math.round(xStart).toLocaleString()}–${Math.round(xEnd).toLocaleString()}</b><br/>Agents: <b>${counts[idx].toLocaleString()}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
 }
 
 function renderTopClientsNetwork(fig){
@@ -758,28 +796,62 @@ function renderTopClientsNetwork(fig){
     const y1 = clientY.get(e.clientId), y2 = agentY.get(e.agentId);
     if (!Number.isFinite(y1) || !Number.isFinite(y2)) return '';
     const w = 0.8 + 7 * (Number(e.weight || 0) / maxEdge);
-    return `<path d='M ${leftX + 12} ${y1} C ${leftX + 220} ${y1}, ${rightX - 220} ${y2}, ${rightX - 12} ${y2}' stroke='rgba(79,70,229,0.35)' stroke-width='${w.toFixed(2)}' fill='none'/>`;
+    return `<path class='tc-edge' data-client='${e.clientId}' data-agent='${e.agentId}' data-weight='${Number(e.weight || 0)}' d='M ${leftX + 12} ${y1} C ${leftX + 220} ${y1}, ${rightX - 220} ${y2}, ${rightX - 12} ${y2}' stroke='rgba(79,70,229,0.35)' stroke-width='${w.toFixed(2)}' fill='none'><title>${e.clientId} → ${e.agentId} · ${Number(e.weight || 0)} events</title></path>`;
   }).join('');
 
   const clientSvg = clients.map((c, i) => {
     const y = clientY.get(c.id);
     const r = 5 + 11 * (Number(c.totalFeedback || 0) / maxClient);
-    return `<circle cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'/><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>#${i + 1} ${c.label}</text>`;
+    return `<circle class='tc-client' data-id='${c.id}' data-total='${Number(c.totalFeedback || 0)}' cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'><title>${c.id} · total feedback ${Number(c.totalFeedback || 0)}</title></circle><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>#${i + 1} ${c.label}</text>`;
   }).join('');
 
   const agentSvg = agents.map((a, i) => {
     const y = agentY.get(a.id);
     const r = 4 + 9 * (Number(a.totalFromTopClients || 0) / maxAgent);
-    return `<circle cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'/><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>#${i + 1} ${a.label}</text>`;
+    return `<circle class='tc-agent' data-id='${a.id}' data-total='${Number(a.totalFromTopClients || 0)}' cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'><title>Agent ${a.id} · events from top clients ${Number(a.totalFromTopClients || 0)}</title></circle><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>#${i + 1} ${a.label}</text>`;
   }).join('');
 
-  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Top clients connected to agents network'>
-    <text x='${leftX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#5b21b6'>Top clients</text>
-    <text x='${rightX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#1d4ed8'>Agents reached</text>
-    ${edgeSvg}
-    ${clientSvg}
-    ${agentSvg}
-  </svg></div>`;
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Top clients connected to agents network'>
+        <text x='${leftX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#5b21b6'>Top clients</text>
+        <text x='${rightX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#1d4ed8'>Agents reached</text>
+        ${edgeSvg}
+        ${clientSvg}
+        ${agentSvg}
+      </svg>
+      <div id='tc-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const tip = root.querySelector('#tc-tooltip');
+  if (!wrap || !tip) return;
+
+  const showTip = (ev, html) => {
+    const bounds = wrap.getBoundingClientRect();
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 12))}px`;
+    tip.style.top = `${Math.min(bounds.height - 90, Math.max(8, ev.clientY - bounds.top + 12))}px`;
+    tip.innerHTML = html;
+  };
+  const hideTip = () => { tip.style.display = 'none'; };
+
+  root.querySelectorAll('.tc-edge').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-client')}</b> → <b>${el.getAttribute('data-agent')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-client')}</b> → <b>${el.getAttribute('data-agent')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.tc-client').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Top client <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Top client <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.tc-agent').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Agent <b>${el.getAttribute('data-id')}</b><br/>Events from top clients: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Agent <b>${el.getAttribute('data-id')}</b><br/>Events from top clients: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
 }
 
 function renderFig08(fig){
@@ -818,18 +890,70 @@ function renderFig08(fig){
 
   const line = buildPolyline(x, y, xToPx, yToPx);
 
-  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Mean feedback curve by age bins'>
-    ${yTickSvg}${xTickSvg}
-    <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
-    <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
-    <line x1='${width - margin.right}' y1='${margin.top}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.45'/>
-    ${bars}
-    <polyline class='fig-line-anim' fill='none' stroke='#2A9D8F' stroke-width='2.8' points='${line}'/>
-    ${nTickSvg}
-    <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delta blocks since registration</text>
-    <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Mean feedback per active agent</text>
-    <text x='${width - 14}' y='${height/2}' transform='rotate(-90 ${width - 14} ${height/2})' text-anchor='middle' font-size='14' font-weight='700'>Active agents</text>
-  </svg></div>`;
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-controls'>
+      <label><input type='checkbox' id='fig08-toggle-bars' checked/> active agents (bars)</label>
+      <label><input type='checkbox' id='fig08-toggle-line' checked/> mean feedback (line)</label>
+    </div>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Mean feedback curve by age bins'>
+        ${yTickSvg}${xTickSvg}
+        <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        <line x1='${width - margin.right}' y1='${margin.top}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.45'/>
+        <g id='fig08-bars'>${bars}</g>
+        <polyline id='fig08-line' class='fig-line-anim' fill='none' stroke='#2A9D8F' stroke-width='2.8' points='${line}'/>
+        <line id='fig08-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+        <rect id='fig08-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+        ${nTickSvg}
+        <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delta blocks since registration</text>
+        <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Mean feedback per active agent</text>
+        <text x='${width - 14}' y='${height/2}' transform='rotate(-90 ${width - 14} ${height/2})' text-anchor='middle' font-size='14' font-weight='700'>Active agents</text>
+      </svg>
+      <div id='fig08-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig08-hitbox');
+  const cross = root.querySelector('#fig08-cross');
+  const tip = root.querySelector('#fig08-tooltip');
+  const barsEl = root.querySelector('#fig08-bars');
+  const lineEl = root.querySelector('#fig08-line');
+  const barsToggle = root.querySelector('#fig08-toggle-bars');
+  const lineToggle = root.querySelector('#fig08-toggle-line');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const syncVisibility = () => {
+    if (barsEl) barsEl.style.display = barsToggle?.checked === false ? 'none' : 'block';
+    if (lineEl) lineEl.style.display = lineToggle?.checked === false ? 'none' : 'block';
+  };
+  barsToggle?.addEventListener('change', syncVisibility);
+  lineToggle?.addEventListener('change', syncVisibility);
+  syncVisibility();
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(x.length - 1, Math.round(t * (x.length - 1))));
+    const px = xToPx(x[idx]);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 240, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    tip.innerHTML = `Delta blocks <b>${Math.round(x[idx]).toLocaleString()}</b><br/>Mean feedback: <b>${Number(y[idx] || 0).toFixed(2)}</b><br/>Active agents: <b>${Math.round(n[idx] || 0).toLocaleString()}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
 }
 
 window.renderAnalytics = async function renderAnalytics(){ 

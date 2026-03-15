@@ -59,6 +59,10 @@ async function loadFig08() {
   try { return await fetchJson('./data/analytics/fig08.mean_feedback_curve.json'); }
   catch { return null; }
 }
+async function loadTopClientsNetwork() {
+  try { return await fetchJson('./data/analytics/fig_top_clients_agents_network.json'); }
+  catch { return null; }
+}
 
 function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
 function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
@@ -725,6 +729,59 @@ function renderFig07(fig){
   </svg></div>`;
 }
 
+function renderTopClientsNetwork(fig){
+  const root = document.getElementById('fig-top-clients-root');
+  if (!root) return;
+  const clients = fig?.clients || [];
+  const agents = fig?.agents || [];
+  const edges = fig?.edges || [];
+  if (!clients.length || !agents.length || !edges.length) {
+    root.innerHTML = `<p>Figure data not available yet.</p>`;
+    return;
+  }
+
+  const width = 1120, height = 560;
+  const margin = { top: 30, right: 80, bottom: 30, left: 80 };
+  const leftX = margin.left + 80;
+  const rightX = width - margin.right - 80;
+
+  const maxClient = Math.max(1, ...clients.map((c) => Number(c.totalFeedback || 0)));
+  const maxAgent = Math.max(1, ...agents.map((a) => Number(a.totalFromTopClients || 0)));
+  const maxEdge = Math.max(1, ...edges.map((e) => Number(e.weight || 0)));
+
+  const clientY = new Map();
+  clients.forEach((c, i) => clientY.set(c.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / clients.length));
+  const agentY = new Map();
+  agents.forEach((a, i) => agentY.set(a.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / agents.length));
+
+  const edgeSvg = edges.map((e) => {
+    const y1 = clientY.get(e.clientId), y2 = agentY.get(e.agentId);
+    if (!Number.isFinite(y1) || !Number.isFinite(y2)) return '';
+    const w = 0.8 + 7 * (Number(e.weight || 0) / maxEdge);
+    return `<path d='M ${leftX + 12} ${y1} C ${leftX + 220} ${y1}, ${rightX - 220} ${y2}, ${rightX - 12} ${y2}' stroke='rgba(79,70,229,0.35)' stroke-width='${w.toFixed(2)}' fill='none'/>`;
+  }).join('');
+
+  const clientSvg = clients.map((c) => {
+    const y = clientY.get(c.id);
+    const r = 5 + 11 * (Number(c.totalFeedback || 0) / maxClient);
+    return `<circle cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'/><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>${c.label}</text>`;
+  }).join('');
+
+  const agentSvg = agents.map((a) => {
+    const y = agentY.get(a.id);
+    const r = 4 + 9 * (Number(a.totalFromTopClients || 0) / maxAgent);
+    return `<circle cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'/><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>${a.label}</text>`;
+  }).join('');
+
+  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Top clients connected to agents network'>
+    <text x='${leftX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#5b21b6'>Top clients</text>
+    <text x='${rightX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#1d4ed8'>Agents reached</text>
+    ${edgeSvg}
+    ${clientSvg}
+    ${agentSvg}
+  </svg></div>`;
+}
+
 function renderFig08(fig){
   const root = document.getElementById('fig08-root');
   if (!root) return;
@@ -785,6 +842,7 @@ window.renderAnalytics = async function renderAnalytics(){
   const fig00b = await loadFig00b();
   const fig07 = await loadFig07();
   const fig08 = await loadFig08();
+  const figTopClients = await loadTopClientsNetwork();
   const agents = data.agents || [];
   const enriched = agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
 
@@ -839,5 +897,6 @@ window.renderAnalytics = async function renderAnalytics(){
   renderFig00b(fig00b);
   renderFig07(fig07);
   renderFig08(fig08);
+  renderTopClientsNetwork(figTopClients);
   initFancyUI();
 }

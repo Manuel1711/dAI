@@ -299,17 +299,14 @@ function giniFromArray(values){
   return (2 * weighted) / (x.length * sum) - (x.length + 1) / x.length;
 }
 
-function buildPolyline(xs, ys, width, height, pad){
-  if (!xs.length || !ys.length) return '';
-  const xMin = Math.min(...xs), xMax = Math.max(...xs);
-  const yMin = 0, yMax = Math.max(...ys, 1);
-  const dx = Math.max(1, xMax - xMin);
-  const dy = Math.max(1, yMax - yMin);
-  return xs.map((x, i) => {
-    const px = pad + ((x - xMin) / dx) * (width - 2 * pad);
-    const py = (height - pad) - ((ys[i] - yMin) / dy) * (height - 2 * pad);
-    return `${px.toFixed(2)},${py.toFixed(2)}`;
-  }).join(' ');
+function buildPolyline(xs, ys, xToPx, yToPx){
+  return xs.map((x, i) => `${xToPx(x).toFixed(2)},${yToPx(ys[i]).toFixed(2)}`).join(' ');
+}
+
+function tickValues(min, max, n = 6){
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return [min];
+  const step = (max - min) / (n - 1);
+  return Array.from({ length: n }, (_, i) => min + i * step);
 }
 
 function renderFig00a(fig){
@@ -324,24 +321,101 @@ function renderFig00a(fig){
   const reg = fig.reg_y.map(Number);
   const fb = fig.fb_y.map(Number);
 
-  const width = 980;
-  const height = 360;
-  const pad = 48;
-  const regPoints = buildPolyline(x, reg, width, height, pad);
-  const fbPoints = buildPolyline(x, fb, width, height, pad);
+  const width = 1040;
+  const height = 460;
+  const margin = { top: 24, right: 24, bottom: 72, left: 88 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+
+  const xMin = Math.min(...x);
+  const xMax = Math.max(...x);
+  const yMin = 0;
+  const yMax = Math.max(...reg, ...fb, 1);
+
+  const xToPx = (v) => margin.left + ((v - xMin) / Math.max(1, xMax - xMin)) * plotW;
+  const yToPx = (v) => margin.top + (1 - (v - yMin) / Math.max(1, yMax - yMin)) * plotH;
+
+  const regPoints = buildPolyline(x, reg, xToPx, yToPx);
+  const fbPoints = buildPolyline(x, fb, xToPx, yToPx);
+
+  const yTicks = tickValues(yMin, yMax, 6);
+  const xTicks = tickValues(xMin, xMax, 6);
+  const xScale = Math.pow(10, Math.floor(Math.log10(Math.max(1, Math.abs(xMax)))));
+
+  const yTickSvg = yTicks.map((v) => {
+    const py = yToPx(v);
+    return `
+      <line x1='${margin.left}' y1='${py}' x2='${width - margin.right}' y2='${py}' stroke='currentColor' opacity='0.12'/>
+      <text x='${margin.left - 10}' y='${py + 4}' text-anchor='end' font-size='12'>${Math.round(v).toLocaleString()}</text>
+    `;
+  }).join('');
+
+  const xTickSvg = xTicks.map((v) => {
+    const px = xToPx(v);
+    const scaled = v / xScale;
+    return `
+      <line x1='${px}' y1='${margin.top}' x2='${px}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.10'/>
+      <text x='${px}' y='${height - margin.bottom + 22}' text-anchor='middle' font-size='12'>${scaled.toFixed(3)}</text>
+    `;
+  }).join('');
 
   root.innerHTML = `
-    <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Cumulative registrations and feedback over blocks'>
-      <rect x='0' y='0' width='${width}' height='${height}' fill='var(--card, #0f172a)' opacity='0.04'></rect>
-      <line x1='${pad}' y1='${height-pad}' x2='${width-pad}' y2='${height-pad}' stroke='currentColor' opacity='0.35'/>
-      <line x1='${pad}' y1='${pad}' x2='${pad}' y2='${height-pad}' stroke='currentColor' opacity='0.35'/>
-      <polyline fill='none' stroke='#2563eb' stroke-width='2.8' points='${regPoints}' />
-      <polyline fill='none' stroke='#dc2626' stroke-width='2.8' points='${fbPoints}' />
-      <text x='${pad}' y='26' font-size='13'>Registrations cumulative</text>
-      <text x='${pad + 230}' y='26' font-size='13' fill='#dc2626'>Feedback cumulative</text>
-    </svg>
-    <p class='meta-row'>From block <b>${x[0]}</b> to <b>${x[x.length-1]}</b> · Registered agents: <b>${reg[reg.length-1]}</b> · Feedback events: <b>${fb[fb.length-1]}</b></p>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Cumulative registrations and feedback events over block number'>
+        ${yTickSvg}
+        ${xTickSvg}
+
+        <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+
+        <polyline fill='none' stroke='#1d4ed8' stroke-width='2.5' points='${regPoints}' />
+        <polyline fill='none' stroke='#dc2626' stroke-width='2.5' points='${fbPoints}' />
+
+        <line id='fig00a-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+
+        <rect id='fig00a-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+
+        <text x='${width / 2}' y='${height - 18}' text-anchor='middle' font-size='14'>Block number (×1e${Math.log10(xScale)})</text>
+        <text x='22' y='${height / 2}' transform='rotate(-90 22 ${height / 2})' text-anchor='middle' font-size='14'>Cumulative count</text>
+
+        <circle cx='${margin.left + 8}' cy='${margin.top + 8}' r='4' fill='#1d4ed8'></circle>
+        <text x='${margin.left + 18}' y='${margin.top + 12}' font-size='12'>Cumulative registrations</text>
+        <circle cx='${margin.left + 240}' cy='${margin.top + 8}' r='4' fill='#dc2626'></circle>
+        <text x='${margin.left + 250}' y='${margin.top + 12}' font-size='12'>Cumulative feedback events</text>
+      </svg>
+      <div id='fig00a-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+    <p class='meta-row'>Blocks ${xMin.toLocaleString()}–${xMax.toLocaleString()} · Registrations: <b>${reg[reg.length-1].toLocaleString()}</b> · Feedback events: <b>${fb[fb.length-1].toLocaleString()}</b> · Feedback source: <code>${fig.feedback_source || 'unknown'}</code></p>
   `;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig00a-hitbox');
+  const cross = root.querySelector('#fig00a-cross');
+  const tip = root.querySelector('#fig00a-tooltip');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(x.length - 1, Math.round(t * (x.length - 1))));
+    const px = xToPx(x[idx]);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 210, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    tip.innerHTML = `Block <b>${x[idx].toLocaleString()}</b><br/>Reg: <b>${reg[idx].toLocaleString()}</b><br/>Feedback: <b>${fb[idx].toLocaleString()}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
 }
 
 window.renderAnalytics = async function renderAnalytics(){

@@ -493,7 +493,7 @@ function renderFig00b(fig){
     return;
   }
 
-  const centers = fig.centers.map(Number);
+  const x = fig.centers.map(Number);
   const reg = fig.reg_hist.map(Number);
   const fb = fig.fb_hist.map(Number);
   const ratio = (fig.ratio || []).map((v) => (v == null ? null : Number(v)));
@@ -504,95 +504,156 @@ function renderFig00b(fig){
   const plotW = width - margin.left - margin.right;
   const plotH = height - margin.top - margin.bottom;
 
-  const xMin = Math.min(...centers);
-  const xMax = Math.max(...centers);
-  const yMaxBars = Math.max(1, ...reg, ...fb);
-  const yMaxRatio = Math.max(1, ...ratio.filter((v) => Number.isFinite(v)));
-
-  const yTicksBar = roundTickValues(0, yMaxBars, 6);
-  const yTicksRatio = roundTickValues(0, yMaxRatio, 5);
+  const xMin = Math.min(...x);
+  const xMax = Math.max(...x);
+  const yMin = 0;
+  const yMax = Math.max(1, ...reg, ...fb);
+  const ratioMax = Math.max(1, ...ratio.filter((v) => Number.isFinite(v)));
 
   const xToPx = (v) => margin.left + ((v - xMin) / Math.max(1, xMax - xMin)) * plotW;
-  const yBarToPx = (v) => margin.top + (1 - (v / Math.max(1, yMaxBars))) * plotH;
-  const yRatioToPx = (v) => margin.top + (1 - (v / Math.max(1, yMaxRatio))) * plotH;
+  const yToPx = (v) => margin.top + (1 - (v - yMin) / Math.max(1, yMax - yMin)) * plotH;
+  const rToPx = (v) => margin.top + (1 - (v / Math.max(1, ratioMax))) * plotH;
 
-  const binW = centers.length > 1 ? Math.abs(xToPx(centers[1]) - xToPx(centers[0])) : 16;
-  const barW = Math.max(3, Math.min(18, binW * 0.34));
+  const regPoints = buildPolyline(x, reg, xToPx, yToPx);
+  const fbPoints = buildPolyline(x, fb, xToPx, yToPx);
+  const ratioPoints = x.map((v, i) => Number.isFinite(ratio[i]) ? `${xToPx(v)},${rToPx(ratio[i])}` : null).filter(Boolean).join(' ');
 
-  const barsReg = centers.map((c, i) => {
-    const x = xToPx(c) - barW - 1;
-    const y = yBarToPx(reg[i]);
-    const h = Math.max(1, margin.top + plotH - y);
-    return `<rect x='${x}' y='${y}' width='${barW}' height='${h}' rx='2' fill='#1d4ed8' fill-opacity='0.75'/>`;
-  }).join('');
+  const yTicks = roundTickValues(yMin, yMax, 6);
+  const xTicks = roundTickValues(xMin, xMax, 6);
+  const rTicks = roundTickValues(0, ratioMax, 5);
 
-  const barsFb = centers.map((c, i) => {
-    const x = xToPx(c) + 1;
-    const y = yBarToPx(fb[i]);
-    const h = Math.max(1, margin.top + plotH - y);
-    return `<rect x='${x}' y='${y}' width='${barW}' height='${h}' rx='2' fill='#dc2626' fill-opacity='0.70'/>`;
-  }).join('');
-
-  const ratioPoints = centers
-    .map((c, i) => Number.isFinite(ratio[i]) ? `${xToPx(c)},${yRatioToPx(ratio[i])}` : null)
-    .filter(Boolean)
-    .join(' ');
-
-  const yGrid = yTicksBar.map((v) => {
-    const py = yBarToPx(v);
+  const yTickSvg = yTicks.map((v) => {
+    const py = yToPx(v);
     return `
-      <line x1='${margin.left}' y1='${py}' x2='${width - margin.right}' y2='${py}' stroke='currentColor' opacity='0.14'/>
+      <line x1='${margin.left}' y1='${py}' x2='${width - margin.right}' y2='${py}' stroke='currentColor' opacity='0.16'/>
       <text x='${margin.left - 12}' y='${py + 5}' text-anchor='end' font-size='13' font-weight='600'>${shortNum(v)}</text>
     `;
   }).join('');
 
-  const yRight = yTicksRatio.map((v) => {
-    const py = yRatioToPx(v);
-    return `<text x='${width - margin.right + 10}' y='${py + 5}' text-anchor='start' font-size='12' font-weight='600'>${v}</text>`;
-  }).join('');
-
-  const stride = Math.max(1, Math.floor(centers.length / 8));
-  const xTicks = centers.filter((_, i) => i % stride === 0 || i === centers.length - 1);
   const xTickSvg = xTicks.map((v) => {
     const px = xToPx(v);
     return `
-      <line x1='${px}' y1='${margin.top}' x2='${px}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.10'/>
-      <text x='${px}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='12' font-weight='600'>${Math.round(v).toLocaleString()}</text>
+      <line x1='${px}' y1='${margin.top}' x2='${px}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.12'/>
+      <text x='${px}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>
     `;
   }).join('');
 
+  const rTickSvg = rTicks.map((v) => {
+    const py = rToPx(v);
+    return `<text x='${width - margin.right + 10}' y='${py + 5}' text-anchor='start' font-size='12' font-weight='600'>${v}</text>`;
+  }).join('');
+
+  const regArea = `${margin.left},${height - margin.bottom} ${regPoints} ${width - margin.right},${height - margin.bottom}`;
+  const fbArea = `${margin.left},${height - margin.bottom} ${fbPoints} ${width - margin.right},${height - margin.bottom}`;
+
   root.innerHTML = `
     <div class='fig00a-panel'>
+      <div class='fig00a-controls'>
+        <label><input type='checkbox' id='fig00b-toggle-reg' checked/> registrations/bin</label>
+        <label><input type='checkbox' id='fig00b-toggle-fb' checked/> feedback/bin</label>
+        <label><input type='checkbox' id='fig00b-toggle-ratio' checked/> ratio (FB/REG)</label>
+      </div>
       <div class='fig00a-wrap' style='position:relative'>
         <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Event intensity by block bins'>
-          ${yGrid}
+          <defs>
+            <linearGradient id='fig00b-grad-reg' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#1d4ed8' stop-opacity='0.28'/>
+              <stop offset='100%' stop-color='#1d4ed8' stop-opacity='0.02'/>
+            </linearGradient>
+            <linearGradient id='fig00b-grad-fb' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#dc2626' stop-opacity='0.24'/>
+              <stop offset='100%' stop-color='#dc2626' stop-opacity='0.02'/>
+            </linearGradient>
+            <filter id='fig00b-glow'><feGaussianBlur stdDeviation='2.2' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter>
+          </defs>
+          ${yTickSvg}
           ${xTickSvg}
+
           <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
           <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
-          <line x1='${width - margin.right}' y1='${margin.top}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.40'/>
+          <line x1='${width - margin.right}' y1='${margin.top}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.45'/>
 
-          ${barsReg}
-          ${barsFb}
+          <polygon id='fig00b-reg-area' points='${regArea}' fill='url(#fig00b-grad-reg)' />
+          <polygon id='fig00b-fb-area' points='${fbArea}' fill='url(#fig00b-grad-fb)' />
 
-          <polyline fill='none' stroke='#8a6a2d' stroke-width='2.4' points='${ratioPoints}'/>
+          <polyline id='fig00b-reg-line' class='fig-line-anim' fill='none' stroke='#1d4ed8' stroke-width='2.8' filter='url(#fig00b-glow)' points='${regPoints}' />
+          <polyline id='fig00b-fb-line' class='fig-line-anim' fill='none' stroke='#dc2626' stroke-width='2.8' filter='url(#fig00b-glow)' points='${fbPoints}' />
+          <polyline id='fig00b-ratio-line' class='fig-line-anim' fill='none' stroke='#8a6a2d' stroke-width='2.5' points='${ratioPoints}' />
 
-          ${yRight}
+          <line id='fig00b-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+          <rect id='fig00b-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+
+          ${rTickSvg}
 
           <text x='${width / 2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Block number (bin centers)</text>
           <text x='24' y='${height / 2}' transform='rotate(-90 24 ${height / 2})' text-anchor='middle' font-size='16' font-weight='700'>Events per bin</text>
-          <text x='${width - 14}' y='${height / 2}' transform='rotate(-90 ${width - 14} ${height / 2})' text-anchor='middle' font-size='14' font-weight='700'>Feedback / Registrations</text>
+          <text x='${width - 14}' y='${height / 2}' transform='rotate(-90 ${width - 14} ${height / 2})' text-anchor='middle' font-size='14' font-weight='700'>Ratio (FB/REG)</text>
 
           <circle cx='${margin.left + 8}' cy='${margin.top + 8}' r='4' fill='#1d4ed8'></circle>
           <text x='${margin.left + 18}' y='${margin.top + 12}' font-size='12'>Registrations per bin</text>
           <circle cx='${margin.left + 190}' cy='${margin.top + 8}' r='4' fill='#dc2626'></circle>
           <text x='${margin.left + 200}' y='${margin.top + 12}' font-size='12'>Feedback per bin</text>
-          <circle cx='${margin.left + 340}' cy='${margin.top + 8}' r='4' fill='#8a6a2d'></circle>
-          <text x='${margin.left + 350}' y='${margin.top + 12}' font-size='12'>Intensity ratio (FB/REG)</text>
+          <circle cx='${margin.left + 330}' cy='${margin.top + 8}' r='4' fill='#8a6a2d'></circle>
+          <text x='${margin.left + 340}' y='${margin.top + 12}' font-size='12'>Ratio (FB/REG)</text>
         </svg>
+        <div id='fig00b-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
       </div>
     </div>
     <p class='chart-caption'>Event intensity by ${Number(fig.bin_width || 0).toLocaleString()}-block windows · Block range ${Number(fig.block_min || xMin).toLocaleString()}–${Number(fig.block_max || xMax).toLocaleString()}.</p>
   `;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig00b-hitbox');
+  const cross = root.querySelector('#fig00b-cross');
+  const tip = root.querySelector('#fig00b-tooltip');
+  const regLine = root.querySelector('#fig00b-reg-line');
+  const fbLine = root.querySelector('#fig00b-fb-line');
+  const ratioLine = root.querySelector('#fig00b-ratio-line');
+  const regAreaEl = root.querySelector('#fig00b-reg-area');
+  const fbAreaEl = root.querySelector('#fig00b-fb-area');
+  const regToggle = root.querySelector('#fig00b-toggle-reg');
+  const fbToggle = root.querySelector('#fig00b-toggle-fb');
+  const ratioToggle = root.querySelector('#fig00b-toggle-ratio');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const syncSeriesVisibility = () => {
+    const regOn = regToggle ? regToggle.checked : true;
+    const fbOn = fbToggle ? fbToggle.checked : true;
+    const ratioOn = ratioToggle ? ratioToggle.checked : true;
+    if (regLine) regLine.style.display = regOn ? 'block' : 'none';
+    if (regAreaEl) regAreaEl.style.display = regOn ? 'block' : 'none';
+    if (fbLine) fbLine.style.display = fbOn ? 'block' : 'none';
+    if (fbAreaEl) fbAreaEl.style.display = fbOn ? 'block' : 'none';
+    if (ratioLine) ratioLine.style.display = ratioOn ? 'block' : 'none';
+  };
+  if (regToggle) regToggle.addEventListener('change', syncSeriesVisibility);
+  if (fbToggle) fbToggle.addEventListener('change', syncSeriesVisibility);
+  if (ratioToggle) ratioToggle.addEventListener('change', syncSeriesVisibility);
+  syncSeriesVisibility();
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(x.length - 1, Math.round(t * (x.length - 1))));
+    const px = xToPx(x[idx]);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 230, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    const r = Number.isFinite(ratio[idx]) ? ratio[idx].toFixed(2) : 'n/a';
+    tip.innerHTML = `Block <b>${x[idx].toLocaleString()}</b><br/>Reg/bin: <b>${reg[idx].toLocaleString()}</b><br/>Feedback/bin: <b>${fb[idx].toLocaleString()}</b><br/>Ratio: <b>${r}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
 }
 
 window.renderAnalytics = async function renderAnalytics(){ 

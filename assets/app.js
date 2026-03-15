@@ -33,6 +33,10 @@ async function loadTagMap() {
     return {};
   }
 }
+async function loadFig00a() {
+  try { return await fetchJson('./data/analytics/fig00a.cumulative_activity.json'); }
+  catch { return null; }
+}
 
 function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
 function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
@@ -295,12 +299,58 @@ function giniFromArray(values){
   return (2 * weighted) / (x.length * sum) - (x.length + 1) / x.length;
 }
 
+function buildPolyline(xs, ys, width, height, pad){
+  if (!xs.length || !ys.length) return '';
+  const xMin = Math.min(...xs), xMax = Math.max(...xs);
+  const yMin = 0, yMax = Math.max(...ys, 1);
+  const dx = Math.max(1, xMax - xMin);
+  const dy = Math.max(1, yMax - yMin);
+  return xs.map((x, i) => {
+    const px = pad + ((x - xMin) / dx) * (width - 2 * pad);
+    const py = (height - pad) - ((ys[i] - yMin) / dy) * (height - 2 * pad);
+    return `${px.toFixed(2)},${py.toFixed(2)}`;
+  }).join(' ');
+}
+
+function renderFig00a(fig){
+  const root = document.getElementById('fig00a-root');
+  if (!root) return;
+  if (!fig || !fig.x_union?.length) {
+    root.innerHTML = `<p>Figure data not available yet.</p>`;
+    return;
+  }
+
+  const x = fig.x_union.map(Number);
+  const reg = fig.reg_y.map(Number);
+  const fb = fig.fb_y.map(Number);
+
+  const width = 980;
+  const height = 360;
+  const pad = 48;
+  const regPoints = buildPolyline(x, reg, width, height, pad);
+  const fbPoints = buildPolyline(x, fb, width, height, pad);
+
+  root.innerHTML = `
+    <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Cumulative registrations and feedback over blocks'>
+      <rect x='0' y='0' width='${width}' height='${height}' fill='var(--card, #0f172a)' opacity='0.04'></rect>
+      <line x1='${pad}' y1='${height-pad}' x2='${width-pad}' y2='${height-pad}' stroke='currentColor' opacity='0.35'/>
+      <line x1='${pad}' y1='${pad}' x2='${pad}' y2='${height-pad}' stroke='currentColor' opacity='0.35'/>
+      <polyline fill='none' stroke='#2563eb' stroke-width='2.8' points='${regPoints}' />
+      <polyline fill='none' stroke='#dc2626' stroke-width='2.8' points='${fbPoints}' />
+      <text x='${pad}' y='26' font-size='13'>Registrations cumulative</text>
+      <text x='${pad + 230}' y='26' font-size='13' fill='#dc2626'>Feedback cumulative</text>
+    </svg>
+    <p class='meta-row'>From block <b>${x[0]}</b> to <b>${x[x.length-1]}</b> · Registered agents: <b>${reg[reg.length-1]}</b> · Feedback events: <b>${fb[fb.length-1]}</b></p>
+  `;
+}
+
 window.renderAnalytics = async function renderAnalytics(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
   const data = await loadSnapshot();
   const tagMap = await loadTagMap();
+  const fig00a = await loadFig00a();
   const agents = data.agents || [];
   const enriched = agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
 
@@ -347,4 +397,6 @@ window.renderAnalytics = async function renderAnalytics(){
   document.getElementById('analytics-top-tags').innerHTML = `
     <h3>Most used tags (network-wide)</h3>
     <ol>${topTags.map(([tag,n])=>`<li><code>${tag}</code> — ${n}</li>`).join('') || '<li>No tags</li>'}</ol>`;
+
+  renderFig00a(fig00a);
 }

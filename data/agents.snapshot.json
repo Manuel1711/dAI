@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24659095,
-  "generatedAt": "2026-03-14T23:55:59.657Z",
+  "blockNumber": 24659678,
+  "generatedAt": "2026-03-15T01:52:17.388Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24659096,
-    "fromBlockFeedback": 24659096,
+    "fromBlockIdentity": 24659679,
+    "fromBlockFeedback": 24659679,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -398237,6 +398237,62 @@
       "lastActivityAt": "2026-03-14T23:17:11.000Z"
     },
     {
+      "agentId": "0x701C",
+      "name": "Agent 0x701C",
+      "owner": "0xc6259df9cdfde3649fc3d91aa1a06df31cf9c344",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-15T00:36:23.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-15T00:36:23.000Z"
+    },
+    {
+      "agentId": "0x701D",
+      "name": "Agent 0x701D",
+      "owner": "0x59a16e1183d511c8e98fb85b645230cd9ce547e5",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-15T01:28:47.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-15T01:28:47.000Z"
+    },
+    {
+      "agentId": "0x701E",
+      "name": "Agent 0x701E",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-15T01:33:47.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-15T01:33:47.000Z"
+    },
+    {
+      "agentId": "0x701F",
+      "name": "Agent 0x701F",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-15T01:35:47.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-15T01:35:47.000Z"
+    },
+    {
       "agentId": "0x702",
       "name": "Agent 0x702",
       "owner": "0xca0d6c9ef96e0be03c8579fa40c410d14a081807",
@@ -398249,6 +398305,20 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:41:59.000Z"
+    },
+    {
+      "agentId": "0x7020",
+      "name": "Agent 0x7020",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-15T01:39:59.000Z",
+      "feedbackHistory": [],
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-15T01:39:59.000Z"
     },
     {
       "agentId": "0x703",

@@ -13,6 +13,7 @@ OUT_FILE_00A = OUT_DIR / 'fig00a.cumulative_activity.json'
 OUT_FILE_00B = OUT_DIR / 'fig00b.event_intensity.json'
 OUT_FILE_07 = OUT_DIR / 'fig07.first_feedback_delay_hist.json'
 OUT_FILE_08 = OUT_DIR / 'fig08.mean_feedback_curve.json'
+OUT_FILE_TC = OUT_DIR / 'fig_top_clients_agents_network.json'
 
 
 def load_empirics_module(path: Path):
@@ -74,7 +75,7 @@ def load_feedback_blocks_from_events(path: Path) -> pd.DataFrame:
 
 def load_feedback_events_full(path: Path) -> pd.DataFrame:
     if not path.exists() or path.stat().st_size == 0:
-        return pd.DataFrame(columns=['agentId', 'blockNumber', 'value'])
+        return pd.DataFrame(columns=['agentId', 'clientAddress', 'blockNumber', 'value'])
     rows = []
     with path.open('r', encoding='utf-8') as f:
         for line in f:
@@ -85,18 +86,19 @@ def load_feedback_events_full(path: Path) -> pd.DataFrame:
             if obj.get('kind') != 'feedback_new':
                 continue
             aid = obj.get('agentId')
+            ca = obj.get('clientAddress')
             bn = obj.get('blockNumber')
             raw = obj.get('valueRaw')
             dec = obj.get('valueDecimals')
-            if aid is None or bn is None or raw is None:
+            if aid is None or ca is None or bn is None or raw is None:
                 continue
             try:
                 dec_i = int(dec or 0)
                 val = float(raw) / (10 ** dec_i)
             except Exception:
                 continue
-            rows.append({'agentId': str(aid), 'blockNumber': int(bn), 'value': float(val)})
-    return pd.DataFrame(rows, columns=['agentId', 'blockNumber', 'value'])
+            rows.append({'agentId': str(aid), 'clientAddress': str(ca).lower(), 'blockNumber': int(bn), 'value': float(val)})
+    return pd.DataFrame(rows, columns=['agentId', 'clientAddress', 'blockNumber', 'value'])
 
 
 def main():
@@ -194,6 +196,61 @@ def main():
     }
     OUT_FILE_08.write_text(json.dumps(payload08, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_08}')
+
+    # Top clients -> agents network (weighted bipartite edges)
+    net = fb_full[['clientAddress', 'agentId']].dropna().copy() if len(fb_full) else pd.DataFrame(columns=['clientAddress', 'agentId'])
+    if len(net):
+        net['clientAddress'] = net['clientAddress'].astype(str).str.lower()
+        net['agentId'] = net['agentId'].astype(str)
+        top_clients = (
+            net.groupby('clientAddress', as_index=False)
+            .size()
+            .rename(columns={'size': 'n_feedback'})
+            .sort_values(['n_feedback', 'clientAddress'], ascending=[False, True])
+            .head(12)
+        )
+        net_top = net[net['clientAddress'].isin(top_clients['clientAddress'])].copy()
+        edges = (
+            net_top.groupby(['clientAddress', 'agentId'], as_index=False)
+            .size()
+            .rename(columns={'size': 'weight'})
+            .sort_values('weight', ascending=False)
+        )
+        top_agents = (
+            edges.groupby('agentId', as_index=False)['weight'].sum()
+            .sort_values('weight', ascending=False)
+            .head(24)
+        )
+        edges = edges[edges['agentId'].isin(top_agents['agentId']) & (edges['weight'] >= 1)].copy()
+        client_totals = top_clients.set_index('clientAddress')['n_feedback'].to_dict()
+        payload_tc = {
+            'figure': 'top_clients_agents_network',
+            'clients': [
+                {
+                    'id': c,
+                    'label': f"{c[:6]}...{c[-4:]}" if c.startswith('0x') and len(c) > 12 else c,
+                    'totalFeedback': int(client_totals.get(c, 0)),
+                }
+                for c in edges['clientAddress'].drop_duplicates().tolist()
+            ],
+            'agents': [
+                {
+                    'id': a,
+                    'label': a,
+                    'totalFromTopClients': int(top_agents.set_index('agentId').to_dict()['weight'].get(a, 0)),
+                }
+                for a in edges['agentId'].drop_duplicates().tolist()
+            ],
+            'edges': [
+                {'clientId': str(r.clientAddress), 'agentId': str(r.agentId), 'weight': int(r.weight)}
+                for r in edges.itertuples(index=False)
+            ],
+        }
+    else:
+        payload_tc = {'figure': 'top_clients_agents_network', 'clients': [], 'agents': [], 'edges': []}
+
+    OUT_FILE_TC.write_text(json.dumps(payload_tc, ensure_ascii=False), encoding='utf-8')
+    print(f'Wrote {OUT_FILE_TC}')
 
 
 if __name__ == '__main__':

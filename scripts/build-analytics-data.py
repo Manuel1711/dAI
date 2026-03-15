@@ -11,6 +11,8 @@ SNAPSHOT = ROOT / 'data/agents.snapshot.json'
 OUT_DIR = ROOT / 'data/analytics'
 OUT_FILE_00A = OUT_DIR / 'fig00a.cumulative_activity.json'
 OUT_FILE_00B = OUT_DIR / 'fig00b.event_intensity.json'
+OUT_FILE_07 = OUT_DIR / 'fig07.first_feedback_delay_hist.json'
+OUT_FILE_08 = OUT_DIR / 'fig08.mean_feedback_curve.json'
 
 
 def load_empirics_module(path: Path):
@@ -70,6 +72,33 @@ def load_feedback_blocks_from_events(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=['blockNumber'])
 
 
+def load_feedback_events_full(path: Path) -> pd.DataFrame:
+    if not path.exists() or path.stat().st_size == 0:
+        return pd.DataFrame(columns=['agentId', 'blockNumber', 'value'])
+    rows = []
+    with path.open('r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            obj = json.loads(line)
+            if obj.get('kind') != 'feedback_new':
+                continue
+            aid = obj.get('agentId')
+            bn = obj.get('blockNumber')
+            raw = obj.get('valueRaw')
+            dec = obj.get('valueDecimals')
+            if aid is None or bn is None or raw is None:
+                continue
+            try:
+                dec_i = int(dec or 0)
+                val = float(raw) / (10 ** dec_i)
+            except Exception:
+                continue
+            rows.append({'agentId': str(aid), 'blockNumber': int(bn), 'value': float(val)})
+    return pd.DataFrame(rows, columns=['agentId', 'blockNumber', 'value'])
+
+
 def main():
     empirics = load_empirics_module(EMPIRICS_SOURCE)
     reg_first = load_reg_first(IDENTITY_EVENTS)
@@ -88,6 +117,34 @@ def main():
     block_min = int(min(reg_first['reg_block'].min(), fb['blockNumber'].min())) if len(fb) else int(reg_first['reg_block'].min())
     block_max = int(max(reg_first['reg_block'].max(), fb['blockNumber'].max())) if len(fb) else int(reg_first['reg_block'].max())
     out00b = empirics.compute_fig00b_event_intensity_data(reg_first, fb, block_min=block_min, block_max=block_max, bin_width=5000)
+
+    fb_full = load_feedback_events_full(feedback_events_path)
+    if len(fb_full):
+        first_fb = fb_full.groupby('agentId', as_index=False)['blockNumber'].min().rename(columns={'blockNumber': 'first_fb_block'})
+        delay = first_fb.merge(reg_first, on='agentId', how='inner')
+        delay['first_feedback_delay_blocks'] = delay['first_fb_block'] - delay['reg_block']
+        delay = delay[delay['first_feedback_delay_blocks'] >= 0].copy()
+
+        BIN_W = 2000
+        fb_reg = fb_full.merge(reg_first, on='agentId', how='inner')
+        fb_reg['delta_blocks'] = fb_reg['blockNumber'] - fb_reg['reg_block']
+        fb_reg = fb_reg[fb_reg['delta_blocks'] >= 0].copy()
+        fb_reg['bin_idx'] = (fb_reg['delta_blocks'] // BIN_W).astype(int)
+
+        ab = fb_reg.groupby(['agentId', 'bin_idx'], as_index=False).size().rename(columns={'size': 'feedback_count'})
+        per_bin = ab.groupby('bin_idx', as_index=False)['feedback_count'].sum().rename(columns={'feedback_count': 'total_feedback_in_bin'})
+        active_in_bin = ab.groupby('bin_idx', as_index=False)['agentId'].nunique().rename(columns={'agentId': 'active_agents_in_bin'})
+        per_bin = per_bin.merge(active_in_bin, on='bin_idx', how='left')
+        per_bin['mean_feedback_per_active_agent'] = per_bin['total_feedback_in_bin'] / per_bin['active_agents_in_bin'].clip(lower=1)
+        per_bin['mean_feedback_per_agent'] = per_bin['total_feedback_in_bin'] / max(1, reg_first['agentId'].nunique())
+        per_bin['bin_start_delta_blocks'] = per_bin['bin_idx'] * BIN_W
+        per_bin = per_bin.sort_values('bin_idx')
+    else:
+        delay = pd.DataFrame(columns=['first_feedback_delay_blocks'])
+        per_bin = pd.DataFrame(columns=['bin_idx', 'bin_start_delta_blocks', 'mean_feedback_per_active_agent', 'active_agents_in_bin'])
+
+    out07 = empirics.compute_fig07_first_feedback_delay_hist_data(delay)
+    out08 = empirics.compute_fig08_mean_feedback_curve_data(per_bin)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -117,6 +174,26 @@ def main():
     }
     OUT_FILE_00B.write_text(json.dumps(payload00b, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_00B}')
+
+    payload07 = {
+        'figure': 'fig07_first_feedback_delay_hist_data',
+        'q50': None if pd.isna(out07['q50']) else float(out07['q50']),
+        'd': [float(x) for x in out07['d']],
+        'dd': [float(x) for x in out07['dd']],
+    }
+    OUT_FILE_07.write_text(json.dumps(payload07, ensure_ascii=False), encoding='utf-8')
+    print(f'Wrote {OUT_FILE_07}')
+
+    pb = out08['pb']
+    payload08 = {
+        'figure': 'fig08_mean_feedback_curve_data',
+        'bin_idx': [int(x) for x in pb['bin_idx']] if len(pb) else [],
+        'bin_start_delta_blocks': [int(x) for x in pb['bin_start_delta_blocks']] if len(pb) else [],
+        'mean_feedback_per_active_agent': [float(x) for x in pb['mean_feedback_per_active_agent']] if len(pb) else [],
+        'active_agents_in_bin': [int(x) for x in pb['active_agents_in_bin']] if len(pb) else [],
+    }
+    OUT_FILE_08.write_text(json.dumps(payload08, ensure_ascii=False), encoding='utf-8')
+    print(f'Wrote {OUT_FILE_08}')
 
 
 if __name__ == '__main__':

@@ -15,6 +15,16 @@ function setActiveNav() {
   });
 }
 
+function initFancyUI(){
+  document.querySelectorAll('.card, .hero, .table').forEach((el) => el.classList.add('reveal'));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) e.target.classList.add('revealed');
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+}
+
 async function fetchJson(path) {
   const res = await fetch(path, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed loading ${path}`);
@@ -39,6 +49,14 @@ async function loadFig00a() {
 }
 async function loadFig00b() {
   try { return await fetchJson('./data/analytics/fig00b.event_intensity.json'); }
+  catch { return null; }
+}
+async function loadFig07() {
+  try { return await fetchJson('./data/analytics/fig07.first_feedback_delay_hist.json'); }
+  catch { return null; }
+}
+async function loadFig08() {
+  try { return await fetchJson('./data/analytics/fig08.mean_feedback_curve.json'); }
   catch { return null; }
 }
 
@@ -147,6 +165,7 @@ window.renderHome = async function renderHome(){
 
   const cpText = cp ? ` | Last safe block: ${cp.lastSafeBlock ?? '-'} | Checkpoint updated: ${fmtDate(cp.updatedAt)}` : '';
   document.getElementById('meta').textContent = `Snapshot block: ${data.blockNumber} | Generated: ${fmtDate(data.generatedAt)}${cpText}`;
+  initFancyUI();
 }
 
 window.renderAgents = async function renderAgents(){
@@ -217,6 +236,7 @@ window.renderAgents = async function renderAgents(){
   sortEl.addEventListener('change', () => renderRows(true));
   if (moreBtn) moreBtn.addEventListener('click', () => { visible += PAGE_SIZE; renderRows(false); });
   renderRows(true);
+  initFancyUI();
 }
 
 window.renderAgentDetail = async function renderAgentDetail(){
@@ -272,6 +292,7 @@ window.renderAgentDetail = async function renderAgentDetail(){
       <thead><tr><th>Timestamp</th><th>Score</th><th>tag1</th><th>Category</th><th>Comment</th><th>TxHash</th></tr></thead>
       <tbody>${feedbackRows || '<tr><td colspan="6">No feedback</td></tr>'}</tbody>
     </table>`;
+  initFancyUI();
 }
 
 window.renderPipeline = async function renderPipeline(){
@@ -291,6 +312,7 @@ window.renderPipeline = async function renderPipeline(){
     <div class='card'><h3>Updated at</h3><div>${fmtDate(cp.updatedAt)}</div></div>`;
 
   document.getElementById('checkpoint-raw').textContent = JSON.stringify(cp, null, 2);
+  initFancyUI();
 }
 
 function giniFromArray(values){
@@ -599,7 +621,6 @@ function renderFig00b(fig){
         <div id='fig00b-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
       </div>
     </div>
-    <p class='chart-caption'>Event intensity by ${Number(fig.bin_width || 0).toLocaleString()}-block windows · Block range ${Number(fig.block_min || xMin).toLocaleString()}–${Number(fig.block_max || xMax).toLocaleString()}.</p>
   `;
 
   const wrap = root.querySelector('.fig00a-wrap');
@@ -656,14 +677,113 @@ function renderFig00b(fig){
   });
 }
 
+function renderFig07(fig){
+  const root = document.getElementById('fig07-root');
+  if (!root) return;
+  const d = (fig?.dd || []).map(Number).filter((v) => Number.isFinite(v) && v >= 0);
+  if (!d.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+
+  const bins = 36;
+  const xMax = Math.max(...d);
+  const step = Math.max(1, Math.ceil(xMax / bins));
+  const counts = Array.from({ length: bins }, () => 0);
+  d.forEach((v) => { const i = Math.min(bins - 1, Math.floor(v / step)); counts[i] += 1; });
+  const xs = counts.map((_, i) => i * step);
+
+  const width = 1040, height = 420;
+  const margin = { top: 24, right: 24, bottom: 64, left: 82 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+  const yMax = Math.max(...counts, 1);
+  const xToPx = (v) => margin.left + (v / Math.max(1, xMax)) * plotW;
+  const yToPx = (v) => margin.top + (1 - v / Math.max(1, yMax)) * plotH;
+
+  const yTicks = roundTickValues(0, yMax, 6);
+  const xTicks = roundTickValues(0, xMax, 6);
+
+  const yTickSvg = yTicks.map((v) => `<line x1='${margin.left}' y1='${yToPx(v)}' x2='${width - margin.right}' y2='${yToPx(v)}' stroke='currentColor' opacity='0.16'/><text x='${margin.left - 12}' y='${yToPx(v) + 5}' text-anchor='end' font-size='13' font-weight='600'>${shortNum(v)}</text>`).join('');
+  const xTickSvg = xTicks.map((v) => `<line x1='${xToPx(v)}' y1='${margin.top}' x2='${xToPx(v)}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.10'/><text x='${xToPx(v)}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>`).join('');
+  const barW = Math.max(3, plotW / bins - 2);
+  const bars = counts.map((c, i) => {
+    const x = margin.left + i * (plotW / bins);
+    const y = yToPx(c);
+    const h = margin.top + plotH - y;
+    return `<rect x='${x}' y='${y}' width='${barW}' height='${h}' rx='2' fill='#1d4ed8' fill-opacity='0.78'/>`;
+  }).join('');
+
+  const q50 = Number(fig?.q50 || 0);
+  const q50x = xToPx(q50);
+  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='First feedback delay distribution'>
+    ${yTickSvg}${xTickSvg}
+    <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+    <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+    ${bars}
+    <line x1='${q50x}' y1='${margin.top}' x2='${q50x}' y2='${height - margin.bottom}' stroke='#8a6a2d' stroke-width='2.2' stroke-dasharray='6 5'/>
+    <text x='${Math.min(width - margin.right - 10, q50x + 8)}' y='${margin.top + 18}' font-size='12' font-weight='700' fill='#8a6a2d'>Median: ${Math.round(q50).toLocaleString()}</text>
+    <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delay from registration (blocks)</text>
+    <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Number of agents</text>
+  </svg></div>`;
+}
+
+function renderFig08(fig){
+  const root = document.getElementById('fig08-root');
+  if (!root) return;
+  const x = (fig?.bin_start_delta_blocks || []).map(Number);
+  const y = (fig?.mean_feedback_per_active_agent || []).map(Number);
+  const n = (fig?.active_agents_in_bin || []).map(Number);
+  if (!x.length || !y.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+
+  const width = 1040, height = 450;
+  const margin = { top: 24, right: 96, bottom: 70, left: 88 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+  const xMin = Math.min(...x), xMax = Math.max(...x);
+  const yMax = Math.max(1, ...y), nMax = Math.max(1, ...n);
+
+  const xToPx = (v) => margin.left + ((v - xMin) / Math.max(1, xMax - xMin)) * plotW;
+  const yToPx = (v) => margin.top + (1 - v / yMax) * plotH;
+  const nToPx = (v) => margin.top + (1 - v / nMax) * plotH;
+
+  const yTicks = roundTickValues(0, yMax, 6);
+  const xTicks = roundTickValues(xMin, xMax, 6);
+  const nTicks = roundTickValues(0, nMax, 5);
+
+  const yTickSvg = yTicks.map((v) => `<line x1='${margin.left}' y1='${yToPx(v)}' x2='${width - margin.right}' y2='${yToPx(v)}' stroke='currentColor' opacity='0.16'/><text x='${margin.left - 12}' y='${yToPx(v) + 5}' text-anchor='end' font-size='13' font-weight='600'>${v.toFixed(1)}</text>`).join('');
+  const xTickSvg = xTicks.map((v) => `<line x1='${xToPx(v)}' y1='${margin.top}' x2='${xToPx(v)}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.10'/><text x='${xToPx(v)}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>`).join('');
+  const nTickSvg = nTicks.map((v) => `<text x='${width - margin.right + 10}' y='${nToPx(v) + 5}' font-size='12' font-weight='600'>${shortNum(v)}</text>`).join('');
+
+  const binW = x.length > 1 ? Math.abs(xToPx(x[1]) - xToPx(x[0])) : 10;
+  const bars = x.map((v, i) => {
+    const xx = xToPx(v) - Math.max(2, binW * 0.4);
+    const yy = nToPx(n[i]);
+    return `<rect x='${xx}' y='${yy}' width='${Math.max(3, binW * 0.8)}' height='${margin.top + plotH - yy}' fill='#e2c379' fill-opacity='0.36'/>`;
+  }).join('');
+
+  const line = buildPolyline(x, y, xToPx, yToPx);
+
+  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Mean feedback curve by age bins'>
+    ${yTickSvg}${xTickSvg}
+    <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+    <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+    <line x1='${width - margin.right}' y1='${margin.top}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.45'/>
+    ${bars}
+    <polyline class='fig-line-anim' fill='none' stroke='#2A9D8F' stroke-width='2.8' points='${line}'/>
+    ${nTickSvg}
+    <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delta blocks since registration</text>
+    <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Mean feedback per active agent</text>
+    <text x='${width - 14}' y='${height/2}' transform='rotate(-90 ${width - 14} ${height/2})' text-anchor='middle' font-size='14' font-weight='700'>Active agents</text>
+  </svg></div>`;
+}
+
 window.renderAnalytics = async function renderAnalytics(){ 
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
   const data = await loadSnapshot();
   const tagMap = await loadTagMap();
-  const fig00a = await loadFig00a();
   const fig00b = await loadFig00b();
+  const fig07 = await loadFig07();
+  const fig08 = await loadFig08();
   const agents = data.agents || [];
   const enriched = agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
 
@@ -677,13 +797,6 @@ window.renderAnalytics = async function renderAnalytics(){
     .sort((a,b) => (b.feedbackCount || 0) - (a.feedbackCount || 0))
     .slice(0, 8);
 
-  const allTags = new Map();
-  for (const a of enriched) {
-    for (const t of a._metrics.topTags || []) {
-      allTags.set(t.tag, (allTags.get(t.tag) || 0) + Number(t.count || 0));
-    }
-  }
-  const topTags = [...allTags.entries()].sort((a,b) => b[1] - a[1]).slice(0, 10);
 
   const avgScore = scoreMain.length ? avg(scoreMain).toFixed(2) : '0.00';
   const p90Feedback = feedbackCounts.length
@@ -703,14 +816,26 @@ window.renderAnalytics = async function renderAnalytics(){
       <p class='meta-row'>Snapshot generated: ${fmtDate(data.generatedAt)} · Block ${data.blockNumber}</p>
     </div>`;
 
+  const maxFb = Math.max(1, ...topByFeedback.map((a) => Number(a.feedbackCount || 0)));
   document.getElementById('analytics-top-feedback').innerHTML = `
-    <h3>Top agents by feedback volume</h3>
-    <ol>${topByFeedback.map((a)=>`<li><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || shortAddr(a.agentId)}</a> — ${a.feedbackCount || 0} feedback</li>`).join('') || '<li>No data</li>'}</ol>`;
+    <div class='agent-tiles'>
+      ${topByFeedback.map((a) => {
+        const fb = Number(a.feedbackCount || 0);
+        const w = Math.max(6, Math.round((fb / maxFb) * 100));
+        const img = pickAgentImage(a);
+        return `<a class='agent-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}'>
+          <img class='agent-avatar' src='${img}' alt='${a.name || a.agentId}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div>
+            <div class='agent-tile-title'>${a.name || shortAddr(a.agentId)}</div>
+            <div class='agent-tile-sub'>${fb.toLocaleString()} feedback</div>
+            <div class='mini-bar'><span style='width:${w}%'></span></div>
+          </div>
+        </a>`;
+      }).join('')}
+    </div>`;
 
-  document.getElementById('analytics-top-tags').innerHTML = `
-    <h3>Most used tags (network-wide)</h3>
-    <ol>${topTags.map(([tag,n])=>`<li><code>${tag}</code> — ${n}</li>`).join('') || '<li>No tags</li>'}</ol>`;
-
-  renderFig00a(fig00a);
   renderFig00b(fig00b);
+  renderFig07(fig07);
+  renderFig08(fig08);
+  initFancyUI();
 }

@@ -85,6 +85,12 @@ pre{white-space:pre-wrap;word-break:break-word;color:#cfe0ff}
 .btn-secondary{margin-top:12px;background:#0f1a33;color:var(--text);border:1px solid #2a3a64;border-radius:10px;padding:10px 14px;cursor:pointer}
 .btn-secondary:hover{border-color:#4772bd;color:#d8e6ff}
 .footer{margin-top:18px;color:var(--muted);font-size:12px}
+.fig00a-panel{background:linear-gradient(180deg,rgba(15,22,41,.95),rgba(10,14,26,.96));border:1px solid #2a3f6e;border-radius:14px;padding:12px;box-shadow:0 14px 36px rgba(6,12,30,.45), inset 0 0 0 1px rgba(133,181,255,.08)}
+.fig00a-controls{display:flex;gap:14px;align-items:center;margin-bottom:8px;color:#cfe0ff;font-size:13px}
+.fig00a-controls label{display:inline-flex;gap:6px;align-items:center;background:rgba(19,31,58,.7);border:1px solid #355288;border-radius:999px;padding:4px 10px}
+.fig00a-controls input{accent-color:#66b3ff}
+.fig-line-anim{stroke-dasharray:2000;stroke-dashoffset:2000;animation:figline 1.5s ease forwards}
+@keyframes figline{to{stroke-dashoffset:0}}
 .fig-tooltip{background:rgba(8,12,20,.92);border:1px solid rgba(148,163,184,.35);border-radius:8px;padding:8px 10px;font-size:12px;color:#e2e8f0;min-width:170px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 @media (max-width:760px){
   .toolbar{grid-template-columns:1fr}

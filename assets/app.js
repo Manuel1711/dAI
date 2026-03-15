@@ -359,31 +359,54 @@ function renderFig00a(fig){
     `;
   }).join('');
 
+  const regArea = `${margin.left},${height - margin.bottom} ${regPoints} ${width - margin.right},${height - margin.bottom}`;
+  const fbArea = `${margin.left},${height - margin.bottom} ${fbPoints} ${width - margin.right},${height - margin.bottom}`;
+
   root.innerHTML = `
-    <div class='fig00a-wrap' style='position:relative'>
-      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Cumulative registrations and feedback events over block number'>
-        ${yTickSvg}
-        ${xTickSvg}
+    <div class='fig00a-panel'>
+      <div class='fig00a-controls'>
+        <label><input type='checkbox' id='fig00a-toggle-reg' checked/> registrations</label>
+        <label><input type='checkbox' id='fig00a-toggle-fb' checked/> feedback events</label>
+      </div>
+      <div class='fig00a-wrap' style='position:relative'>
+        <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Cumulative registrations and feedback events over block number'>
+          <defs>
+            <linearGradient id='fig00a-grad-reg' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#1d4ed8' stop-opacity='0.32'/>
+              <stop offset='100%' stop-color='#1d4ed8' stop-opacity='0.02'/>
+            </linearGradient>
+            <linearGradient id='fig00a-grad-fb' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#dc2626' stop-opacity='0.28'/>
+              <stop offset='100%' stop-color='#dc2626' stop-opacity='0.02'/>
+            </linearGradient>
+            <filter id='fig00a-glow'><feGaussianBlur stdDeviation='2.2' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter>
+          </defs>
+          ${yTickSvg}
+          ${xTickSvg}
 
-        <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
-        <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+          <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+          <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
 
-        <polyline fill='none' stroke='#1d4ed8' stroke-width='2.5' points='${regPoints}' />
-        <polyline fill='none' stroke='#dc2626' stroke-width='2.5' points='${fbPoints}' />
+          <polygon id='fig00a-reg-area' points='${regArea}' fill='url(#fig00a-grad-reg)' />
+          <polygon id='fig00a-fb-area' points='${fbArea}' fill='url(#fig00a-grad-fb)' />
 
-        <line id='fig00a-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+          <polyline id='fig00a-reg-line' class='fig-line-anim' fill='none' stroke='#1d4ed8' stroke-width='2.8' filter='url(#fig00a-glow)' points='${regPoints}' />
+          <polyline id='fig00a-fb-line' class='fig-line-anim' fill='none' stroke='#dc2626' stroke-width='2.8' filter='url(#fig00a-glow)' points='${fbPoints}' />
 
-        <rect id='fig00a-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+          <line id='fig00a-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
 
-        <text x='${width / 2}' y='${height - 18}' text-anchor='middle' font-size='14'>Block number (×1e${Math.log10(xScale)})</text>
-        <text x='22' y='${height / 2}' transform='rotate(-90 22 ${height / 2})' text-anchor='middle' font-size='14'>Cumulative count</text>
+          <rect id='fig00a-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
 
-        <circle cx='${margin.left + 8}' cy='${margin.top + 8}' r='4' fill='#1d4ed8'></circle>
-        <text x='${margin.left + 18}' y='${margin.top + 12}' font-size='12'>Cumulative registrations</text>
-        <circle cx='${margin.left + 240}' cy='${margin.top + 8}' r='4' fill='#dc2626'></circle>
-        <text x='${margin.left + 250}' y='${margin.top + 12}' font-size='12'>Cumulative feedback events</text>
-      </svg>
-      <div id='fig00a-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+          <text x='${width / 2}' y='${height - 18}' text-anchor='middle' font-size='14'>Block number (×1e${Math.log10(xScale)})</text>
+          <text x='22' y='${height / 2}' transform='rotate(-90 22 ${height / 2})' text-anchor='middle' font-size='14'>Cumulative count</text>
+
+          <circle cx='${margin.left + 8}' cy='${margin.top + 8}' r='4' fill='#1d4ed8'></circle>
+          <text x='${margin.left + 18}' y='${margin.top + 12}' font-size='12'>Cumulative registrations</text>
+          <circle cx='${margin.left + 240}' cy='${margin.top + 8}' r='4' fill='#dc2626'></circle>
+          <text x='${margin.left + 250}' y='${margin.top + 12}' font-size='12'>Cumulative feedback events</text>
+        </svg>
+        <div id='fig00a-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+      </div>
     </div>
     <p class='meta-row'>Blocks ${xMin.toLocaleString()}–${xMax.toLocaleString()} · Registrations: <b>${reg[reg.length-1].toLocaleString()}</b> · Feedback events: <b>${fb[fb.length-1].toLocaleString()}</b> · Feedback source: <code>${fig.feedback_source || 'unknown'}</code></p>
   `;
@@ -392,7 +415,25 @@ function renderFig00a(fig){
   const hitbox = root.querySelector('#fig00a-hitbox');
   const cross = root.querySelector('#fig00a-cross');
   const tip = root.querySelector('#fig00a-tooltip');
+  const regLine = root.querySelector('#fig00a-reg-line');
+  const fbLine = root.querySelector('#fig00a-fb-line');
+  const regAreaEl = root.querySelector('#fig00a-reg-area');
+  const fbAreaEl = root.querySelector('#fig00a-fb-area');
+  const regToggle = root.querySelector('#fig00a-toggle-reg');
+  const fbToggle = root.querySelector('#fig00a-toggle-fb');
   if (!wrap || !hitbox || !cross || !tip) return;
+
+  const syncSeriesVisibility = () => {
+    const regOn = regToggle ? regToggle.checked : true;
+    const fbOn = fbToggle ? fbToggle.checked : true;
+    if (regLine) regLine.style.display = regOn ? 'block' : 'none';
+    if (regAreaEl) regAreaEl.style.display = regOn ? 'block' : 'none';
+    if (fbLine) fbLine.style.display = fbOn ? 'block' : 'none';
+    if (fbAreaEl) fbAreaEl.style.display = fbOn ? 'block' : 'none';
+  };
+  if (regToggle) regToggle.addEventListener('change', syncSeriesVisibility);
+  if (fbToggle) fbToggle.addEventListener('change', syncSeriesVisibility);
+  syncSeriesVisibility();
 
   const onMove = (ev) => {
     const bounds = wrap.getBoundingClientRect();

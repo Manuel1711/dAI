@@ -781,6 +781,7 @@ window.renderAnalytics = async function renderAnalytics(){
 
   const data = await loadSnapshot();
   const tagMap = await loadTagMap();
+  const fig00a = await loadFig00a();
   const fig00b = await loadFig00b();
   const fig07 = await loadFig07();
   const fig08 = await loadFig08();
@@ -834,6 +835,7 @@ window.renderAnalytics = async function renderAnalytics(){
       }).join('')}
     </div>`;
 
+  renderFig00a(fig00a);
   renderFig00b(fig00b);
   renderFig07(fig07);
   renderFig08(fig08);

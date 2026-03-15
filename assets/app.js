@@ -303,10 +303,34 @@ function buildPolyline(xs, ys, xToPx, yToPx){
   return xs.map((x, i) => `${xToPx(x).toFixed(2)},${yToPx(ys[i]).toFixed(2)}`).join(' ');
 }
 
-function tickValues(min, max, n = 6){
-  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return [min];
-  const step = (max - min) / (n - 1);
-  return Array.from({ length: n }, (_, i) => min + i * step);
+function niceStep(rawStep){
+  if (!Number.isFinite(rawStep) || rawStep <= 0) return 1;
+  const exp = Math.floor(Math.log10(rawStep));
+  const frac = rawStep / Math.pow(10, exp);
+  let niceFrac = 1;
+  if (frac <= 1) niceFrac = 1;
+  else if (frac <= 2) niceFrac = 2;
+  else if (frac <= 5) niceFrac = 5;
+  else niceFrac = 10;
+  return niceFrac * Math.pow(10, exp);
+}
+
+function roundTickValues(min, max, n = 6){
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return [Math.round(min || 0)];
+  const step = niceStep((max - min) / Math.max(1, (n - 1)));
+  const start = Math.ceil(min / step) * step;
+  const ticks = [];
+  for (let v = start; v <= max + step * 0.5; v += step) ticks.push(Math.round(v));
+  if (!ticks.length || ticks[0] !== 0) ticks.unshift(0);
+  return [...new Set(ticks)].sort((a,b)=>a-b);
+}
+
+function shortNum(v){
+  const a = Math.abs(v);
+  if (a >= 1e9) return `${(v/1e9).toFixed(1).replace(/\.0$/,'')}B`;
+  if (a >= 1e6) return `${(v/1e6).toFixed(1).replace(/\.0$/,'')}M`;
+  if (a >= 1e3) return `${(v/1e3).toFixed(1).replace(/\.0$/,'')}K`;
+  return `${Math.round(v)}`;
 }
 
 function renderFig00a(fig){
@@ -338,24 +362,22 @@ function renderFig00a(fig){
   const regPoints = buildPolyline(x, reg, xToPx, yToPx);
   const fbPoints = buildPolyline(x, fb, xToPx, yToPx);
 
-  const yTicks = tickValues(yMin, yMax, 6);
-  const xTicks = tickValues(xMin, xMax, 6);
-  const xScale = Math.pow(10, Math.floor(Math.log10(Math.max(1, Math.abs(xMax)))));
+  const yTicks = roundTickValues(yMin, yMax, 6);
+  const xTicks = roundTickValues(xMin, xMax, 6);
 
   const yTickSvg = yTicks.map((v) => {
     const py = yToPx(v);
     return `
-      <line x1='${margin.left}' y1='${py}' x2='${width - margin.right}' y2='${py}' stroke='currentColor' opacity='0.12'/>
-      <text x='${margin.left - 10}' y='${py + 4}' text-anchor='end' font-size='12'>${Math.round(v).toLocaleString()}</text>
+      <line x1='${margin.left}' y1='${py}' x2='${width - margin.right}' y2='${py}' stroke='currentColor' opacity='0.16'/>
+      <text x='${margin.left - 12}' y='${py + 5}' text-anchor='end' font-size='13' font-weight='600'>${shortNum(v)}</text>
     `;
   }).join('');
 
   const xTickSvg = xTicks.map((v) => {
     const px = xToPx(v);
-    const scaled = v / xScale;
     return `
-      <line x1='${px}' y1='${margin.top}' x2='${px}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.10'/>
-      <text x='${px}' y='${height - margin.bottom + 22}' text-anchor='middle' font-size='12'>${scaled.toFixed(3)}</text>
+      <line x1='${px}' y1='${margin.top}' x2='${px}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.12'/>
+      <text x='${px}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>
     `;
   }).join('');
 
@@ -397,8 +419,8 @@ function renderFig00a(fig){
 
           <rect id='fig00a-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
 
-          <text x='${width / 2}' y='${height - 18}' text-anchor='middle' font-size='14'>Block number (×1e${Math.log10(xScale)})</text>
-          <text x='22' y='${height / 2}' transform='rotate(-90 22 ${height / 2})' text-anchor='middle' font-size='14'>Cumulative count</text>
+          <text x='${width / 2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Block number</text>
+          <text x='24' y='${height / 2}' transform='rotate(-90 24 ${height / 2})' text-anchor='middle' font-size='16' font-weight='700'>Cumulative count</text>
 
           <circle cx='${margin.left + 8}' cy='${margin.top + 8}' r='4' fill='#1d4ed8'></circle>
           <text x='${margin.left + 18}' y='${margin.top + 12}' font-size='12'>Cumulative registrations</text>
@@ -408,7 +430,7 @@ function renderFig00a(fig){
         <div id='fig00a-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
       </div>
     </div>
-    <p class='meta-row'>Blocks ${xMin.toLocaleString()}–${xMax.toLocaleString()} · Registrations: <b>${reg[reg.length-1].toLocaleString()}</b> · Feedback events: <b>${fb[fb.length-1].toLocaleString()}</b> · Feedback source: <code>${fig.feedback_source || 'unknown'}</code></p>
+    <p class='chart-caption'>Crescita cumulata della rete nel periodo ${xMin.toLocaleString()}–${xMax.toLocaleString()} · Registrazioni totali <b>${reg[reg.length-1].toLocaleString()}</b> · Feedback totali <b>${fb[fb.length-1].toLocaleString()}</b>.</p>
   `;
 
   const wrap = root.querySelector('.fig00a-wrap');

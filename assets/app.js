@@ -430,7 +430,7 @@ function renderFig00a(fig){
         <div id='fig00a-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
       </div>
     </div>
-    <p class='chart-caption'>Crescita cumulata della rete nel periodo ${xMin.toLocaleString()}–${xMax.toLocaleString()} · Registrazioni totali <b>${reg[reg.length-1].toLocaleString()}</b> · Feedback totali <b>${fb[fb.length-1].toLocaleString()}</b>.</p>
+    <p class='chart-caption'>Cumulative network growth in the ${xMin.toLocaleString()}–${xMax.toLocaleString()} block range · Total registrations <b>${reg[reg.length-1].toLocaleString()}</b> · Total feedback <b>${fb[fb.length-1].toLocaleString()}</b>.</p>
   `;
 
   const wrap = root.querySelector('.fig00a-wrap');

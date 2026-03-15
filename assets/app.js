@@ -16,7 +16,7 @@ function setActiveNav() {
 }
 
 function initFancyUI(){
-  document.querySelectorAll('.card, .hero, .table').forEach((el) => el.classList.add('reveal'));
+  document.querySelectorAll('.card, .hero, .fig00a-panel, .agent-tile').forEach((el) => el.classList.add('reveal'));
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) e.target.classList.add('revealed');

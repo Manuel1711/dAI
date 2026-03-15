@@ -732,8 +732,8 @@ function renderFig07(fig){
 function renderTopClientsNetwork(fig){
   const root = document.getElementById('fig-top-clients-root');
   if (!root) return;
-  const clients = fig?.clients || [];
-  const agents = fig?.agents || [];
+  const clients = [...(fig?.clients || [])].sort((a, b) => Number(b.totalFeedback || 0) - Number(a.totalFeedback || 0));
+  const agents = [...(fig?.agents || [])].sort((a, b) => Number(b.totalFromTopClients || 0) - Number(a.totalFromTopClients || 0));
   const edges = fig?.edges || [];
   if (!clients.length || !agents.length || !edges.length) {
     root.innerHTML = `<p>Figure data not available yet.</p>`;
@@ -761,16 +761,16 @@ function renderTopClientsNetwork(fig){
     return `<path d='M ${leftX + 12} ${y1} C ${leftX + 220} ${y1}, ${rightX - 220} ${y2}, ${rightX - 12} ${y2}' stroke='rgba(79,70,229,0.35)' stroke-width='${w.toFixed(2)}' fill='none'/>`;
   }).join('');
 
-  const clientSvg = clients.map((c) => {
+  const clientSvg = clients.map((c, i) => {
     const y = clientY.get(c.id);
     const r = 5 + 11 * (Number(c.totalFeedback || 0) / maxClient);
-    return `<circle cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'/><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>${c.label}</text>`;
+    return `<circle cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'/><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>#${i + 1} ${c.label}</text>`;
   }).join('');
 
-  const agentSvg = agents.map((a) => {
+  const agentSvg = agents.map((a, i) => {
     const y = agentY.get(a.id);
     const r = 4 + 9 * (Number(a.totalFromTopClients || 0) / maxAgent);
-    return `<circle cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'/><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>${a.label}</text>`;
+    return `<circle cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'/><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>#${i + 1} ${a.label}</text>`;
   }).join('');
 
   root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Top clients connected to agents network'>

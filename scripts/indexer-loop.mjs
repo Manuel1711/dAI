@@ -19,6 +19,7 @@ const CFG = {
 if (!CFG.rpcUrl) { console.error('Missing ETH_RPC_URL env'); process.exit(1); }
 const ONCE = process.argv.includes('--once');
 const FULL_REINDEX_ONCE = ONCE && (process.env.FULL_REINDEX_ONCE || '1') !== '0';
+const METADATA_FETCH_CAP = Number(process.env.METADATA_FETCH_CAP || (ONCE ? 150 : 40));
 let oneShotPrepared = false;
 fs.mkdirSync(LIVE_DIR, { recursive: true });
 
@@ -27,6 +28,7 @@ const identityJsonlPath = path.join(LIVE_DIR, 'identity.events.jsonl');
 const feedbackJsonlPath = path.join(LIVE_DIR, 'feedback.events.jsonl');
 const ownersCachePath = path.join(LIVE_DIR, 'owners.cache.json');
 const blockTimesCachePath = path.join(LIVE_DIR, 'block_times.cache.json');
+const agentMetadataCachePath = path.join(LIVE_DIR, 'agent_metadata.cache.json');
 
 const readJson = (p, fb) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return fb; } };
 const writeJson = (p, obj) => fs.writeFileSync(p, JSON.stringify(obj, null, 2));
@@ -75,6 +77,8 @@ function decodeAbiString(w, offsetWordIdx) {
 
 function parseIdentityRegistered(log) {
   const t = log.topics || [];
+  const w = words(log.data);
+  const agentURI = decodeAbiString(w, 0);
   return {
     kind: 'identity_registered',
     blockNumber: hexToInt(log.blockNumber),
@@ -83,7 +87,7 @@ function parseIdentityRegistered(log) {
     eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`,
     agentId: safeUint(t[1]),
     owner: safeAddr(t[2]),
-    agentURI: null,
+    agentURI,
     rawData: log.data,
     ingestedAt: new Date().toISOString(),
   };
@@ -222,6 +226,68 @@ function blockIsoFromCache(blockNumber, tsCache) {
   return new Date(ts * 1000).toISOString();
 }
 
+function ipfsToHttp(u) {
+  if (!u) return null;
+  const s = String(u).trim();
+  if (!s) return null;
+  if (s.startsWith('ipfs://')) return `https://ipfs.io/ipfs/${s.slice('ipfs://'.length)}`;
+  return s;
+}
+
+function looksLikeJsonUrl(u) {
+  if (!u) return false;
+  return /\.json(\?|$)/i.test(u) || u.startsWith('ipfs://') || /^https?:\/\//i.test(u);
+}
+
+async function fetchJsonSafe(url, timeoutMs = 10000) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: ctl.signal });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+async function hydrateAgentMetadata(agents) {
+  const cache = readJson(agentMetadataCachePath, {});
+  let fetched = 0;
+  for (const a of agents) {
+    const key = a.identityURI || a.agentURI || '';
+    if (!key || !looksLikeJsonUrl(key)) continue;
+    const cached = cache[key];
+    if (cached) {
+      if (!a.name && cached.name) a.name = cached.name;
+      if ((!a.description || a.description === 'Derived from ERC8004 registries') && cached.description) a.description = cached.description;
+      if (!a.image && cached.image) a.image = cached.image;
+      continue;
+    }
+
+    if (fetched >= METADATA_FETCH_CAP) continue;
+    const metaUrl = ipfsToHttp(key);
+    const j = await fetchJsonSafe(metaUrl);
+    if (!j || typeof j !== 'object') continue;
+
+    fetched += 1;
+    const md = {
+      name: typeof j.name === 'string' ? j.name : null,
+      description: typeof j.description === 'string' ? j.description : null,
+      image: typeof j.image === 'string' ? ipfsToHttp(j.image) : null,
+      fetchedAt: new Date().toISOString(),
+    };
+    cache[key] = md;
+
+    if (!a.name && md.name) a.name = md.name;
+    if ((!a.description || a.description === 'Derived from ERC8004 registries') && md.description) a.description = md.description;
+    if (!a.image && md.image) a.image = md.image;
+  }
+  writeJson(agentMetadataCachePath, cache);
+}
+
 async function buildMaterializedView(checkpoints) {
   const byAgent = new Map();
   const seen = new Set();
@@ -237,10 +303,11 @@ async function buildMaterializedView(checkpoints) {
     if (row.kind === 'identity_registered' || row.kind === 'identity_transfer') {
       const aid = normalizeAgentId(row.agentId);
       if (!aid) continue;
-      const a = byAgent.get(aid) || { agentId: aid, name: `Agent ${aid}`, owner: null, category: 'Unknown', description: 'Derived from ERC8004 registries', identityURI: null, createdAt: null, feedbackHistory: [], raters: new Set() };
+      const a = byAgent.get(aid) || { agentId: aid, name: null, owner: null, category: 'Unknown', description: 'Derived from ERC8004 registries', identityURI: null, createdAt: null, feedbackHistory: [], raters: new Set(), image: null };
       if (row.kind === 'identity_registered') {
         if (row.owner) a.owner = row.owner;
         if (!a.createdAt) a.createdAt = blockIsoFromCache(row.blockNumber, blockTsCache);
+        if (row.agentURI) a.identityURI = row.agentURI;
       }
       if (row.kind === 'identity_transfer' && row.to) a.owner = row.to;
       byAgent.set(aid, a);
@@ -265,7 +332,7 @@ async function buildMaterializedView(checkpoints) {
     const revKey = `${aid}:${(row.clientAddress || '').toLowerCase()}:${row.feedbackIndex || ''}`;
     if (revoked.has(revKey)) continue;
 
-    const a = byAgent.get(aid) || { agentId: aid, name: `Agent ${aid}`, owner: null, category: 'Unknown', description: 'Derived from ERC8004 registries', identityURI: null, createdAt: null, feedbackHistory: [], raters: new Set() };
+    const a = byAgent.get(aid) || { agentId: aid, name: null, owner: null, category: 'Unknown', description: 'Derived from ERC8004 registries', identityURI: null, createdAt: null, feedbackHistory: [], raters: new Set(), image: null };
     const n = Number(row.valueRaw);
     const scaled = Number.isFinite(n) ? (row.valueDecimals != null && row.valueDecimals > 0 ? n / (10 ** row.valueDecimals) : n) : null;
     if (scaled != null && Number.isFinite(scaled)) {
@@ -285,12 +352,13 @@ async function buildMaterializedView(checkpoints) {
 
   const pre = [...byAgent.values()];
   await fillMissingOwners(pre);
+  await hydrateAgentMetadata(pre);
 
   const agents = pre.map((a) => {
     const scores = a.feedbackHistory.map((x) => x.score);
     const avg = scores.length ? scores.reduce((s, x) => s + x, 0) / scores.length : 0;
     a.feedbackHistory.sort((x, y) => new Date(y.timestamp) - new Date(x.timestamp));
-    return { ...a, raters: undefined, uniqueRaters: a.raters.size, scoreV1: Number(avg.toFixed(4)), feedbackCount: a.feedbackHistory.length, lastActivityAt: a.feedbackHistory[0]?.timestamp || a.createdAt || null };
+    return { ...a, name: a.name || `Agent ${a.agentId}`, raters: undefined, uniqueRaters: a.raters.size, scoreV1: Number(avg.toFixed(4)), feedbackCount: a.feedbackHistory.length, lastActivityAt: a.feedbackHistory[0]?.timestamp || a.createdAt || null };
   }).sort((a, b) => b.feedbackCount - a.feedbackCount || a.agentId.localeCompare(b.agentId));
 
   writeJson(path.join(DATA_DIR, 'agents.snapshot.json'), {

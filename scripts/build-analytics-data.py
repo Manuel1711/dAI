@@ -9,7 +9,8 @@ EMPIRICS_SOURCE = Path('/home/manuel/.openclaw/workspace/workspaces/erc8004-spec
 IDENTITY_EVENTS = ROOT / 'data/live/identity.events.jsonl'
 SNAPSHOT = ROOT / 'data/agents.snapshot.json'
 OUT_DIR = ROOT / 'data/analytics'
-OUT_FILE = OUT_DIR / 'fig00a.cumulative_activity.json'
+OUT_FILE_00A = OUT_DIR / 'fig00a.cumulative_activity.json'
+OUT_FILE_00B = OUT_DIR / 'fig00b.event_intensity.json'
 
 
 def load_empirics_module(path: Path):
@@ -82,21 +83,40 @@ def main():
         fb = load_feedback_blocks_from_snapshot(SNAPSHOT)
         feedback_source = str(SNAPSHOT)
 
-    out = empirics.compute_fig00a_cumulative_activity_data(reg_first, fb)
+    out00a = empirics.compute_fig00a_cumulative_activity_data(reg_first, fb)
+
+    block_min = int(min(reg_first['reg_block'].min(), fb['blockNumber'].min())) if len(fb) else int(reg_first['reg_block'].min())
+    block_max = int(max(reg_first['reg_block'].max(), fb['blockNumber'].max())) if len(fb) else int(reg_first['reg_block'].max())
+    out00b = empirics.compute_fig00b_event_intensity_data(reg_first, fb, block_min=block_min, block_max=block_max, bin_width=5000)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    payload = {
+
+    payload00a = {
         'source': str(EMPIRICS_SOURCE),
         'feedback_source': feedback_source,
         'figure': 'fig00a_cumulative_activity_data',
         'n_registered_agents': int(len(reg_first)),
         'n_feedback_events': int(len(fb)),
-        'x_union': [int(x) for x in out['x_union']],
-        'reg_y': [int(y) for y in out['reg_y']],
-        'fb_y': [int(y) for y in out['fb_y']],
+        'x_union': [int(x) for x in out00a['x_union']],
+        'reg_y': [int(y) for y in out00a['reg_y']],
+        'fb_y': [int(y) for y in out00a['fb_y']],
     }
-    OUT_FILE.write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
-    print(f'Wrote {OUT_FILE}')
+    OUT_FILE_00A.write_text(json.dumps(payload00a, ensure_ascii=False), encoding='utf-8')
+    print(f'Wrote {OUT_FILE_00A}')
+
+    payload00b = {
+        'source': str(EMPIRICS_SOURCE),
+        'figure': 'fig00b_event_intensity_data',
+        'bin_width': int(out00b['bin_width']),
+        'block_min': int(block_min),
+        'block_max': int(block_max),
+        'centers': [int(round(x)) for x in out00b['centers']],
+        'reg_hist': [int(x) for x in out00b['reg_hist']],
+        'fb_hist': [int(x) for x in out00b['fb_hist']],
+        'ratio': [None if pd.isna(x) else float(x) for x in out00b['ratio']],
+    }
+    OUT_FILE_00B.write_text(json.dumps(payload00b, ensure_ascii=False), encoding='utf-8')
+    print(f'Wrote {OUT_FILE_00B}')
 
 
 if __name__ == '__main__':

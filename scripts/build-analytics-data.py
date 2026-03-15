@@ -52,16 +52,42 @@ def load_feedback_blocks_from_snapshot(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=['blockNumber'])
 
 
+def load_feedback_blocks_from_events(path: Path) -> pd.DataFrame:
+    if not path.exists() or path.stat().st_size == 0:
+        return pd.DataFrame(columns=['blockNumber'])
+    rows = []
+    with path.open('r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            obj = json.loads(line)
+            bn = obj.get('blockNumber')
+            if bn is None:
+                continue
+            rows.append({'blockNumber': int(bn)})
+    return pd.DataFrame(rows, columns=['blockNumber'])
+
+
 def main():
     empirics = load_empirics_module(EMPIRICS_SOURCE)
     reg_first = load_reg_first(IDENTITY_EVENTS)
-    fb = load_feedback_blocks_from_snapshot(SNAPSHOT)
+
+    feedback_events_path = ROOT / 'data/live/feedback.events.jsonl'
+    fb_events = load_feedback_blocks_from_events(feedback_events_path)
+    if len(fb_events):
+        fb = fb_events
+        feedback_source = str(feedback_events_path)
+    else:
+        fb = load_feedback_blocks_from_snapshot(SNAPSHOT)
+        feedback_source = str(SNAPSHOT)
 
     out = empirics.compute_fig00a_cumulative_activity_data(reg_first, fb)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     payload = {
         'source': str(EMPIRICS_SOURCE),
+        'feedback_source': feedback_source,
         'figure': 'fig00a_cumulative_activity_data',
         'n_registered_agents': int(len(reg_first)),
         'n_feedback_events': int(len(fb)),

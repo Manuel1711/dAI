@@ -126,6 +126,9 @@ def main():
     empirics = load_empirics_module(EMPIRICS_SOURCE)
     reg_first = load_reg_first(IDENTITY_EVENTS)
 
+    snapshot_json = json.loads(SNAPSHOT.read_text(encoding='utf-8')) if SNAPSHOT.exists() else {}
+    checkpoints_json = json.loads(CHECKPOINTS.read_text(encoding='utf-8')) if CHECKPOINTS.exists() else {}
+
     feedback_events_path = ROOT / 'data/live/feedback.events.jsonl'
     fb_events = load_feedback_blocks_from_events(feedback_events_path)
     if len(fb_events):
@@ -142,6 +145,16 @@ def main():
     horizon_block = load_horizon_block(SNAPSHOT, CHECKPOINTS)
     block_max = max(block_max_data, int(horizon_block)) if horizon_block is not None else block_max_data
     out00b = empirics.compute_fig00b_event_intensity_data(reg_first, fb, block_min=block_min, block_max=block_max, bin_width=5000)
+
+    centers = [int(round(x)) for x in out00b['centers']]
+    reg_hist = [int(x) for x in out00b['reg_hist']]
+    fb_hist = [int(x) for x in out00b['fb_hist']]
+    ratio = [None if pd.isna(x) else float(x) for x in out00b['ratio']]
+    keep = [i for i, c in enumerate(centers) if c <= block_max]
+    centers = [centers[i] for i in keep]
+    reg_hist = [reg_hist[i] for i in keep]
+    fb_hist = [fb_hist[i] for i in keep]
+    ratio = [ratio[i] for i in keep]
 
     fb_full = load_feedback_events_full(feedback_events_path)
     if len(fb_full):
@@ -187,6 +200,14 @@ def main():
             reg_y.append(reg_y[-1])
             fb_y.append(fb_y[-1])
 
+    common_meta = {
+        'snapshot_block': int(snapshot_json.get('blockNumber')) if snapshot_json.get('blockNumber') is not None else None,
+        'last_safe_block': int(checkpoints_json.get('lastSafeBlock')) if checkpoints_json.get('lastSafeBlock') is not None else None,
+        'snapshot_generated_at': snapshot_json.get('generatedAt'),
+        'checkpoint_updated_at': checkpoints_json.get('updatedAt'),
+        'agents_indexed': int(len(snapshot_json.get('agents', []) or [])),
+    }
+
     payload00a = {
         'source': str(EMPIRICS_SOURCE),
         'feedback_source': feedback_source,
@@ -197,6 +218,7 @@ def main():
         'x_union': x_union,
         'reg_y': reg_y,
         'fb_y': fb_y,
+        **common_meta,
     }
     OUT_FILE_00A.write_text(json.dumps(payload00a, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_00A}')
@@ -207,10 +229,11 @@ def main():
         'bin_width': int(out00b['bin_width']),
         'block_min': int(block_min),
         'block_max': int(block_max),
-        'centers': [int(round(x)) for x in out00b['centers']],
-        'reg_hist': [int(x) for x in out00b['reg_hist']],
-        'fb_hist': [int(x) for x in out00b['fb_hist']],
-        'ratio': [None if pd.isna(x) else float(x) for x in out00b['ratio']],
+        'centers': centers,
+        'reg_hist': reg_hist,
+        'fb_hist': fb_hist,
+        'ratio': ratio,
+        **common_meta,
     }
     OUT_FILE_00B.write_text(json.dumps(payload00b, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_00B}')
@@ -220,6 +243,7 @@ def main():
         'q50': None if pd.isna(out07['q50']) else float(out07['q50']),
         'd': [float(x) for x in out07['d']],
         'dd': [float(x) for x in out07['dd']],
+        **common_meta,
     }
     OUT_FILE_07.write_text(json.dumps(payload07, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_07}')
@@ -231,6 +255,7 @@ def main():
         'bin_start_delta_blocks': [int(x) for x in pb['bin_start_delta_blocks']] if len(pb) else [],
         'mean_feedback_per_active_agent': [float(x) for x in pb['mean_feedback_per_active_agent']] if len(pb) else [],
         'active_agents_in_bin': [int(x) for x in pb['active_agents_in_bin']] if len(pb) else [],
+        **common_meta,
     }
     OUT_FILE_08.write_text(json.dumps(payload08, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_08}')
@@ -283,9 +308,10 @@ def main():
                 {'clientId': str(r.clientAddress), 'agentId': str(r.agentId), 'weight': int(r.weight)}
                 for r in edges.itertuples(index=False)
             ],
+            **common_meta,
         }
     else:
-        payload_tc = {'figure': 'top_clients_agents_network', 'clients': [], 'agents': [], 'edges': []}
+        payload_tc = {'figure': 'top_clients_agents_network', 'clients': [], 'agents': [], 'edges': [], **common_meta}
 
     OUT_FILE_TC.write_text(json.dumps(payload_tc, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_TC}')
@@ -335,9 +361,10 @@ def main():
                 {'agentId': str(r.agentId), 'clientId': str(r.clientAddress), 'weight': int(r.weight)}
                 for r in edges_a.itertuples(index=False)
             ],
+            **common_meta,
         }
     else:
-        payload_ta = {'figure': 'top_agents_clients_network', 'agents': [], 'clients': [], 'edges': []}
+        payload_ta = {'figure': 'top_agents_clients_network', 'agents': [], 'clients': [], 'edges': [], **common_meta}
 
     OUT_FILE_TA.write_text(json.dumps(payload_ta, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_TA}')

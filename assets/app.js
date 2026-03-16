@@ -6,6 +6,7 @@ const NAV = `
   <a href="./analytics.html">Analytics</a>
   <a href="./research.html">Research</a>
   <a href="./pipeline.html">Pipeline</a>
+  <a href="./deploy.html">Deploy</a>
 </nav>`;
 
 function setActiveNav() {

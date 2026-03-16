@@ -147,13 +147,21 @@ pre{white-space:pre-wrap;word-break:break-word;color:#374151}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease, transform .55s ease}
 .reveal.revealed{opacity:1;transform:none}
 
-.agent-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.agent-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
 .agent-tile{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #eadfca;border-radius:12px;background:linear-gradient(180deg,#fff,#fffaf1);text-decoration:none;color:inherit;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease}
 .agent-tile:hover{transform:translateY(-2px);border-color:#c8a24d;box-shadow:0 8px 18px rgba(115,92,52,.14)}
-.agent-tile-title{font-weight:700;color:#3f2d0f;line-height:1.2}
-.agent-tile-sub{font-size:12px;color:#7a6240;margin-top:2px}
-.mini-bar{margin-top:7px;height:6px;background:#f1e4c8;border-radius:999px;overflow:hidden}
-.mini-bar span{display:block;height:100%;background:linear-gradient(90deg,#b88a2f,#e2c379)}
+.agent-tile-title{font-weight:700;color:#3f2d0f;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.agent-tile-sub{font-size:12px;color:#7a6240;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-bar{margin-top:7px;height:8px;background:#f1e4c8;border-radius:999px;overflow:hidden;position:relative}
+.mini-bar span{display:block;height:100%;background:linear-gradient(90deg,#a77014,#d9ac4d,#f1d390);background-size:180% 100%;transition:width .35s ease;animation:barShine 2.2s linear infinite}
+.mini-bar.interactive:hover{height:10px;box-shadow:0 0 0 2px rgba(200,162,77,.24)}
+.mini-bar.interactive::after{content:attr(data-pct) '%';position:absolute;right:8px;top:-19px;font-size:11px;color:#76561f;opacity:0;transition:opacity .2s ease}
+.mini-bar.interactive:hover::after{opacity:1}
+@keyframes barShine{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+
+.agents-top-card{padding:14px 16px 14px;margin-bottom:12px}
+.top-feedback-tile{padding:12px}
+.top-feedback-tile:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 12px 22px rgba(115,92,52,.16)}
 
 .agents-toolbar-card{padding:14px 16px 12px}
 .agents-toolbar{margin:0}

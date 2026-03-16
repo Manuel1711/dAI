@@ -4,12 +4,17 @@
   <meta charset='utf-8'/>
   <meta name='viewport' content='width=device-width, initial-scale=1'/>
   <title>ERC8004 Agents - List</title>
-  <link rel='stylesheet' href='./assets/styles.css?v=agents-pagination-20260316-1'/>
+  <link rel='stylesheet' href='./assets/styles.css?v=agents-top-feedback-20260316-1'/>
 </head>
 <body>
   <div class='container'>
     <div id='nav'></div>
     <h1>Agents List</h1>
+
+    <section class='card agents-top-card no-reveal'>
+      <h3>Top agents by feedback volume</h3>
+      <div id='agents-top-feedback' class='agent-tiles'></div>
+    </section>
 
     <section class='card agents-toolbar-card no-reveal'>
       <div class='toolbar agents-toolbar'>
@@ -34,7 +39,7 @@
       <div id='agents-pagination' class='agents-pagination'></div>
     </section>
   </div>
-  <script src='./assets/app.js?v=agents-pagination-20260316-1'></script>
+  <script src='./assets/app.js?v=agents-top-feedback-20260316-1'></script>
   <script>renderAgents()</script>
 </body>
 </html>

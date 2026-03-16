@@ -195,8 +195,36 @@ window.renderAgents = async function renderAgents(){
   const sortEl = document.getElementById('sort');
   const metaEl = document.getElementById('agents-meta');
   const paginationEl = document.getElementById('agents-pagination');
+  const topFeedbackEl = document.getElementById('agents-top-feedback');
   const PAGE_SIZE = 20;
   let currentPage = 1;
+
+  function renderTopFeedbackTiles() {
+    if (!topFeedbackEl) return;
+    const top = [...enriched]
+      .sort((a,b)=>(b.feedbackCount||0)-(a.feedbackCount||0))
+      .slice(0, 12);
+    const maxFb = Math.max(1, ...top.map((a) => Number(a.feedbackCount || 0)));
+
+    topFeedbackEl.innerHTML = top.map((a, idx) => {
+      const fb = Number(a.feedbackCount || 0);
+      const pct = Math.max(3, Math.round((fb / maxFb) * 100));
+      const score = Number(a._metrics?.scoreMain || 0).toFixed(2);
+      const img = pickAgentImage(a);
+      return `
+        <a class='agent-tile top-feedback-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}' title='Open agent ${a.name || a.agentId}'>
+          <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div style='min-width:0;flex:1;'>
+            <div class='agent-tile-title'>#${idx+1} ${a.name || a.agentId}</div>
+            <div class='agent-tile-sub'>${a.agentId} · Feedback: <b>${fb.toLocaleString()}</b> · Score: <b>${score}</b></div>
+            <div class='mini-bar interactive' data-pct='${pct}'>
+              <span style='width:${pct}%'></span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('') || '<p>No agents available yet.</p>';
+  }
 
   function applyFilters() {
     const q = (searchEl.value || '').toLowerCase().trim();
@@ -283,6 +311,7 @@ window.renderAgents = async function renderAgents(){
 
   searchEl.addEventListener('input', () => renderRows(true));
   sortEl.addEventListener('change', () => renderRows(true));
+  renderTopFeedbackTiles();
   renderRows(true);
   initFancyUI();
 }

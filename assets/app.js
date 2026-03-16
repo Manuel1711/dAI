@@ -16,7 +16,15 @@ function setActiveNav() {
 }
 
 function initFancyUI(){
-  document.querySelectorAll('.card, .hero, .fig00a-panel, .agent-tile').forEach((el) => el.classList.add('reveal'));
+  const targets = [...document.querySelectorAll('.card, .hero, .fig00a-panel, .agent-tile')]
+    .filter((el) => !el.classList.contains('no-reveal'));
+  targets.forEach((el) => el.classList.add('reveal'));
+
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach((el) => el.classList.add('revealed'));
+    return;
+  }
+
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) e.target.classList.add('revealed');

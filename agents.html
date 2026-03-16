@@ -11,7 +11,7 @@
     <div id='nav'></div>
     <h1>Agents List</h1>
 
-    <section class='card agents-toolbar-card'>
+    <section class='card agents-toolbar-card no-reveal'>
       <div class='toolbar agents-toolbar'>
         <input id='search' class='input' placeholder='Search by name, id, owner, category...'/>
         <select id='sort' class='input'>
@@ -24,7 +24,7 @@
       <div id='agents-meta' class='meta-row agents-meta-row'></div>
     </section>
 
-    <section class='card agents-table-card'>
+    <section class='card agents-table-card no-reveal'>
       <div class='agents-table-wrap'>
         <table class='table agents-table'>
           <thead><tr><th>Agent</th><th>Category</th><th>Owner</th><th>Reputation</th><th>Feedback</th><th>Status</th><th>Last activity</th></tr></thead>
@@ -34,7 +34,7 @@
       <button id='load-more' class='btn-secondary' style='display:none;'>Load more</button>
     </section>
   </div>
-  <script src='./assets/app.js?v=agents-fix-20260315-1'></script>
+  <script src='./assets/app.js?v=agents-visibility-fix-20260316-1'></script>
   <script>renderAgents()</script>
 </body>
 </html>

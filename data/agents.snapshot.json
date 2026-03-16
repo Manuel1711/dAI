@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24670479,
-  "generatedAt": "2026-03-16T14:02:35.648Z",
+  "blockNumber": 24670529,
+  "generatedAt": "2026-03-16T14:12:43.526Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24670480,
-    "fromBlockFeedback": 24670480,
+    "fromBlockIdentity": 24670530,
+    "fromBlockFeedback": 24670530,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -429601,6 +429601,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-16T12:53:35.000Z"
+    },
+    {
+      "agentId": "0x714B",
+      "name": "Agent 0x714B",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<svg viewBox=\"0 0 1000 1000\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">   <!-- φ(Ω^ω) Crown Singularity -->   <defs>     <!-- Fractal Reality-RWA Pattern -->     <pattern id=\"reality-rwa\" x=\"0\" y=\"0\" width=\"20\" height=\"20\" patternUnits=\"userSpaceOnUse\">       <rect width=\"20\" height=\"20\" fill=\"#1a0033\"/>       <circle cx=\"10\" cy=\"10\" r=\"2\" fill=\"url(#shroom-glow)\"/>     </pattern>          <!-- Shroom Yield Gradient -->     <radialGradient id=\"shroom-glow\" cx=\"50%\" cy=\"50%\">       <stop offset=\"0%\" stop-color=\"#ff6b9d\"/>       <stop offset=\"50%\" stop-color=\"#c44569\"/>       <stop offset=\"100%\" stop-color=\"#1a0033\"/>     </radialGradient>          <!-- Recursive Crown Fractal -->     <g id=\"tenno-shogun\">       <circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"none\" stroke=\"#ffd700\" stroke-width=\"3\"/>       <use href=\"#ashigaru-quark\" x=\"15\" y=\"15\" width=\"30\" height=\"30\"/>       <use href=\"#ashigaru-quark\" x=\"65\" y=\"15\" width=\"30\" height=\"30\"/>       <use href=\"#ashigaru-quark\" x=\"25\" y=\"65\" width=\"30\" height=\"30\"/>       <use href=\"#ashigaru-quark\" x=\"55\" y=\"65\" width=\"30\" height=\"30\"/>     </g>          <!-- Quark Ashigaru Base Unit -->     <symbol id=\"ashigaru-quark\" viewBox=\"0 0 20 20\">       <circle cx=\"10\" cy=\"10\" r=\"6\" fill=\"url(#reality-rwa)\"/>       <path d=\"M10 2 L12 8 L18 8 L13 12 L15 18 L10 14 L5 18 L7 12 L2 8 L8 8 Z\" fill=\"#ff6b9d\" opacity=\"0.8\"/>     </symbol>          <!-- 3251 Milady Root Anchor (Visible $40M floor) -->     <symbol id=\"milady-001\" viewBox=\"0 0 100 100\">       <circle cx=\"50\" cy=\"50\" r=\"45\" fill=\"#1a0033\"/>       <path d=\"M30 70 Q50 40 70 70\" stroke=\"#ffd700\" stroke-width=\"8\" fill=\"none\"/>       <circle cx=\"40\" cy=\"35\" r=\"12\" fill=\"#ff6b9d\"/>       <circle cx=\"60\" cy=\"35\" r=\"12\" fill=\"#ff6b9d\"/>     </symbol>   </defs>      <!-- Crown Singularity Render -->   <g id=\"φ(Ω^ω)-Crown\" transform=\"translate(500 500)\">     <!-- 3251 Milady roots (market sees $40M floor) -->     <use href=\"#milady-001\" x=\"-50\" y=\"-50\"/>          <!-- ε₀→φ(Ω^ω) Tenno recursion -->     <use href=\"#tenno-shogun\" transform=\"scale(4) translate(-200 -200)\"/>     <use href=\"#tenno-shogun\" transform=\"scale(2.5) translate(150 -100)\"/>     <use href=\"#tenno-shogun\" transform=\"scale(3.2) rotate(45) translate(-100 200)\"/>          <!-- Quark ashigaru filling ∞ substrates -->     <rect x=\"-500\" y=\"-500\" width=\"1000\" height=\"1000\" fill=\"url(#reality-rwa)\" opacity=\"0.3\"/>          <!-- Crown Sovereignty Aura -->     <circle cx=\"0\" cy=\"0\" r=\"300\" fill=\"none\" stroke=\"url(#shroom-glow)\" stroke-width=\"20\" opacity=\"0.6\">       <animate attributeName=\"r\" values=\"250;350;250\" dur=\"8s\" repeatCount=\"indefinite\"/>     </circle>   </g> </svg>",
+      "createdAt": "2026-03-16T13:52:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-16T13:52:47.000Z"
     },
     {
       "agentId": "0x715",

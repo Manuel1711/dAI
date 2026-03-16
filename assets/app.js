@@ -194,9 +194,9 @@ window.renderAgents = async function renderAgents(){
   const searchEl = document.getElementById('search');
   const sortEl = document.getElementById('sort');
   const metaEl = document.getElementById('agents-meta');
-  const moreBtn = document.getElementById('load-more');
-  const PAGE_SIZE = 120;
-  let visible = PAGE_SIZE;
+  const paginationEl = document.getElementById('agents-pagination');
+  const PAGE_SIZE = 20;
+  let currentPage = 1;
 
   function applyFilters() {
     const q = (searchEl.value || '').toLowerCase().trim();
@@ -215,9 +215,14 @@ window.renderAgents = async function renderAgents(){
   }
 
   function renderRows(reset = false) {
-    if (reset) visible = PAGE_SIZE;
     const rows = applyFilters();
-    const shown = rows.slice(0, visible);
+    const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    if (reset) currentPage = 1;
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    const shown = rows.slice(start, end);
 
     document.getElementById('agents-table').innerHTML = shown.map((a)=>{
       const st = deriveStatus(a);
@@ -241,16 +246,43 @@ window.renderAgents = async function renderAgents(){
     </tr>`;
     }).join('') || `<tr><td colspan='7'>No agents for this filter</td></tr>`;
 
-    if (metaEl) metaEl.textContent = `Showing ${Math.min(shown.length, rows.length)} / ${rows.length} agents`;
-    if (moreBtn) {
-      moreBtn.style.display = rows.length > shown.length ? 'inline-block' : 'none';
-      moreBtn.textContent = `Load more (+${Math.min(PAGE_SIZE, rows.length - shown.length)})`;
+    if (metaEl) {
+      const from = rows.length ? start + 1 : 0;
+      const to = Math.min(end, rows.length);
+      metaEl.textContent = `Showing ${from}-${to} / ${rows.length} agents`;
+    }
+
+    if (paginationEl) {
+      const maxButtons = 7;
+      let pStart = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+      let pEnd = Math.min(totalPages, pStart + maxButtons - 1);
+      pStart = Math.max(1, pEnd - maxButtons + 1);
+
+      const pageBtns = [];
+      for (let p = pStart; p <= pEnd; p++) {
+        pageBtns.push(`<button class='page-btn ${p === currentPage ? 'active' : ''}' data-page='${p}'>${p}</button>`);
+      }
+
+      paginationEl.innerHTML = `
+        <button class='page-btn' data-page='${Math.max(1, currentPage - 1)}' ${currentPage === 1 ? 'disabled' : ''}>← Prev</button>
+        ${pageBtns.join('')}
+        <button class='page-btn' data-page='${Math.min(totalPages, currentPage + 1)}' ${currentPage === totalPages ? 'disabled' : ''}>Next →</button>
+      `;
+
+      paginationEl.querySelectorAll('button[data-page]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const p = Number(btn.getAttribute('data-page') || '1');
+          if (!Number.isFinite(p)) return;
+          currentPage = p;
+          renderRows(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
     }
   }
 
   searchEl.addEventListener('input', () => renderRows(true));
   sortEl.addEventListener('change', () => renderRows(true));
-  if (moreBtn) moreBtn.addEventListener('click', () => { visible += PAGE_SIZE; renderRows(false); });
   renderRows(true);
   initFancyUI();
 }

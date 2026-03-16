@@ -19,12 +19,8 @@ fi
 
 cd "$REPO"
 
-# Keep branch in sync first
-(git fetch origin main && git rebase origin/main) || {
-  echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] warning: rebase failed, abort cycle"
-  git rebase --abort || true
-  exit 0
-}
+# Refresh remote refs (do not rebase upfront; local unstaged changes may exist)
+git fetch origin main || true
 
 export ETH_RPC_URL="${ETH_RPC_URL:-https://ethereum-rpc.publicnode.com}"
 export CONFIRMATIONS="${CONFIRMATIONS:-12}"

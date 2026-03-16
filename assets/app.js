@@ -66,13 +66,62 @@ async function fetchJson(path) {
 
 const clientMetadataCache = new Map();
 
+function isGenericAgentName(v){
+  return /^Agent\s+/i.test(String(v || '').trim());
+}
+
 function needsClientMetadataHydration(a){
   if (!a) return false;
   const uri = String(a.identityURI || a.agentURI || '').trim();
   if (!uri) return false;
-  const hasName = !!(a.name && !/^Agent\s+\d+$/i.test(String(a.name).trim()));
+  const hasName = !!(a.name && !isGenericAgentName(a.name));
   const hasImage = !!(a.image || a.imageURI || a.avatar);
   return !hasName || !hasImage;
+}
+
+function b64ToBytes(base64){
+  const bin = atob(base64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+async function parseDataUriJson(uri){
+  try {
+    const m = String(uri).match(/^data:application\/json(?:;enc=gzip)?;base64,(.+)$/i);
+    if (!m) return null;
+    const b64 = m[1];
+    const bytes = b64ToBytes(b64);
+
+    if (/;enc=gzip;/i.test(uri)) {
+      if (typeof DecompressionStream === 'undefined') return null;
+      const ds = new DecompressionStream('gzip');
+      const stream = new Blob([bytes]).stream().pipeThrough(ds);
+      const text = await new Response(stream).text();
+      return JSON.parse(text);
+    }
+
+    const text = new TextDecoder().decode(bytes);
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
+function pickMdField(md, paths){
+  for (const p of paths) {
+    const v = p.split('.').reduce((o, k) => (o && o[k] != null ? o[k] : null), md);
+    if (typeof v === 'string' && v.trim()) return v.trim();
+  }
+  return null;
+}
+
+function extractMetadataFields(md){
+  if (!md || typeof md !== 'object') return { name: null, description: null, image: null };
+  const name = pickMdField(md, ['name', 'agent.name', 'metadata.name', 'profile.name', 'agentCard.name']);
+  const description = pickMdField(md, ['description', 'agent.description', 'metadata.description', 'profile.description', 'agentCard.description']);
+  const imageRaw = pickMdField(md, ['image', 'icon', 'avatar', 'logo', 'agent.image', 'agent.icon', 'metadata.image', 'profile.image', 'agentCard.icon']);
+  return { name, description, image: imageRaw ? ipfsToHttp(imageRaw) : null };
 }
 
 async function fetchJsonWithTimeout(url, timeoutMs = 9000){
@@ -89,7 +138,7 @@ async function fetchJsonWithTimeout(url, timeoutMs = 9000){
   }
 }
 
-async function enrichAgentsMetadataClient(agents, cap = 80, concurrency = 8){
+async function enrichAgentsMetadataClient(agents, cap = 240, concurrency = 12){
   const targets = (agents || []).filter(needsClientMetadataHydration).slice(0, cap);
   let idx = 0;
 
@@ -102,25 +151,20 @@ async function enrichAgentsMetadataClient(agents, cap = 80, concurrency = 8){
 
       let md = clientMetadataCache.get(key);
       if (!md) {
-        const url = ipfsToHttp(key);
-        md = await fetchJsonWithTimeout(url);
+        if (/^data:application\/json/i.test(key)) md = await parseDataUriJson(key);
+        else md = await fetchJsonWithTimeout(ipfsToHttp(key));
         if (md && typeof md === 'object') clientMetadataCache.set(key, md);
       }
 
       if (!md || typeof md !== 'object') continue;
-      if ((!a.name || /^Agent\s+\d+$/i.test(String(a.name).trim())) && typeof md.name === 'string' && md.name.trim()) {
-        a.name = md.name.trim();
-      }
-      if ((!a.description || a.description === 'Derived from ERC8004 registries') && typeof md.description === 'string' && md.description.trim()) {
-        a.description = md.description.trim();
-      }
-      if (!a.image && typeof md.image === 'string' && md.image.trim()) {
-        a.image = ipfsToHttp(md.image.trim());
-      }
+      const fields = extractMetadataFields(md);
+      if ((!a.name || isGenericAgentName(a.name)) && fields.name) a.name = fields.name;
+      if ((!a.description || a.description === 'Derived from ERC8004 registries') && fields.description) a.description = fields.description;
+      if (!a.image && fields.image) a.image = fields.image;
     }
   }
 
-  await Promise.all(Array.from({ length: Math.max(1, Math.min(concurrency, 12)) }, () => worker()));
+  await Promise.all(Array.from({ length: Math.max(1, Math.min(concurrency, 16)) }, () => worker()));
 }
 
 async function loadSnapshot() {

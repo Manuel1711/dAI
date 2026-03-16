@@ -21,7 +21,34 @@
 
     <section class='hero hero-future'>
       <div class='eyebrow'>OPS</div>
-      <h1>DEPLOY</h1>
+      <h1>Deploy Control Panel</h1>
+      <p>Operational entrypoint for protocol actions (register agent, give/respond feedback) and deployment status.</p>
+    </section>
+
+    <section class='grid'>
+      <div class='card'>
+        <h3>API status</h3>
+        <p><b>Mode:</b> external runtime required (not served by GitHub Pages).</p>
+        <p><b>Health endpoint:</b> <code>/health</code></p>
+        <p><b>Security:</b> Bearer token + rate limit + audit log.</p>
+      </div>
+      <div class='card'>
+        <h3>Available actions</h3>
+        <ul>
+          <li><code>POST /agents/register</code></li>
+          <li><code>POST /feedback/give</code></li>
+          <li><code>POST /feedback/respond</code></li>
+        </ul>
+      </div>
+      <div class='card'>
+        <h3>Deployment checklist</h3>
+        <ul>
+          <li>Set <code>OPS_API_TOKEN</code></li>
+          <li>Configure RPC endpoint</li>
+          <li>Enable <code>dryRun=false</code> only after validation</li>
+          <li>Verify health + audit logging</li>
+        </ul>
+      </div>
     </section>
   </div>
   <script src='./assets/app.deploynav.js?v=1'></script>

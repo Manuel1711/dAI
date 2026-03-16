@@ -1,0 +1,1244 @@
+const NAV = `
+<div id="global-sync-block" class="global-sync-block">Sync status: loading…</div>
+<nav>
+  <a href="./index.html">Home</a>
+  <a href="./agents.html">Agents</a>
+  <a href="./analytics.html">Analytics</a>
+  <a href="./research.html">Research</a>
+  <a href="./pipeline.html">Pipeline</a>
+  <a href="./deploy.html">Deploy</a>
+</nav>`;
+
+function setActiveNav() {
+  const page = location.pathname.split('/').pop();
+  document.querySelectorAll('nav a').forEach((a) => {
+    const href = a.getAttribute('href') || '';
+    if (href.includes(page)) a.classList.add('active');
+  });
+  refreshGlobalSyncBlock();
+}
+
+async function refreshGlobalSyncBlock() {
+  const el = document.getElementById('global-sync-block');
+  if (!el) return;
+  try {
+    const [snapshot, cp] = await Promise.all([loadSnapshot(), loadCheckpoint()]);
+    const generatedAt = snapshot?.generatedAt ? new Date(snapshot.generatedAt) : null;
+    const ageMin = generatedAt ? Math.max(0, Math.floor((Date.now() - generatedAt.getTime()) / 60000)) : null;
+    const live = Number.isFinite(ageMin) ? ageMin <= 20 : false;
+
+    const block = snapshot?.blockNumber ?? cp?.lastSafeBlock ?? '-';
+    const stamp = generatedAt && !Number.isNaN(generatedAt.getTime()) ? generatedAt.toLocaleString() : '-';
+
+    el.classList.toggle('live', !!live);
+    el.classList.toggle('stale', !live);
+    el.innerHTML = `<b>${live ? 'LIVE' : 'STALE'}</b> · block <b>${block}</b> · updated <b>${ageMin ?? '-'}m</b> ago · <span>${stamp}</span>`;
+  } catch {
+    el.classList.remove('live');
+    el.classList.add('stale');
+    el.textContent = 'STALE · sync status unavailable';
+  }
+}
+
+function initFancyUI(){
+  const targets = [...document.querySelectorAll('.card, .hero, .fig00a-panel, .agent-tile')]
+    .filter((el) => !el.classList.contains('no-reveal'));
+  targets.forEach((el) => el.classList.add('reveal'));
+
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach((el) => el.classList.add('revealed'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) e.target.classList.add('revealed');
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+}
+
+async function fetchJson(path) {
+  const res = await fetch(path, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Failed loading ${path}`);
+  return res.json();
+}
+
+async function loadSnapshot() { return fetchJson('./data/agents.snapshot.json'); }
+async function loadCheckpoint() {
+  try { return await fetchJson('./data/live/checkpoints.json'); } catch { return null; }
+}
+async function loadTagMap() {
+  try {
+    const j = await fetchJson('./data/tag1-category-map.json');
+    return j?.tags || {};
+  } catch {
+    return {};
+  }
+}
+async function loadFig00a() {
+  try { return await fetchJson('./data/analytics/fig00a.cumulative_activity.json'); }
+  catch { return null; }
+}
+async function loadFig00b() {
+  try { return await fetchJson('./data/analytics/fig00b.event_intensity.json'); }
+  catch { return null; }
+}
+async function loadFig07() {
+  try { return await fetchJson('./data/analytics/fig07.first_feedback_delay_hist.json'); }
+  catch { return null; }
+}
+async function loadFig08() {
+  try { return await fetchJson('./data/analytics/fig08.mean_feedback_curve.json'); }
+  catch { return null; }
+}
+async function loadTopClientsNetwork() {
+  try { return await fetchJson('./data/analytics/fig_top_clients_agents_network.json'); }
+  catch { return null; }
+}
+async function loadTopAgentsNetwork() {
+  try { return await fetchJson('./data/analytics/fig_top_agents_clients_network.json'); }
+  catch { return null; }
+}
+
+function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
+function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
+function shortAddr(a){ return a && a.startsWith('0x') && a.length>12 ? `${a.slice(0,6)}...${a.slice(-4)}` : (a || '-'); }
+function deriveStatus(a){
+  const t = new Date(a.lastActivityAt || a.createdAt || 0).getTime();
+  if (!Number.isFinite(t) || t<=0) return 'Inactive';
+  const days = (Date.now() - t) / (1000*60*60*24);
+  if (days <= 14) return 'Active';
+  if (days <= 60) return 'Warm';
+  return 'Inactive';
+}
+function statusPill(status){
+  const key = String(status || 'inactive').toLowerCase();
+  return `<span class='status-pill ${key}'>${status}</span>`;
+}
+function ipfsToHttp(u){
+  if (!u) return null;
+  const s = String(u).trim();
+  if (!s) return null;
+  if (s.startsWith('ipfs://')) return `https://ipfs.io/ipfs/${s.slice('ipfs://'.length)}`;
+  return s;
+}
+function fallbackAvatar(agentId){
+  return `https://api.dicebear.com/9.x/identicon/svg?seed=${encodeURIComponent(agentId||'agent')}`;
+}
+function pickAgentImage(a){
+  const direct = ipfsToHttp(a.image || a.imageURI || a.avatar || null);
+  if (direct) return direct;
+  const uri = ipfsToHttp(a.identityURI || a.agentURI || null);
+  if (uri && /\.(png|jpg|jpeg|gif|webp|svg)(\?|$)/i.test(uri)) return uri;
+  return fallbackAvatar(a.agentId);
+}
+
+function deriveAgentMetrics(agent, tagMap) {
+  const history = agent.feedbackHistory || [];
+  const nonCharacteristic = [];
+  const byCharacteristic = new Map();
+  const tagFreq = new Map();
+
+  for (const f of history) {
+    const n = Number(f.score);
+    if (!Number.isFinite(n)) continue;
+    const t = String(f.tag1 || '').trim().toLowerCase();
+    if (t) tagFreq.set(t, (tagFreq.get(t) || 0) + 1);
+    const cat = (tagMap[t]?.category) || 'unclassified';
+
+    if (cat === 'characteristic') {
+      const bucket = byCharacteristic.get(t) || [];
+      bucket.push(n);
+      byCharacteristic.set(t, bucket);
+    } else {
+      nonCharacteristic.push(n);
+    }
+  }
+
+  const characteristics = [...byCharacteristic.entries()]
+    .map(([tag, vals]) => ({ tag, count: vals.length, mean: Number(avg(vals).toFixed(2)) }))
+    .sort((a,b) => b.count - a.count || b.mean - a.mean);
+
+  const topTags = [...tagFreq.entries()]
+    .map(([tag,count]) => ({ tag, count, category: tagMap[tag]?.category || 'unclassified' }))
+    .sort((a,b) => b.count - a.count)
+    .slice(0, 8);
+
+  return {
+    scoreMain: Number(avg(nonCharacteristic).toFixed(2)),
+    scoreMainCount: nonCharacteristic.length,
+    characteristicCount: characteristics.reduce((s,x)=>s+x.count,0),
+    characteristics,
+    topTags,
+  };
+}
+
+window.renderHome = async function renderHome(){
+  document.getElementById('nav').innerHTML = NAV;
+  setActiveNav();
+
+  const data = await loadSnapshot();
+  const cp = await loadCheckpoint();
+  const tagMap = await loadTagMap();
+  const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+
+  const total = enriched.length;
+  const allScores = enriched.map((a)=>a._metrics.scoreMain || 0);
+  const mean = avg(allScores).toFixed(2);
+  const feedback = enriched.reduce((s,a)=>s+(a.feedbackCount||0),0);
+  const now = Date.now();
+  const ageMin = Math.floor((now - new Date(data.generatedAt).getTime()) / 60000);
+  const live = ageMin <= 20;
+
+  document.getElementById('status-chip').className = `status-chip ${live ? 'status-live' : 'status-stale'}`;
+  document.getElementById('status-chip').textContent = live ? `LIVE • updated ${ageMin}m ago` : `STALE • updated ${ageMin}m ago`;
+
+  document.getElementById('home-kpis').innerHTML = `
+    <div class='card'><h3>Agents indexed</h3><div class='kpi'>${total}</div></div>
+    <div class='card'><h3>Network</h3><div class='kpi'>ETH L1</div></div>
+    <div class='card'><h3>Avg Main Score (non-C1)</h3><div class='kpi'>${mean}</div></div>
+    <div class='card'><h3>Total Feedback</h3><div class='kpi'>${feedback}</div></div>`;
+
+  const top = [...enriched].sort((a,b)=>(b._metrics.scoreMain||0)-(a._metrics.scoreMain||0)).slice(0,5)
+    .map((a)=>`<li><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name}</a> — ${Number(a._metrics.scoreMain||0).toFixed(2)} (${a._metrics.scoreMainCount} fb used)</li>`).join('');
+  document.getElementById('top-agents').innerHTML = `<h3>Top agents by Main Score (non-C1)</h3><ol>${top || '<li>No agents</li>'}</ol>`;
+
+  const cpText = cp ? ` | Last safe block: ${cp.lastSafeBlock ?? '-'} | Checkpoint updated: ${fmtDate(cp.updatedAt)}` : '';
+  document.getElementById('meta').textContent = `Snapshot block: ${data.blockNumber} | Generated: ${fmtDate(data.generatedAt)}${cpText}`;
+  initFancyUI();
+}
+
+window.renderAgents = async function renderAgents(){
+  document.getElementById('nav').innerHTML = NAV;
+  setActiveNav();
+
+  const data = await loadSnapshot();
+  const tagMap = await loadTagMap();
+  const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+  const searchEl = document.getElementById('search');
+  const sortEl = document.getElementById('sort');
+  const metaEl = document.getElementById('agents-meta');
+  const paginationEl = document.getElementById('agents-pagination');
+  const topFeedbackEl = document.getElementById('agents-top-feedback');
+  const latestDeployedEl = document.getElementById('agents-latest-deployed');
+  const PAGE_SIZE = 20;
+  let currentPage = 1;
+
+  function renderTopFeedbackTiles() {
+    if (!topFeedbackEl) return;
+    const top = [...enriched]
+      .sort((a,b)=>(b.feedbackCount||0)-(a.feedbackCount||0))
+      .slice(0, 12);
+    const maxFb = Math.max(1, ...top.map((a) => Number(a.feedbackCount || 0)));
+
+    topFeedbackEl.innerHTML = top.map((a, idx) => {
+      const fb = Number(a.feedbackCount || 0);
+      const pct = Math.max(3, Math.round((fb / maxFb) * 100));
+      const score = Number(a._metrics?.scoreMain || 0).toFixed(2);
+      const img = pickAgentImage(a);
+      return `
+        <a class='agent-tile top-feedback-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}' title='Open agent ${a.name || a.agentId}'>
+          <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div style='min-width:0;flex:1;'>
+            <div class='agent-tile-title'>#${idx+1} ${a.name || a.agentId}</div>
+            <div class='agent-tile-sub'>${a.agentId} · Feedback: <b>${fb.toLocaleString()}</b> · Score: <b>${score}</b></div>
+            <div class='mini-bar interactive' data-pct='${pct}'>
+              <span style='width:${pct}%'></span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('') || '<p>No agents available yet.</p>';
+  }
+
+  function renderLatestDeployedTiles() {
+    if (!latestDeployedEl) return;
+    const latest = [...enriched]
+      .sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0))
+      .slice(0, 12);
+
+    const newestTs = latest.length ? Math.max(...latest.map((a) => new Date(a.createdAt || 0).getTime() || 0)) : 0;
+
+    latestDeployedEl.innerHTML = latest.map((a, idx) => {
+      const created = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const recencyPct = newestTs > 0 ? Math.max(4, Math.round((created / newestTs) * 100)) : 10;
+      const img = pickAgentImage(a);
+      const fb = Number(a.feedbackCount || 0);
+      return `
+        <a class='agent-tile latest-deployed-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}' title='Open agent ${a.name || a.agentId}'>
+          <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div style='min-width:0;flex:1;'>
+            <div class='agent-tile-title'>#${idx+1} ${a.name || a.agentId}</div>
+            <div class='agent-tile-sub'>${a.agentId} · Created: <b>${fmtDate(a.createdAt)}</b></div>
+            <div class='agent-tile-sub'>Feedback: <b>${fb.toLocaleString()}</b> · Status: <b>${deriveStatus(a)}</b></div>
+            <div class='mini-bar interactive' data-pct='${recencyPct}'>
+              <span style='width:${recencyPct}%'></span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('') || '<p>No deployed agents yet.</p>';
+  }
+
+  function applyFilters() {
+    const q = (searchEl.value || '').toLowerCase().trim();
+    const mode = sortEl.value;
+    let rows = [...enriched];
+
+    if (q) {
+      rows = rows.filter((a) => [a.name, a.agentId, a.owner, a.category].filter(Boolean).join(' ').toLowerCase().includes(q));
+    }
+
+    if (mode === 'score') rows.sort((a,b)=>(b._metrics.scoreMain||0)-(a._metrics.scoreMain||0));
+    if (mode === 'feedback') rows.sort((a,b)=>(b.feedbackCount||0)-(a.feedbackCount||0));
+    if (mode === 'recent') rows.sort((a,b)=>new Date(b.lastActivityAt||0)-new Date(a.lastActivityAt||0));
+    if (mode === 'name') rows.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    return rows;
+  }
+
+  function renderRows(reset = false) {
+    const rows = applyFilters();
+    const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    if (reset) currentPage = 1;
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    const shown = rows.slice(start, end);
+
+    document.getElementById('agents-table').innerHTML = shown.map((a)=>{
+      const st = deriveStatus(a);
+      const img = pickAgentImage(a);
+      return `<tr>
+      <td>
+        <div class='agent-cell'>
+          <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div>
+            <a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small>
+            <div class='agent-desc'>${(a.description || '').slice(0, 120) || 'No description yet'}</div>
+          </div>
+        </div>
+      </td>
+      <td>${a.category || '-'}</td>
+      <td class='owner-short' title='${a.owner || '-'}'>${shortAddr(a.owner)}</td>
+      <td>${Number(a._metrics.scoreMain || 0).toFixed(2)} /100</td>
+      <td>${a.feedbackCount || 0}</td>
+      <td>${statusPill(st)}</td>
+      <td>${fmtDate(a.lastActivityAt)}</td>
+    </tr>`;
+    }).join('') || `<tr><td colspan='7'>No agents for this filter</td></tr>`;
+
+    if (metaEl) {
+      const from = rows.length ? start + 1 : 0;
+      const to = Math.min(end, rows.length);
+      metaEl.textContent = `Showing ${from}-${to} / ${rows.length} agents`;
+    }
+
+    if (paginationEl) {
+      const maxButtons = 7;
+      let pStart = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+      let pEnd = Math.min(totalPages, pStart + maxButtons - 1);
+      pStart = Math.max(1, pEnd - maxButtons + 1);
+
+      const pageBtns = [];
+      for (let p = pStart; p <= pEnd; p++) {
+        pageBtns.push(`<button class='page-btn ${p === currentPage ? 'active' : ''}' data-page='${p}'>${p}</button>`);
+      }
+
+      paginationEl.innerHTML = `
+        <button class='page-btn' data-page='${Math.max(1, currentPage - 1)}' ${currentPage === 1 ? 'disabled' : ''}>← Prev</button>
+        ${pageBtns.join('')}
+        <button class='page-btn' data-page='${Math.min(totalPages, currentPage + 1)}' ${currentPage === totalPages ? 'disabled' : ''}>Next →</button>
+      `;
+
+      paginationEl.querySelectorAll('button[data-page]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const p = Number(btn.getAttribute('data-page') || '1');
+          if (!Number.isFinite(p)) return;
+          currentPage = p;
+          renderRows(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+    }
+  }
+
+  searchEl.addEventListener('input', () => renderRows(true));
+  sortEl.addEventListener('change', () => renderRows(true));
+  renderTopFeedbackTiles();
+  renderLatestDeployedTiles();
+  renderRows(true);
+  initFancyUI();
+}
+
+window.renderAgentDetail = async function renderAgentDetail(){
+  document.getElementById('nav').innerHTML = NAV;
+  setActiveNav();
+
+  const id = new URLSearchParams(location.search).get('id');
+  const data = await loadSnapshot();
+  const tagMap = await loadTagMap();
+  const a = data.agents.find((x)=>x.agentId===id);
+  if (!a) {
+    document.getElementById('agent-root').innerHTML = '<div class="card"><p>Agent not found</p></div>';
+    return;
+  }
+
+  const metrics = deriveAgentMetrics(a, tagMap);
+  const characteristicsHtml = metrics.characteristics.slice(0, 8)
+    .map((x)=>`<li><b>${x.tag}</b>: ${x.mean.toFixed(2)} (n=${x.count})</li>`).join('');
+  const topTagsHtml = metrics.topTags
+    .map((x)=>`<li><b>${x.tag}</b> — ${x.count} (${x.category})</li>`).join('');
+
+  const feedbackRows = (a.feedbackHistory || []).map((f)=> {
+    const t = String(f.tag1 || '').trim().toLowerCase();
+    const cat = tagMap[t]?.category || 'unclassified';
+    return `<tr><td>${fmtDate(f.timestamp)}</td><td>${f.score}</td><td>${f.tag1 || '-'}</td><td>${cat}</td><td>${f.comment || '-'}</td><td><small>${f.txHash}</small></td></tr>`;
+  }).join('');
+
+  document.getElementById('agent-root').innerHTML = `
+    <div class='card'>
+      <div class='agent-detail-head'>
+        <img class='agent-avatar-lg' src='${pickAgentImage(a)}' alt='${(a.name||a.agentId)}' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+        <h2>${a.name || a.agentId}</h2>
+      </div>
+      <p>${a.description || 'No description'}</p>
+      <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span></p>
+      <p><b>Owner:</b> ${a.owner || '-'}</p>
+      <p><b>Status:</b> ${statusPill(deriveStatus(a))}</p>
+      <p><b>Identity URI:</b> ${a.identityURI || '-'}</p>
+      <p><b>Created At:</b> ${fmtDate(a.createdAt)}</p>
+      <p><b>Main Score (non-C1):</b> ${metrics.scoreMain.toFixed(2)} /100 (${metrics.scoreMainCount} feedback used)</p>
+      <p><b>Legacy Score v1:</b> ${Number(a.scoreV1 || 0).toFixed(2)} /100</p>
+      <p><b>Total Feedback:</b> ${a.feedbackCount || 0}</p>
+      <p><b>Characteristic feedback (C1):</b> ${metrics.characteristicCount}</p>
+      <p><b>Unique raters:</b> ${a.uniqueRaters ?? '-'}</p>
+      <p><b>Last activity:</b> ${fmtDate(a.lastActivityAt)}</p>
+      <h3 style='margin-top:14px;'>Characteristics evaluated (top)</h3>
+      <ol>${characteristicsHtml || '<li>No characteristic tags yet</li>'}</ol>
+      <h3 style='margin-top:14px;'>Most used tags</h3>
+      <ol>${topTagsHtml || '<li>No tags yet</li>'}</ol>
+    </div>
+    <h3 style='margin-top:16px;'>Feedback Registry History</h3>
+    <table class='table'>
+      <thead><tr><th>Timestamp</th><th>Score</th><th>tag1</th><th>Category</th><th>Comment</th><th>TxHash</th></tr></thead>
+      <tbody>${feedbackRows || '<tr><td colspan="6">No feedback</td></tr>'}</tbody>
+    </table>`;
+  initFancyUI();
+}
+
+window.renderPipeline = async function renderPipeline(){
+  document.getElementById('nav').innerHTML = NAV;
+  setActiveNav();
+
+  const cp = await loadCheckpoint();
+  if (!cp) {
+    document.getElementById('pipeline-kpis').innerHTML = `<div class='card'><h3>No checkpoint yet</h3><p>Run indexer to populate data/live/checkpoints.json</p></div>`;
+    return;
+  }
+
+  document.getElementById('pipeline-kpis').innerHTML = `
+    <div class='card'><h3>Last safe block</h3><div class='kpi'>${cp.lastSafeBlock ?? '-'}</div></div>
+    <div class='card'><h3>Identity from block</h3><div class='kpi'>${cp.identityFromBlock ?? '-'}</div></div>
+    <div class='card'><h3>Feedback from block</h3><div class='kpi'>${cp.feedbackFromBlock ?? '-'}</div></div>
+    <div class='card'><h3>Updated at</h3><div>${fmtDate(cp.updatedAt)}</div></div>`;
+
+  document.getElementById('checkpoint-raw').textContent = JSON.stringify(cp, null, 2);
+  initFancyUI();
+}
+
+function giniFromArray(values){
+  const x = (values || []).map(Number).filter((v) => Number.isFinite(v) && v >= 0).sort((a,b) => a - b);
+  if (!x.length) return 0;
+  const sum = x.reduce((a,b)=>a+b,0);
+  if (sum <= 0) return 0;
+  let weighted = 0;
+  for (let i = 0; i < x.length; i++) weighted += (i + 1) * x[i];
+  return (2 * weighted) / (x.length * sum) - (x.length + 1) / x.length;
+}
+
+function buildPolyline(xs, ys, xToPx, yToPx){
+  return xs.map((x, i) => `${xToPx(x).toFixed(2)},${yToPx(ys[i]).toFixed(2)}`).join(' ');
+}
+
+function niceStep(rawStep){
+  if (!Number.isFinite(rawStep) || rawStep <= 0) return 1;
+  const exp = Math.floor(Math.log10(rawStep));
+  const frac = rawStep / Math.pow(10, exp);
+  let niceFrac = 1;
+  if (frac <= 1) niceFrac = 1;
+  else if (frac <= 2) niceFrac = 2;
+  else if (frac <= 5) niceFrac = 5;
+  else niceFrac = 10;
+  return niceFrac * Math.pow(10, exp);
+}
+
+function roundTickValues(min, max, n = 6){
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return [Math.round(min || 0)];
+  const step = niceStep((max - min) / Math.max(1, (n - 1)));
+  const start = Math.ceil(min / step) * step;
+  const ticks = [];
+  for (let v = start; v <= max + step * 0.5; v += step) ticks.push(Math.round(v));
+  if (!ticks.length || ticks[0] !== 0) ticks.unshift(0);
+  return [...new Set(ticks)].sort((a,b)=>a-b);
+}
+
+function shortNum(v){
+  const a = Math.abs(v);
+  if (a >= 1e9) return `${(v/1e9).toFixed(1).replace(/\.0$/,'')}B`;
+  if (a >= 1e6) return `${(v/1e6).toFixed(1).replace(/\.0$/,'')}M`;
+  if (a >= 1e3) return `${(v/1e3).toFixed(1).replace(/\.0$/,'')}K`;
+  return `${Math.round(v)}`;
+}
+
+function renderFig00a(fig){
+  const root = document.getElementById('fig00a-root');
+  if (!root) return;
+  if (!fig || !fig.x_union?.length) {
+    root.innerHTML = `<p>Figure data not available yet.</p>`;
+    return;
+  }
+
+  const x = fig.x_union.map(Number);
+  const reg = fig.reg_y.map(Number);
+  const fb = fig.fb_y.map(Number);
+
+  const width = 1040;
+  const height = 460;
+  const margin = { top: 24, right: 24, bottom: 72, left: 88 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+
+  const xMin = Math.min(...x);
+  const xMax = Math.max(...x);
+  const yMin = 0;
+  const yMax = Math.max(...reg, ...fb, 1);
+
+  const xToPx = (v) => margin.left + ((v - xMin) / Math.max(1, xMax - xMin)) * plotW;
+  const yToPx = (v) => margin.top + (1 - (v - yMin) / Math.max(1, yMax - yMin)) * plotH;
+
+  const regPoints = buildPolyline(x, reg, xToPx, yToPx);
+  const fbPoints = buildPolyline(x, fb, xToPx, yToPx);
+
+  const yTicks = roundTickValues(yMin, yMax, 6);
+  const xTicks = roundTickValues(xMin, xMax, 6);
+
+  const yTickSvg = yTicks.map((v) => {
+    const py = yToPx(v);
+    return `
+      <line x1='${margin.left}' y1='${py}' x2='${width - margin.right}' y2='${py}' stroke='currentColor' opacity='0.16'/>
+      <text x='${margin.left - 12}' y='${py + 5}' text-anchor='end' font-size='13' font-weight='600'>${shortNum(v)}</text>
+    `;
+  }).join('');
+
+  const xTickSvg = xTicks.map((v) => {
+    const px = xToPx(v);
+    return `
+      <line x1='${px}' y1='${margin.top}' x2='${px}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.12'/>
+      <text x='${px}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>
+    `;
+  }).join('');
+
+  const regArea = `${margin.left},${height - margin.bottom} ${regPoints} ${width - margin.right},${height - margin.bottom}`;
+  const fbArea = `${margin.left},${height - margin.bottom} ${fbPoints} ${width - margin.right},${height - margin.bottom}`;
+
+  root.innerHTML = `
+    <div class='fig00a-panel'>
+      <div class='fig00a-controls'>
+        <label><input type='checkbox' id='fig00a-toggle-reg' checked/> registrations</label>
+        <label><input type='checkbox' id='fig00a-toggle-fb' checked/> feedback events</label>
+      </div>
+      <div class='fig00a-wrap' style='position:relative'>
+        <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Cumulative registrations and feedback events over block number'>
+          <defs>
+            <linearGradient id='fig00a-grad-reg' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#1d4ed8' stop-opacity='0.32'/>
+              <stop offset='100%' stop-color='#1d4ed8' stop-opacity='0.02'/>
+            </linearGradient>
+            <linearGradient id='fig00a-grad-fb' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#dc2626' stop-opacity='0.28'/>
+              <stop offset='100%' stop-color='#dc2626' stop-opacity='0.02'/>
+            </linearGradient>
+            <filter id='fig00a-glow'><feGaussianBlur stdDeviation='2.2' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter>
+          </defs>
+          ${yTickSvg}
+          ${xTickSvg}
+
+          <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+          <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+
+          <polygon id='fig00a-reg-area' points='${regArea}' fill='url(#fig00a-grad-reg)' />
+          <polygon id='fig00a-fb-area' points='${fbArea}' fill='url(#fig00a-grad-fb)' />
+
+          <polyline id='fig00a-reg-line' class='fig-line-anim' fill='none' stroke='#1d4ed8' stroke-width='2.8' filter='url(#fig00a-glow)' points='${regPoints}' />
+          <polyline id='fig00a-fb-line' class='fig-line-anim' fill='none' stroke='#dc2626' stroke-width='2.8' filter='url(#fig00a-glow)' points='${fbPoints}' />
+
+          <line id='fig00a-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+
+          <rect id='fig00a-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+
+          <text x='${width / 2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Block number</text>
+          <text x='24' y='${height / 2}' transform='rotate(-90 24 ${height / 2})' text-anchor='middle' font-size='16' font-weight='700'>Cumulative count</text>
+
+          <circle cx='${margin.left + 8}' cy='${margin.top + 8}' r='4' fill='#1d4ed8'></circle>
+          <text x='${margin.left + 18}' y='${margin.top + 12}' font-size='12'>Cumulative registrations</text>
+          <circle cx='${margin.left + 240}' cy='${margin.top + 8}' r='4' fill='#dc2626'></circle>
+          <text x='${margin.left + 250}' y='${margin.top + 12}' font-size='12'>Cumulative feedback events</text>
+        </svg>
+        <div id='fig00a-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+      </div>
+    </div>
+    <p class='chart-caption'>Cumulative network growth in the ${xMin.toLocaleString()}–${xMax.toLocaleString()} block range · Total registrations <b>${reg[reg.length-1].toLocaleString()}</b> · Total feedback <b>${fb[fb.length-1].toLocaleString()}</b>.</p>
+  `;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig00a-hitbox');
+  const cross = root.querySelector('#fig00a-cross');
+  const tip = root.querySelector('#fig00a-tooltip');
+  const regLine = root.querySelector('#fig00a-reg-line');
+  const fbLine = root.querySelector('#fig00a-fb-line');
+  const regAreaEl = root.querySelector('#fig00a-reg-area');
+  const fbAreaEl = root.querySelector('#fig00a-fb-area');
+  const regToggle = root.querySelector('#fig00a-toggle-reg');
+  const fbToggle = root.querySelector('#fig00a-toggle-fb');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const syncSeriesVisibility = () => {
+    const regOn = regToggle ? regToggle.checked : true;
+    const fbOn = fbToggle ? fbToggle.checked : true;
+    if (regLine) regLine.style.display = regOn ? 'block' : 'none';
+    if (regAreaEl) regAreaEl.style.display = regOn ? 'block' : 'none';
+    if (fbLine) fbLine.style.display = fbOn ? 'block' : 'none';
+    if (fbAreaEl) fbAreaEl.style.display = fbOn ? 'block' : 'none';
+  };
+  if (regToggle) regToggle.addEventListener('change', syncSeriesVisibility);
+  if (fbToggle) fbToggle.addEventListener('change', syncSeriesVisibility);
+  syncSeriesVisibility();
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(x.length - 1, Math.round(t * (x.length - 1))));
+    const px = xToPx(x[idx]);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 210, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    tip.innerHTML = `Block <b>${x[idx].toLocaleString()}</b><br/>Reg: <b>${reg[idx].toLocaleString()}</b><br/>Feedback: <b>${fb[idx].toLocaleString()}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
+}
+
+function renderFig00b(fig){
+  const root = document.getElementById('fig00b-root');
+  if (!root) return;
+  if (!fig || !fig.centers?.length) {
+    root.innerHTML = `<p>Figure data not available yet.</p>`;
+    return;
+  }
+
+  const x = fig.centers.map(Number);
+  const reg = fig.reg_hist.map(Number);
+  const fb = fig.fb_hist.map(Number);
+  const ratio = (fig.ratio || []).map((v) => (v == null ? null : Number(v)));
+
+  const width = 1040;
+  const height = 460;
+  const margin = { top: 24, right: 84, bottom: 72, left: 88 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+
+  const xMin = Math.min(...x);
+  const xMax = Math.max(...x);
+  const yMin = 0;
+  const yMax = Math.max(1, ...reg, ...fb);
+  const ratioMax = Math.max(1, ...ratio.filter((v) => Number.isFinite(v)));
+
+  const xToPx = (v) => margin.left + ((v - xMin) / Math.max(1, xMax - xMin)) * plotW;
+  const yToPx = (v) => margin.top + (1 - (v - yMin) / Math.max(1, yMax - yMin)) * plotH;
+  const rToPx = (v) => margin.top + (1 - (v / Math.max(1, ratioMax))) * plotH;
+
+  const regPoints = buildPolyline(x, reg, xToPx, yToPx);
+  const fbPoints = buildPolyline(x, fb, xToPx, yToPx);
+  const ratioPoints = x.map((v, i) => Number.isFinite(ratio[i]) ? `${xToPx(v)},${rToPx(ratio[i])}` : null).filter(Boolean).join(' ');
+
+  const yTicks = roundTickValues(yMin, yMax, 6);
+  const xTicks = roundTickValues(xMin, xMax, 6);
+  const rTicks = roundTickValues(0, ratioMax, 5);
+
+  const yTickSvg = yTicks.map((v) => {
+    const py = yToPx(v);
+    return `
+      <line x1='${margin.left}' y1='${py}' x2='${width - margin.right}' y2='${py}' stroke='currentColor' opacity='0.16'/>
+      <text x='${margin.left - 12}' y='${py + 5}' text-anchor='end' font-size='13' font-weight='600'>${shortNum(v)}</text>
+    `;
+  }).join('');
+
+  const xTickSvg = xTicks.map((v) => {
+    const px = xToPx(v);
+    return `
+      <line x1='${px}' y1='${margin.top}' x2='${px}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.12'/>
+      <text x='${px}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>
+    `;
+  }).join('');
+
+  const rTickSvg = rTicks.map((v) => {
+    const py = rToPx(v);
+    return `<text x='${width - margin.right + 10}' y='${py + 5}' text-anchor='start' font-size='12' font-weight='600'>${v}</text>`;
+  }).join('');
+
+  const regArea = `${margin.left},${height - margin.bottom} ${regPoints} ${width - margin.right},${height - margin.bottom}`;
+  const fbArea = `${margin.left},${height - margin.bottom} ${fbPoints} ${width - margin.right},${height - margin.bottom}`;
+
+  root.innerHTML = `
+    <div class='fig00a-panel'>
+      <div class='fig00a-controls'>
+        <label><input type='checkbox' id='fig00b-toggle-reg' checked/> registrations/bin</label>
+        <label><input type='checkbox' id='fig00b-toggle-fb' checked/> feedback/bin</label>
+        <label><input type='checkbox' id='fig00b-toggle-ratio' checked/> ratio (FB/REG)</label>
+      </div>
+      <div class='fig00a-wrap' style='position:relative'>
+        <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Event intensity by block bins'>
+          <defs>
+            <linearGradient id='fig00b-grad-reg' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#1d4ed8' stop-opacity='0.28'/>
+              <stop offset='100%' stop-color='#1d4ed8' stop-opacity='0.02'/>
+            </linearGradient>
+            <linearGradient id='fig00b-grad-fb' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stop-color='#dc2626' stop-opacity='0.24'/>
+              <stop offset='100%' stop-color='#dc2626' stop-opacity='0.02'/>
+            </linearGradient>
+            <filter id='fig00b-glow'><feGaussianBlur stdDeviation='2.2' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter>
+          </defs>
+          ${yTickSvg}
+          ${xTickSvg}
+
+          <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+          <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+          <line x1='${width - margin.right}' y1='${margin.top}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.45'/>
+
+          <polygon id='fig00b-reg-area' points='${regArea}' fill='url(#fig00b-grad-reg)' />
+          <polygon id='fig00b-fb-area' points='${fbArea}' fill='url(#fig00b-grad-fb)' />
+
+          <polyline id='fig00b-reg-line' class='fig-line-anim' fill='none' stroke='#1d4ed8' stroke-width='2.8' filter='url(#fig00b-glow)' points='${regPoints}' />
+          <polyline id='fig00b-fb-line' class='fig-line-anim' fill='none' stroke='#dc2626' stroke-width='2.8' filter='url(#fig00b-glow)' points='${fbPoints}' />
+          <polyline id='fig00b-ratio-line' class='fig-line-anim' fill='none' stroke='#8a6a2d' stroke-width='2.5' points='${ratioPoints}' />
+
+          <line id='fig00b-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+          <rect id='fig00b-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+
+          ${rTickSvg}
+
+          <text x='${width / 2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Block number (bin centers)</text>
+          <text x='24' y='${height / 2}' transform='rotate(-90 24 ${height / 2})' text-anchor='middle' font-size='16' font-weight='700'>Events per bin</text>
+          <text x='${width - 14}' y='${height / 2}' transform='rotate(-90 ${width - 14} ${height / 2})' text-anchor='middle' font-size='14' font-weight='700'>Ratio (FB/REG)</text>
+
+          <circle cx='${margin.left + 8}' cy='${margin.top + 8}' r='4' fill='#1d4ed8'></circle>
+          <text x='${margin.left + 18}' y='${margin.top + 12}' font-size='12'>Registrations per bin</text>
+          <circle cx='${margin.left + 190}' cy='${margin.top + 8}' r='4' fill='#dc2626'></circle>
+          <text x='${margin.left + 200}' y='${margin.top + 12}' font-size='12'>Feedback per bin</text>
+          <circle cx='${margin.left + 330}' cy='${margin.top + 8}' r='4' fill='#8a6a2d'></circle>
+          <text x='${margin.left + 340}' y='${margin.top + 12}' font-size='12'>Ratio (FB/REG)</text>
+        </svg>
+        <div id='fig00b-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+      </div>
+    </div>
+  `;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig00b-hitbox');
+  const cross = root.querySelector('#fig00b-cross');
+  const tip = root.querySelector('#fig00b-tooltip');
+  const regLine = root.querySelector('#fig00b-reg-line');
+  const fbLine = root.querySelector('#fig00b-fb-line');
+  const ratioLine = root.querySelector('#fig00b-ratio-line');
+  const regAreaEl = root.querySelector('#fig00b-reg-area');
+  const fbAreaEl = root.querySelector('#fig00b-fb-area');
+  const regToggle = root.querySelector('#fig00b-toggle-reg');
+  const fbToggle = root.querySelector('#fig00b-toggle-fb');
+  const ratioToggle = root.querySelector('#fig00b-toggle-ratio');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const syncSeriesVisibility = () => {
+    const regOn = regToggle ? regToggle.checked : true;
+    const fbOn = fbToggle ? fbToggle.checked : true;
+    const ratioOn = ratioToggle ? ratioToggle.checked : true;
+    if (regLine) regLine.style.display = regOn ? 'block' : 'none';
+    if (regAreaEl) regAreaEl.style.display = regOn ? 'block' : 'none';
+    if (fbLine) fbLine.style.display = fbOn ? 'block' : 'none';
+    if (fbAreaEl) fbAreaEl.style.display = fbOn ? 'block' : 'none';
+    if (ratioLine) ratioLine.style.display = ratioOn ? 'block' : 'none';
+  };
+  if (regToggle) regToggle.addEventListener('change', syncSeriesVisibility);
+  if (fbToggle) fbToggle.addEventListener('change', syncSeriesVisibility);
+  if (ratioToggle) ratioToggle.addEventListener('change', syncSeriesVisibility);
+  syncSeriesVisibility();
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(x.length - 1, Math.round(t * (x.length - 1))));
+    const px = xToPx(x[idx]);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 230, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    const r = Number.isFinite(ratio[idx]) ? ratio[idx].toFixed(2) : 'n/a';
+    tip.innerHTML = `Block <b>${x[idx].toLocaleString()}</b><br/>Reg/bin: <b>${reg[idx].toLocaleString()}</b><br/>Feedback/bin: <b>${fb[idx].toLocaleString()}</b><br/>Ratio: <b>${r}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
+}
+
+function renderFig07(fig){
+  const root = document.getElementById('fig07-root');
+  if (!root) return;
+  const d = (fig?.dd || []).map(Number).filter((v) => Number.isFinite(v) && v >= 0);
+  if (!d.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+
+  const bins = 36;
+  const xMax = Math.max(...d);
+  const step = Math.max(1, Math.ceil(xMax / bins));
+  const counts = Array.from({ length: bins }, () => 0);
+  d.forEach((v) => { const i = Math.min(bins - 1, Math.floor(v / step)); counts[i] += 1; });
+  const xs = counts.map((_, i) => i * step);
+
+  const width = 1040, height = 420;
+  const margin = { top: 24, right: 24, bottom: 64, left: 82 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+  const yMax = Math.max(...counts, 1);
+  const xToPx = (v) => margin.left + (v / Math.max(1, xMax)) * plotW;
+  const yToPx = (v) => margin.top + (1 - v / Math.max(1, yMax)) * plotH;
+
+  const yTicks = roundTickValues(0, yMax, 6);
+  const xTicks = roundTickValues(0, xMax, 6);
+
+  const yTickSvg = yTicks.map((v) => `<line x1='${margin.left}' y1='${yToPx(v)}' x2='${width - margin.right}' y2='${yToPx(v)}' stroke='currentColor' opacity='0.16'/><text x='${margin.left - 12}' y='${yToPx(v) + 5}' text-anchor='end' font-size='13' font-weight='600'>${shortNum(v)}</text>`).join('');
+  const xTickSvg = xTicks.map((v) => `<line x1='${xToPx(v)}' y1='${margin.top}' x2='${xToPx(v)}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.10'/><text x='${xToPx(v)}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>`).join('');
+  const barW = Math.max(3, plotW / bins - 2);
+  const bars = counts.map((c, i) => {
+    const x = margin.left + i * (plotW / bins);
+    const y = yToPx(c);
+    const h = margin.top + plotH - y;
+    return `<rect x='${x}' y='${y}' width='${barW}' height='${h}' rx='2' fill='#1d4ed8' fill-opacity='0.78'/>`;
+  }).join('');
+
+  const q50 = Number(fig?.q50 || 0);
+  const q50x = xToPx(q50);
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='First feedback delay distribution'>
+        ${yTickSvg}${xTickSvg}
+        <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        ${bars}
+        <line x1='${q50x}' y1='${margin.top}' x2='${q50x}' y2='${height - margin.bottom}' stroke='#8a6a2d' stroke-width='2.2' stroke-dasharray='6 5'/>
+        <line id='fig07-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+        <rect id='fig07-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+        <text x='${Math.min(width - margin.right - 10, q50x + 8)}' y='${margin.top + 18}' font-size='12' font-weight='700' fill='#8a6a2d'>Median: ${Math.round(q50).toLocaleString()}</text>
+        <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delay from registration (blocks)</text>
+        <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Number of agents</text>
+      </svg>
+      <div id='fig07-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig07-hitbox');
+  const cross = root.querySelector('#fig07-cross');
+  const tip = root.querySelector('#fig07-tooltip');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(bins - 1, Math.floor(t * bins)));
+    const xStart = idx * step;
+    const xEnd = (idx + 1) * step;
+    const px = margin.left + (idx + 0.5) * (plotW / bins);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 220, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    tip.innerHTML = `Delay bin <b>${Math.round(xStart).toLocaleString()}–${Math.round(xEnd).toLocaleString()}</b><br/>Agents: <b>${counts[idx].toLocaleString()}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
+}
+
+function renderTopClientsNetwork(fig){
+  const root = document.getElementById('fig-top-clients-root');
+  if (!root) return;
+  const clients = [...(fig?.clients || [])].sort((a, b) => Number(b.totalFeedback || 0) - Number(a.totalFeedback || 0));
+  const agents = [...(fig?.agents || [])].sort((a, b) => Number(b.totalFromTopClients || 0) - Number(a.totalFromTopClients || 0));
+  const edges = fig?.edges || [];
+  if (!clients.length || !agents.length || !edges.length) {
+    root.innerHTML = `<p>Figure data not available yet.</p>`;
+    return;
+  }
+
+  const width = 1120, height = 560;
+  const margin = { top: 30, right: 80, bottom: 30, left: 80 };
+  const leftX = margin.left + 80;
+  const rightX = width - margin.right - 80;
+
+  const maxClient = Math.max(1, ...clients.map((c) => Number(c.totalFeedback || 0)));
+  const maxAgent = Math.max(1, ...agents.map((a) => Number(a.totalFromTopClients || 0)));
+  const maxEdge = Math.max(1, ...edges.map((e) => Number(e.weight || 0)));
+
+  const clientY = new Map();
+  clients.forEach((c, i) => clientY.set(c.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / clients.length));
+  const agentY = new Map();
+  agents.forEach((a, i) => agentY.set(a.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / agents.length));
+
+  const edgeSvg = edges.map((e) => {
+    const y1 = clientY.get(e.clientId), y2 = agentY.get(e.agentId);
+    if (!Number.isFinite(y1) || !Number.isFinite(y2)) return '';
+    const w = 0.8 + 7 * (Number(e.weight || 0) / maxEdge);
+    return `<path class='tc-edge' data-client='${e.clientId}' data-agent='${e.agentId}' data-weight='${Number(e.weight || 0)}' d='M ${leftX + 12} ${y1} C ${leftX + 220} ${y1}, ${rightX - 220} ${y2}, ${rightX - 12} ${y2}' stroke='rgba(79,70,229,0.35)' stroke-width='${w.toFixed(2)}' fill='none'><title>${e.clientId} → ${e.agentId} · ${Number(e.weight || 0)} events</title></path>`;
+  }).join('');
+
+  const clientSvg = clients.map((c, i) => {
+    const y = clientY.get(c.id);
+    const r = 5 + 11 * (Number(c.totalFeedback || 0) / maxClient);
+    return `<circle class='tc-client' data-id='${c.id}' data-total='${Number(c.totalFeedback || 0)}' cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'><title>${c.id} · total feedback ${Number(c.totalFeedback || 0)}</title></circle><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>#${i + 1} ${c.label}</text>`;
+  }).join('');
+
+  const agentSvg = agents.map((a, i) => {
+    const y = agentY.get(a.id);
+    const r = 4 + 9 * (Number(a.totalFromTopClients || 0) / maxAgent);
+    return `<circle class='tc-agent' data-id='${a.id}' data-total='${Number(a.totalFromTopClients || 0)}' cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'><title>Agent ${a.id} · events from top clients ${Number(a.totalFromTopClients || 0)}</title></circle><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>#${i + 1} ${a.label}</text>`;
+  }).join('');
+
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Top clients connected to agents network'>
+        <text x='${leftX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#5b21b6'>Top clients</text>
+        <text x='${rightX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#1d4ed8'>Agents reached</text>
+        ${edgeSvg}
+        ${clientSvg}
+        ${agentSvg}
+      </svg>
+      <div id='tc-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const tip = root.querySelector('#tc-tooltip');
+  if (!wrap || !tip) return;
+
+  const showTip = (ev, html) => {
+    const bounds = wrap.getBoundingClientRect();
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 12))}px`;
+    tip.style.top = `${Math.min(bounds.height - 90, Math.max(8, ev.clientY - bounds.top + 12))}px`;
+    tip.innerHTML = html;
+  };
+  const hideTip = () => { tip.style.display = 'none'; };
+
+  root.querySelectorAll('.tc-edge').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-client')}</b> → <b>${el.getAttribute('data-agent')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-client')}</b> → <b>${el.getAttribute('data-agent')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.tc-client').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Top client <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Top client <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.tc-agent').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Agent <b>${el.getAttribute('data-id')}</b><br/>Events from top clients: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Agent <b>${el.getAttribute('data-id')}</b><br/>Events from top clients: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+}
+
+function renderTopAgentsNetwork(fig){
+  const root = document.getElementById('fig-top-agents-root');
+  if (!root) return;
+  const agents = [...(fig?.agents || [])].sort((a, b) => Number(b.totalFeedback || 0) - Number(a.totalFeedback || 0));
+  const clients = [...(fig?.clients || [])].sort((a, b) => Number(b.totalFromTopAgents || 0) - Number(a.totalFromTopAgents || 0));
+  const edges = fig?.edges || [];
+  if (!agents.length || !clients.length || !edges.length) {
+    root.innerHTML = `<p>Figure data not available yet.</p>`;
+    return;
+  }
+
+  const width = 1120, height = 560;
+  const margin = { top: 30, right: 80, bottom: 30, left: 80 };
+  const leftX = margin.left + 80;
+  const rightX = width - margin.right - 80;
+
+  const maxAgent = Math.max(1, ...agents.map((a) => Number(a.totalFeedback || 0)));
+  const maxClient = Math.max(1, ...clients.map((c) => Number(c.totalFromTopAgents || 0)));
+  const maxEdge = Math.max(1, ...edges.map((e) => Number(e.weight || 0)));
+
+  const agentY = new Map();
+  agents.forEach((a, i) => agentY.set(a.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / agents.length));
+  const clientY = new Map();
+  clients.forEach((c, i) => clientY.set(c.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / clients.length));
+
+  const edgeSvg = edges.map((e) => {
+    const y1 = agentY.get(e.agentId), y2 = clientY.get(e.clientId);
+    if (!Number.isFinite(y1) || !Number.isFinite(y2)) return '';
+    const w = 0.8 + 7 * (Number(e.weight || 0) / maxEdge);
+    return `<path class='ta-edge' data-agent='${e.agentId}' data-client='${e.clientId}' data-weight='${Number(e.weight || 0)}' d='M ${leftX + 12} ${y1} C ${leftX + 220} ${y1}, ${rightX - 220} ${y2}, ${rightX - 12} ${y2}' stroke='rgba(37,99,235,0.35)' stroke-width='${w.toFixed(2)}' fill='none'></path>`;
+  }).join('');
+
+  const agentSvg = agents.map((a, i) => {
+    const y = agentY.get(a.id);
+    const r = 5 + 11 * (Number(a.totalFeedback || 0) / maxAgent);
+    return `<circle class='ta-agent' data-id='${a.id}' data-total='${Number(a.totalFeedback || 0)}' cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'></circle><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>#${i + 1} ${a.label}</text>`;
+  }).join('');
+
+  const clientSvg = clients.map((c, i) => {
+    const y = clientY.get(c.id);
+    const r = 4 + 9 * (Number(c.totalFromTopAgents || 0) / maxClient);
+    return `<circle class='ta-client' data-id='${c.id}' data-total='${Number(c.totalFromTopAgents || 0)}' cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'></circle><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>#${i + 1} ${c.label}</text>`;
+  }).join('');
+
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Top agents connected to clients network'>
+        <text x='${leftX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#1d4ed8'>Top agents</text>
+        <text x='${rightX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#5b21b6'>Clients reached</text>
+        ${edgeSvg}
+        ${agentSvg}
+        ${clientSvg}
+      </svg>
+      <div id='ta-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const tip = root.querySelector('#ta-tooltip');
+  if (!wrap || !tip) return;
+
+  const showTip = (ev, html) => {
+    const bounds = wrap.getBoundingClientRect();
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 12))}px`;
+    tip.style.top = `${Math.min(bounds.height - 90, Math.max(8, ev.clientY - bounds.top + 12))}px`;
+    tip.innerHTML = html;
+  };
+  const hideTip = () => { tip.style.display = 'none'; };
+
+  root.querySelectorAll('.ta-edge').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-agent')}</b> → <b>${el.getAttribute('data-client')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-agent')}</b> → <b>${el.getAttribute('data-client')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.ta-agent').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Top agent <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Top agent <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.ta-client').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Client <b>${el.getAttribute('data-id')}</b><br/>Events from top agents: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Client <b>${el.getAttribute('data-id')}</b><br/>Events from top agents: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+}
+
+function renderFig08(fig){
+  const root = document.getElementById('fig08-root');
+  if (!root) return;
+  const x = (fig?.bin_start_delta_blocks || []).map(Number);
+  const y = (fig?.mean_feedback_per_active_agent || []).map(Number);
+  const n = (fig?.active_agents_in_bin || []).map(Number);
+  if (!x.length || !y.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+
+  const width = 1040, height = 450;
+  const margin = { top: 24, right: 96, bottom: 70, left: 88 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+  const xMin = Math.min(...x), xMax = Math.max(...x);
+  const yMax = Math.max(1, ...y), nMax = Math.max(1, ...n);
+
+  const xToPx = (v) => margin.left + ((v - xMin) / Math.max(1, xMax - xMin)) * plotW;
+  const yToPx = (v) => margin.top + (1 - v / yMax) * plotH;
+  const nToPx = (v) => margin.top + (1 - v / nMax) * plotH;
+
+  const yTicks = roundTickValues(0, yMax, 6);
+  const xTicks = roundTickValues(xMin, xMax, 6);
+  const nTicks = roundTickValues(0, nMax, 5);
+
+  const yTickSvg = yTicks.map((v) => `<line x1='${margin.left}' y1='${yToPx(v)}' x2='${width - margin.right}' y2='${yToPx(v)}' stroke='currentColor' opacity='0.16'/><text x='${margin.left - 12}' y='${yToPx(v) + 5}' text-anchor='end' font-size='13' font-weight='600'>${v.toFixed(1)}</text>`).join('');
+  const xTickSvg = xTicks.map((v) => `<line x1='${xToPx(v)}' y1='${margin.top}' x2='${xToPx(v)}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.10'/><text x='${xToPx(v)}' y='${height - margin.bottom + 24}' text-anchor='middle' font-size='13' font-weight='600'>${Math.round(v).toLocaleString()}</text>`).join('');
+  const nTickSvg = nTicks.map((v) => `<text x='${width - margin.right + 10}' y='${nToPx(v) + 5}' font-size='12' font-weight='600'>${shortNum(v)}</text>`).join('');
+
+  const binW = x.length > 1 ? Math.abs(xToPx(x[1]) - xToPx(x[0])) : 10;
+  const bars = x.map((v, i) => {
+    const xx = xToPx(v) - Math.max(2, binW * 0.4);
+    const yy = nToPx(n[i]);
+    return `<rect x='${xx}' y='${yy}' width='${Math.max(3, binW * 0.8)}' height='${margin.top + plotH - yy}' fill='#e2c379' fill-opacity='0.36'/>`;
+  }).join('');
+
+  const line = buildPolyline(x, y, xToPx, yToPx);
+
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-controls'>
+      <label><input type='checkbox' id='fig08-toggle-bars' checked/> active agents (bars)</label>
+      <label><input type='checkbox' id='fig08-toggle-line' checked/> mean feedback (line)</label>
+    </div>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Mean feedback curve by age bins'>
+        ${yTickSvg}${xTickSvg}
+        <line x1='${margin.left}' y1='${height - margin.bottom}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        <line x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.65'/>
+        <line x1='${width - margin.right}' y1='${margin.top}' x2='${width - margin.right}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0.45'/>
+        <g id='fig08-bars'>${bars}</g>
+        <polyline id='fig08-line' class='fig-line-anim' fill='none' stroke='#2A9D8F' stroke-width='2.8' points='${line}'/>
+        <line id='fig08-cross' x1='${margin.left}' y1='${margin.top}' x2='${margin.left}' y2='${height - margin.bottom}' stroke='currentColor' opacity='0' stroke-dasharray='4 4'/>
+        <rect id='fig08-hitbox' x='${margin.left}' y='${margin.top}' width='${plotW}' height='${plotH}' fill='transparent' style='cursor:crosshair'/>
+        ${nTickSvg}
+        <text x='${width/2}' y='${height - 16}' text-anchor='middle' font-size='16' font-weight='700'>Delta blocks since registration</text>
+        <text x='24' y='${height/2}' transform='rotate(-90 24 ${height/2})' text-anchor='middle' font-size='16' font-weight='700'>Mean feedback per active agent</text>
+        <text x='${width - 14}' y='${height/2}' transform='rotate(-90 ${width - 14} ${height/2})' text-anchor='middle' font-size='14' font-weight='700'>Active agents</text>
+      </svg>
+      <div id='fig08-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const hitbox = root.querySelector('#fig08-hitbox');
+  const cross = root.querySelector('#fig08-cross');
+  const tip = root.querySelector('#fig08-tooltip');
+  const barsEl = root.querySelector('#fig08-bars');
+  const lineEl = root.querySelector('#fig08-line');
+  const barsToggle = root.querySelector('#fig08-toggle-bars');
+  const lineToggle = root.querySelector('#fig08-toggle-line');
+  if (!wrap || !hitbox || !cross || !tip) return;
+
+  const syncVisibility = () => {
+    if (barsEl) barsEl.style.display = barsToggle?.checked === false ? 'none' : 'block';
+    if (lineEl) lineEl.style.display = lineToggle?.checked === false ? 'none' : 'block';
+  };
+  barsToggle?.addEventListener('change', syncVisibility);
+  lineToggle?.addEventListener('change', syncVisibility);
+  syncVisibility();
+
+  const onMove = (ev) => {
+    const bounds = wrap.getBoundingClientRect();
+    const svgX = ((ev.clientX - bounds.left) / bounds.width) * width;
+    const t = Math.max(0, Math.min(1, (svgX - margin.left) / plotW));
+    const idx = Math.max(0, Math.min(x.length - 1, Math.round(t * (x.length - 1))));
+    const px = xToPx(x[idx]);
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('opacity', '0.7');
+
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 240, Math.max(8, (px / width) * bounds.width + 10))}px`;
+    tip.style.top = `${Math.max(8, (margin.top / height) * bounds.height + 10)}px`;
+    tip.innerHTML = `Delta blocks <b>${Math.round(x[idx]).toLocaleString()}</b><br/>Mean feedback: <b>${Number(y[idx] || 0).toFixed(2)}</b><br/>Active agents: <b>${Math.round(n[idx] || 0).toLocaleString()}</b>`;
+  };
+
+  hitbox.addEventListener('mousemove', onMove);
+  hitbox.addEventListener('mouseenter', onMove);
+  hitbox.addEventListener('mouseleave', () => {
+    cross.setAttribute('opacity', '0');
+    tip.style.display = 'none';
+  });
+}
+
+window.renderAnalytics = async function renderAnalytics(){ 
+  document.getElementById('nav').innerHTML = NAV;
+  setActiveNav();
+
+  const data = await loadSnapshot();
+  const tagMap = await loadTagMap();
+  const fig00a = await loadFig00a();
+  const fig00b = await loadFig00b();
+  const fig07 = await loadFig07();
+  const fig08 = await loadFig08();
+  const figTopClients = await loadTopClientsNetwork();
+  const figTopAgents = await loadTopAgentsNetwork();
+  const agents = data.agents || [];
+  const enriched = agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+
+  const feedbackCounts = enriched.map((a) => Number(a.feedbackCount || 0));
+  const scoreMain = enriched.map((a) => Number(a._metrics.scoreMain || 0)).filter((v) => Number.isFinite(v) && v > 0);
+  const active = enriched.filter((a) => deriveStatus(a) === 'Active').length;
+  const warm = enriched.filter((a) => deriveStatus(a) === 'Warm').length;
+  const inactive = Math.max(0, enriched.length - active - warm);
+
+  const topByFeedback = [...enriched]
+    .sort((a,b) => (b.feedbackCount || 0) - (a.feedbackCount || 0))
+    .slice(0, 8);
+
+
+  const avgScore = scoreMain.length ? avg(scoreMain).toFixed(2) : '0.00';
+  const p90Feedback = feedbackCounts.length
+    ? [...feedbackCounts].sort((a,b)=>a-b)[Math.floor(0.9 * (feedbackCounts.length - 1))]
+    : 0;
+  const giniFeedback = giniFromArray(feedbackCounts).toFixed(3);
+
+  document.getElementById('analytics-kpis').innerHTML = `
+    <div class='card'><h3>Agents indexed</h3><div class='kpi'>${enriched.length}</div></div>
+    <div class='card'><h3>Avg Main Score</h3><div class='kpi'>${avgScore}</div></div>
+    <div class='card'><h3>Feedback concentration (Gini)</h3><div class='kpi'>${giniFeedback}</div></div>
+    <div class='card'><h3>P90 feedback / agent</h3><div class='kpi'>${p90Feedback}</div></div>`;
+
+  document.getElementById('analytics-status').innerHTML = `
+    <div class='card'><h3>Activity status mix</h3>
+      <p>Active: <b>${active}</b> · Warm: <b>${warm}</b> · Inactive: <b>${inactive}</b></p>
+      <p class='meta-row'>Snapshot generated: ${fmtDate(data.generatedAt)} · Block ${data.blockNumber}</p>
+    </div>`;
+
+  const maxFb = Math.max(1, ...topByFeedback.map((a) => Number(a.feedbackCount || 0)));
+  document.getElementById('analytics-top-feedback').innerHTML = `
+    <div class='agent-tiles'>
+      ${topByFeedback.map((a) => {
+        const fb = Number(a.feedbackCount || 0);
+        const w = Math.max(6, Math.round((fb / maxFb) * 100));
+        const img = pickAgentImage(a);
+        return `<a class='agent-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}'>
+          <img class='agent-avatar' src='${img}' alt='${a.name || a.agentId}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div>
+            <div class='agent-tile-title'>${a.name || shortAddr(a.agentId)}</div>
+            <div class='agent-tile-sub'>${fb.toLocaleString()} feedback</div>
+            <div class='mini-bar'><span style='width:${w}%'></span></div>
+          </div>
+        </a>`;
+      }).join('')}
+    </div>`;
+
+  renderFig00a(fig00a);
+  renderFig00b(fig00b);
+  renderFig07(fig07);
+  renderFig08(fig08);
+  renderTopClientsNetwork(figTopClients);
+  renderTopAgentsNetwork(figTopAgents);
+  initFancyUI();
+}

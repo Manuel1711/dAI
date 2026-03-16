@@ -196,6 +196,7 @@ window.renderAgents = async function renderAgents(){
   const metaEl = document.getElementById('agents-meta');
   const paginationEl = document.getElementById('agents-pagination');
   const topFeedbackEl = document.getElementById('agents-top-feedback');
+  const latestDeployedEl = document.getElementById('agents-latest-deployed');
   const PAGE_SIZE = 20;
   let currentPage = 1;
 
@@ -224,6 +225,35 @@ window.renderAgents = async function renderAgents(){
         </a>
       `;
     }).join('') || '<p>No agents available yet.</p>';
+  }
+
+  function renderLatestDeployedTiles() {
+    if (!latestDeployedEl) return;
+    const latest = [...enriched]
+      .sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0))
+      .slice(0, 12);
+
+    const newestTs = latest.length ? Math.max(...latest.map((a) => new Date(a.createdAt || 0).getTime() || 0)) : 0;
+
+    latestDeployedEl.innerHTML = latest.map((a, idx) => {
+      const created = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const recencyPct = newestTs > 0 ? Math.max(4, Math.round((created / newestTs) * 100)) : 10;
+      const img = pickAgentImage(a);
+      const fb = Number(a.feedbackCount || 0);
+      return `
+        <a class='agent-tile latest-deployed-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}' title='Open agent ${a.name || a.agentId}'>
+          <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div style='min-width:0;flex:1;'>
+            <div class='agent-tile-title'>#${idx+1} ${a.name || a.agentId}</div>
+            <div class='agent-tile-sub'>${a.agentId} · Created: <b>${fmtDate(a.createdAt)}</b></div>
+            <div class='agent-tile-sub'>Feedback: <b>${fb.toLocaleString()}</b> · Status: <b>${deriveStatus(a)}</b></div>
+            <div class='mini-bar interactive' data-pct='${recencyPct}'>
+              <span style='width:${recencyPct}%'></span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('') || '<p>No deployed agents yet.</p>';
   }
 
   function applyFilters() {
@@ -312,6 +342,7 @@ window.renderAgents = async function renderAgents(){
   searchEl.addEventListener('input', () => renderRows(true));
   sortEl.addEventListener('change', () => renderRows(true));
   renderTopFeedbackTiles();
+  renderLatestDeployedTiles();
   renderRows(true);
   initFancyUI();
 }

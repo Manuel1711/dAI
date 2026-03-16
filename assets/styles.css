@@ -159,9 +159,10 @@ pre{white-space:pre-wrap;word-break:break-word;color:#374151}
 .mini-bar.interactive:hover::after{opacity:1}
 @keyframes barShine{0%{background-position:0% 50%}100%{background-position:100% 50%}}
 
-.agents-top-card{padding:14px 16px 14px;margin-bottom:12px}
-.top-feedback-tile{padding:12px}
-.top-feedback-tile:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 12px 22px rgba(115,92,52,.16)}
+.agents-top-card,.agents-latest-card{padding:14px 16px 14px;margin-bottom:12px}
+.top-feedback-tile,.latest-deployed-tile{padding:12px}
+.top-feedback-tile:hover,.latest-deployed-tile:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 12px 22px rgba(115,92,52,.16)}
+.latest-deployed-tile .mini-bar span{background:linear-gradient(90deg,#5b7cfa,#6dd3ff,#9ef3e6)}
 
 .agents-toolbar-card{padding:14px 16px 12px}
 .agents-toolbar{margin:0}

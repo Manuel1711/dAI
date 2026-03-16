@@ -5,5 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.mjs"
+  },
+  "dependencies": {
+    "agent0-sdk": "^1.7.1"
   }
 }

@@ -8,50 +8,98 @@
 </head>
 <body>
   <div class='container'>
-    <div id='nav'>
-      <nav>
-        <a href="./index.html">Home</a>
-        <a href="./agents.html">Agents</a>
-        <a href="./analytics.html">Analytics</a>
-        <a href="./research.html">Research</a>
-        <a href="./pipeline.html">Pipeline</a>
-        <a href="./deploy.html" class="active">Deploy</a>
-      </nav>
-    </div>
+    <div id='nav'></div>
 
     <section class='hero hero-future'>
       <div class='eyebrow'>OPS</div>
-      <h1>Deploy Control Panel</h1>
-      <p>Operational entrypoint for protocol actions (register agent, give/respond feedback) and deployment status.</p>
+      <h1>Deploy Action Center</h1>
+      <p>Questa pagina trasforma la dashboard in control panel operativo: register agent, feedback e response via <code>ops-api</code>.</p>
     </section>
 
     <section class='grid'>
       <div class='card'>
-        <h3>API status</h3>
-        <p><b>Mode:</b> external runtime required (not served by GitHub Pages).</p>
-        <p><b>Health endpoint:</b> <code>/health</code></p>
-        <p><b>Security:</b> Bearer token + rate limit + audit log.</p>
+        <h3>Connection</h3>
+        <p class='meta-row'>Config locale browser (non committata):</p>
+        <label class='meta-row'>Ops API Base URL</label>
+        <input id='ops-base-url' class='input' placeholder='https://your-ops-api.example.com' />
+        <label class='meta-row'>Bearer Token</label>
+        <input id='ops-token' class='input' type='password' placeholder='OPS_API_TOKEN' />
+        <div style='display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;'>
+          <button id='ops-save-config' class='btn-secondary'>Save config</button>
+          <button id='ops-check-health' class='btn-secondary'>Check health</button>
+        </div>
+        <p id='ops-connection-status' class='meta-row'>Not connected yet.</p>
       </div>
+
+      <div class='card'>
+        <h3>Safety mode</h3>
+        <ul>
+          <li>GitHub Pages: frontend only</li>
+          <li>Write actions avvengono su backend <code>ops-api</code></li>
+          <li>Token rimane nel tuo browser (localStorage)</li>
+          <li>Per write reali: backend da mettere in <code>dryRun=false</code></li>
+        </ul>
+      </div>
+
       <div class='card'>
         <h3>Available actions</h3>
         <ul>
           <li><code>POST /agents/register</code></li>
           <li><code>POST /feedback/give</code></li>
           <li><code>POST /feedback/respond</code></li>
-        </ul>
-      </div>
-      <div class='card'>
-        <h3>Deployment checklist</h3>
-        <ul>
-          <li>Set <code>OPS_API_TOKEN</code></li>
-          <li>Configure RPC endpoint</li>
-          <li>Enable <code>dryRun=false</code> only after validation</li>
-          <li>Verify health + audit logging</li>
+          <li><code>GET /health</code></li>
         </ul>
       </div>
     </section>
+
+    <section class='grid grid-3'>
+      <div class='card'>
+        <h3>Register Agent</h3>
+        <input id='register-chainId' class='input' placeholder='chainId (es. 1)' />
+        <div style='height:8px'></div>
+        <input id='register-name' class='input' placeholder='name' />
+        <div style='height:8px'></div>
+        <input id='register-metadataUri' class='input' placeholder='metadataUri (ipfs://...)' />
+        <div style='height:8px'></div>
+        <input id='register-endpoint' class='input' placeholder='endpoint (optional)' />
+        <button id='register-submit' class='btn-secondary'>Send register</button>
+      </div>
+
+      <div class='card'>
+        <h3>Give Feedback</h3>
+        <input id='feedback-agentId' class='input' placeholder='agentId' />
+        <div style='height:8px'></div>
+        <input id='feedback-value' class='input' placeholder='value (0-100)' />
+        <div style='height:8px'></div>
+        <input id='feedback-tag1' class='input' placeholder='tag1 (optional)' />
+        <div style='height:8px'></div>
+        <input id='feedback-tag2' class='input' placeholder='tag2 (optional)' />
+        <div style='height:8px'></div>
+        <input id='feedback-endpoint' class='input' placeholder='endpoint (optional)' />
+        <button id='feedback-submit' class='btn-secondary'>Send feedback</button>
+      </div>
+
+      <div class='card'>
+        <h3>Respond Feedback</h3>
+        <input id='respond-agentId' class='input' placeholder='agentId' />
+        <div style='height:8px'></div>
+        <input id='respond-clientAddress' class='input' placeholder='clientAddress (0x...)' />
+        <div style='height:8px'></div>
+        <input id='respond-feedbackIndex' class='input' placeholder='feedbackIndex' />
+        <div style='height:8px'></div>
+        <input id='respond-response' class='input' placeholder='response text' />
+        <button id='respond-submit' class='btn-secondary'>Send response</button>
+      </div>
+    </section>
+
+    <section class='card'>
+      <h3>API Response</h3>
+      <pre id='ops-output'>{
+  "status": "idle"
+}</pre>
+    </section>
   </div>
-  <script src='./assets/app.deploynav.js?v=1'></script>
-  <script>setActiveNav()</script>
+  <script src='./assets/app.deploynav.js?v=2'></script>
+  <script>window.renderDeployOps && window.renderDeployOps()</script>
 </body>
 </html>

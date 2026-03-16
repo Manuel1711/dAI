@@ -1242,3 +1242,138 @@ window.renderAnalytics = async function renderAnalytics(){
   renderTopAgentsNetwork(figTopAgents);
   initFancyUI();
 }
+
+window.renderDeployOps = function renderDeployOps(){
+  const navEl = document.getElementById('nav');
+  if (navEl) {
+    navEl.innerHTML = NAV;
+    setActiveNav();
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const out = $('ops-output');
+  const status = $('ops-connection-status');
+  const baseEl = $('ops-base-url');
+  const tokenEl = $('ops-token');
+
+  if (!out || !baseEl || !tokenEl) return;
+
+  const savedBase = localStorage.getItem('opsApiBaseUrl') || '';
+  const savedToken = localStorage.getItem('opsApiToken') || '';
+  baseEl.value = savedBase;
+  tokenEl.value = savedToken;
+
+  const print = (payload) => {
+    out.textContent = JSON.stringify(payload, null, 2);
+  };
+
+  const getCfg = () => ({
+    base: (baseEl.value || '').trim().replace(/\/$/, ''),
+    token: (tokenEl.value || '').trim(),
+  });
+
+  const setStatus = (text, ok = false) => {
+    status.textContent = text;
+    status.style.color = ok ? 'var(--ok)' : 'var(--warn)';
+  };
+
+  const request = async (path, method = 'GET', payload = null) => {
+    const { base, token } = getCfg();
+    if (!base) throw new Error('Missing Ops API base URL');
+
+    const headers = { 'content-type': 'application/json' };
+    if (token) headers.authorization = `Bearer ${token}`;
+
+    const res = await fetch(`${base}${path}`, {
+      method,
+      headers,
+      body: payload ? JSON.stringify(payload) : undefined,
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const err = new Error(data?.error || `HTTP ${res.status}`);
+      err.data = data;
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  };
+
+  $('ops-save-config')?.addEventListener('click', () => {
+    const { base, token } = getCfg();
+    localStorage.setItem('opsApiBaseUrl', base);
+    localStorage.setItem('opsApiToken', token);
+    setStatus('Config salvata in localStorage.', true);
+    print({ ok: true, saved: { base, token: token ? '***' : '' } });
+  });
+
+  $('ops-check-health')?.addEventListener('click', async () => {
+    try {
+      print({ status: 'checking /health...' });
+      const data = await request('/health', 'GET');
+      setStatus('Health check OK', true);
+      print(data);
+    } catch (e) {
+      setStatus(`Health check failed: ${e.message}`, false);
+      print({ ok: false, error: e.message, details: e.data || null });
+    }
+  });
+
+  $('register-submit')?.addEventListener('click', async () => {
+    const payload = {
+      chainId: Number(($('register-chainId')?.value || '').trim()),
+      name: ($('register-name')?.value || '').trim(),
+      metadataUri: ($('register-metadataUri')?.value || '').trim(),
+      endpoint: ($('register-endpoint')?.value || '').trim() || undefined,
+    };
+    try {
+      print({ status: 'sending /agents/register...', payload });
+      const data = await request('/agents/register', 'POST', payload);
+      setStatus('Register sent successfully', true);
+      print(data);
+    } catch (e) {
+      setStatus(`Register failed: ${e.message}`, false);
+      print({ ok: false, error: e.message, details: e.data || null });
+    }
+  });
+
+  $('feedback-submit')?.addEventListener('click', async () => {
+    const payload = {
+      agentId: ($('feedback-agentId')?.value || '').trim(),
+      value: Number(($('feedback-value')?.value || '').trim()),
+      tag1: ($('feedback-tag1')?.value || '').trim() || undefined,
+      tag2: ($('feedback-tag2')?.value || '').trim() || undefined,
+      endpoint: ($('feedback-endpoint')?.value || '').trim() || undefined,
+    };
+    try {
+      print({ status: 'sending /feedback/give...', payload });
+      const data = await request('/feedback/give', 'POST', payload);
+      setStatus('Feedback sent successfully', true);
+      print(data);
+    } catch (e) {
+      setStatus(`Feedback failed: ${e.message}`, false);
+      print({ ok: false, error: e.message, details: e.data || null });
+    }
+  });
+
+  $('respond-submit')?.addEventListener('click', async () => {
+    const payload = {
+      agentId: ($('respond-agentId')?.value || '').trim(),
+      clientAddress: ($('respond-clientAddress')?.value || '').trim(),
+      feedbackIndex: Number(($('respond-feedbackIndex')?.value || '').trim()),
+      response: ($('respond-response')?.value || '').trim(),
+    };
+    try {
+      print({ status: 'sending /feedback/respond...', payload });
+      const data = await request('/feedback/respond', 'POST', payload);
+      setStatus('Response sent successfully', true);
+      print(data);
+    } catch (e) {
+      setStatus(`Response failed: ${e.message}`, false);
+      print({ ok: false, error: e.message, details: e.data || null });
+    }
+  });
+
+  initFancyUI();
+};

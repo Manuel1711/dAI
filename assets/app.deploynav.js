@@ -104,6 +104,18 @@ async function loadTopAgentsNetwork() {
 function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
 function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
 function shortAddr(a){ return a && a.startsWith('0x') && a.length>12 ? `${a.slice(0,6)}...${a.slice(-4)}` : (a || '-'); }
+function agentIdToNumber(agentId){
+  if (agentId === null || agentId === undefined) return null;
+  const s = String(agentId).trim();
+  if (!s) return null;
+  try {
+    if (/^0x[0-9a-fA-F]+$/.test(s)) return BigInt(s).toString(10);
+    if (/^[0-9]+$/.test(s)) return BigInt(s).toString(10);
+    return null;
+  } catch {
+    return null;
+  }
+}
 function deriveStatus(a){
   const t = new Date(a.lastActivityAt || a.createdAt || 0).getTime();
   if (!Number.isFinite(t) || t<=0) return 'Inactive';
@@ -386,6 +398,7 @@ window.renderAgentDetail = async function renderAgentDetail(){
   }
 
   const metrics = deriveAgentMetrics(a, tagMap);
+  const agentIdNumeric = agentIdToNumber(a.agentId);
   const characteristicsHtml = metrics.characteristics.slice(0, 8)
     .map((x)=>`<li><b>${x.tag}</b>: ${x.mean.toFixed(2)} (n=${x.count})</li>`).join('');
   const topTagsHtml = metrics.topTags
@@ -404,7 +417,8 @@ window.renderAgentDetail = async function renderAgentDetail(){
         <h2>${a.name || a.agentId}</h2>
       </div>
       <p>${a.description || 'No description'}</p>
-      <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span></p>
+      <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span>${agentIdNumeric ? ` <span class='badge'>#${agentIdNumeric}</span>` : ''}</p>
+      <p><b>Agent ID (numeric):</b> ${agentIdNumeric || '-'}</p>
       <p><b>Owner:</b> ${a.owner || '-'}</p>
       <p><b>Status:</b> ${statusPill(deriveStatus(a))}</p>
       <p><b>Identity URI:</b> ${a.identityURI || '-'}</p>

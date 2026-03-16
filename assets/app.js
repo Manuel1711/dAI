@@ -64,7 +64,70 @@ async function fetchJson(path) {
   return res.json();
 }
 
-async function loadSnapshot() { return fetchJson('./data/agents.snapshot.json'); }
+const clientMetadataCache = new Map();
+
+function needsClientMetadataHydration(a){
+  if (!a) return false;
+  const uri = String(a.identityURI || a.agentURI || '').trim();
+  if (!uri) return false;
+  const hasName = !!(a.name && !/^Agent\s+\d+$/i.test(String(a.name).trim()));
+  const hasImage = !!(a.image || a.imageURI || a.avatar);
+  return !hasName || !hasImage;
+}
+
+async function fetchJsonWithTimeout(url, timeoutMs = 9000){
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: ctl.signal });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+async function enrichAgentsMetadataClient(agents, cap = 80, concurrency = 8){
+  const targets = (agents || []).filter(needsClientMetadataHydration).slice(0, cap);
+  let idx = 0;
+
+  async function worker(){
+    while (idx < targets.length) {
+      const i = idx++;
+      const a = targets[i];
+      const key = String(a.identityURI || a.agentURI || '').trim();
+      if (!key) continue;
+
+      let md = clientMetadataCache.get(key);
+      if (!md) {
+        const url = ipfsToHttp(key);
+        md = await fetchJsonWithTimeout(url);
+        if (md && typeof md === 'object') clientMetadataCache.set(key, md);
+      }
+
+      if (!md || typeof md !== 'object') continue;
+      if ((!a.name || /^Agent\s+\d+$/i.test(String(a.name).trim())) && typeof md.name === 'string' && md.name.trim()) {
+        a.name = md.name.trim();
+      }
+      if ((!a.description || a.description === 'Derived from ERC8004 registries') && typeof md.description === 'string' && md.description.trim()) {
+        a.description = md.description.trim();
+      }
+      if (!a.image && typeof md.image === 'string' && md.image.trim()) {
+        a.image = ipfsToHttp(md.image.trim());
+      }
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.max(1, Math.min(concurrency, 12)) }, () => worker()));
+}
+
+async function loadSnapshot() {
+  const data = await fetchJson('./data/agents.snapshot.json');
+  await enrichAgentsMetadataClient(data?.agents || []);
+  return data;
+}
 async function loadCheckpoint() {
   try { return await fetchJson('./data/live/checkpoints.json'); } catch { return null; }
 }
@@ -104,6 +167,17 @@ async function loadTopAgentsNetwork() {
 function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
 function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
 function shortAddr(a){ return a && a.startsWith('0x') && a.length>12 ? `${a.slice(0,6)}...${a.slice(-4)}` : (a || '-'); }
+function agentNumericId(agentId){
+  const s = String(agentId || '').trim();
+  if (!s) return null;
+  try {
+    if (/^0x[0-9a-f]+$/i.test(s)) return BigInt(s).toString(10);
+    if (/^[0-9]+$/.test(s)) return s;
+    return null;
+  } catch {
+    return null;
+  }
+}
 function deriveStatus(a){
   const t = new Date(a.lastActivityAt || a.createdAt || 0).getTime();
   if (!Number.isFinite(t) || t<=0) return 'Inactive';
@@ -315,7 +389,7 @@ window.renderAgents = async function renderAgents(){
         <div class='agent-cell'>
           <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
           <div>
-            <a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}</small>
+            <a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${a.agentId}${agentNumericId(a.agentId) ? ` · #${agentNumericId(a.agentId)}` : ''}</small>
             <div class='agent-desc'>${(a.description || '').slice(0, 120) || 'No description yet'}</div>
           </div>
         </div>
@@ -386,6 +460,7 @@ window.renderAgentDetail = async function renderAgentDetail(){
   }
 
   const metrics = deriveAgentMetrics(a, tagMap);
+  const numericId = agentNumericId(a.agentId);
   const characteristicsHtml = metrics.characteristics.slice(0, 8)
     .map((x)=>`<li><b>${x.tag}</b>: ${x.mean.toFixed(2)} (n=${x.count})</li>`).join('');
   const topTagsHtml = metrics.topTags
@@ -404,8 +479,9 @@ window.renderAgentDetail = async function renderAgentDetail(){
         <h2>${a.name || a.agentId}</h2>
       </div>
       <p>${a.description || 'No description'}</p>
-      <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span></p>
+      <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>${a.agentId}</span>${numericId ? ` <span class='badge'>#${numericId}</span>` : ''}</p>
       <p><b>Owner:</b> ${a.owner || '-'}</p>
+      <p><b>Numeric ID:</b> ${numericId || '-'}</p>
       <p><b>Status:</b> ${statusPill(deriveStatus(a))}</p>
       <p><b>Identity URI:</b> ${a.identityURI || '-'}</p>
       <p><b>Created At:</b> ${fmtDate(a.createdAt)}</p>

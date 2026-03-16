@@ -1,0 +1,136 @@
+name: Refresh Watchdog
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Decide if refresh is needed
+        id: gate
+        run: |
+          python3 - <<'PY'
+          import json, datetime, pathlib
+          p = pathlib.Path('data/agents.snapshot.json')
+          if not p.exists():
+              print('run_refresh=true')
+              print('reason=missing_snapshot')
+              raise SystemExit(0)
+          j = json.loads(p.read_text(encoding='utf-8'))
+          ts = j.get('generatedAt')
+          if not ts:
+              print('run_refresh=true')
+              print('reason=missing_generatedAt')
+              raise SystemExit(0)
+          gen = datetime.datetime.fromisoformat(ts.replace('Z', '+00:00'))
+          now = datetime.datetime.now(datetime.timezone.utc)
+          age_min = int((now - gen).total_seconds() // 60)
+          print(f'age_min={age_min}')
+          if age_min > 20:
+              print('run_refresh=true')
+              print('reason=stale_gt_20m')
+          else:
+              print('run_refresh=false')
+              print('reason=fresh')
+          PY
+
+          # expose outputs
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, datetime, pathlib
+          p = pathlib.Path('data/agents.snapshot.json')
+          run_refresh = 'true'
+          reason = 'missing_snapshot'
+          age_min = -1
+          if p.exists():
+              j = json.loads(p.read_text(encoding='utf-8'))
+              ts = j.get('generatedAt')
+              if ts:
+                  gen = datetime.datetime.fromisoformat(ts.replace('Z', '+00:00'))
+                  now = datetime.datetime.now(datetime.timezone.utc)
+                  age_min = int((now - gen).total_seconds() // 60)
+                  if age_min <= 20:
+                      run_refresh = 'false'
+                      reason = 'fresh'
+                  else:
+                      run_refresh = 'true'
+                      reason = 'stale_gt_20m'
+              else:
+                  run_refresh = 'true'
+                  reason = 'missing_generatedAt'
+          print(f'run_refresh={run_refresh}')
+          print(f'reason={reason}')
+          print(f'age_min={age_min}')
+          PY
+
+      - name: Skip (already fresh)
+        if: steps.gate.outputs.run_refresh != 'true'
+        run: |
+          echo "No refresh needed. age_min=${{ steps.gate.outputs.age_min }} reason=${{ steps.gate.outputs.reason }}"
+
+      - name: Run one-shot indexer
+        if: steps.gate.outputs.run_refresh == 'true'
+        env:
+          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+          IDENTITY_REGISTRY: ${{ vars.IDENTITY_REGISTRY }}
+          FEEDBACK_REGISTRY: ${{ vars.FEEDBACK_REGISTRY }}
+          CONFIRMATIONS: ${{ vars.CONFIRMATIONS }}
+          BLOCK_CHUNK: ${{ vars.BLOCK_CHUNK }}
+          MAX_CHUNKS_PER_TICK: ${{ vars.MAX_CHUNKS_PER_TICK }}
+          START_BLOCK: ${{ vars.START_BLOCK }}
+        run: |
+          mkdir -p data/live data/analytics
+          if [ -z "$ETH_RPC_URL" ]; then
+            echo "ETH_RPC_URL secret missing, using public fallback endpoint";
+            export ETH_RPC_URL="https://ethereum-rpc.publicnode.com"
+          fi
+          : "${CONFIRMATIONS:=12}"
+          : "${BLOCK_CHUNK:=1000}"
+          : "${MAX_CHUNKS_PER_TICK:=50}"
+          : "${START_BLOCK:=0}"
+          node scripts/indexer-loop.mjs --once
+
+      - name: Build analytics datasets
+        if: steps.gate.outputs.run_refresh == 'true'
+        run: python3 scripts/build-analytics-data.py
+
+      - name: Commit and push datasets (robust)
+        if: steps.gate.outputs.run_refresh == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/agents.snapshot.json data/live/*.json data/live/*.jsonl data/analytics/*.json || true
+          if git diff --staged --quiet; then
+            echo "No dataset changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: watchdog refresh live index + analytics snapshot"
+
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo "Push succeeded on attempt $i"
+              exit 0
+            fi
+            echo "Push attempt $i failed, retrying..."
+            sleep 5
+          done
+          echo "Push failed after retries"
+          exit 1

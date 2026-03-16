@@ -24,6 +24,20 @@ body{
   color:var(--text)
 }
 .container{max-width:1240px;margin:0 auto;padding:26px}
+.global-sync-block{
+  margin-bottom:10px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(99,102,241,.22);
+  background:linear-gradient(120deg,rgba(255,255,255,.9),rgba(244,245,255,.92));
+  color:#2f3342;
+  font-size:13px;
+  font-weight:600;
+  box-shadow:0 8px 20px rgba(79,70,229,.08);
+}
+.global-sync-block.live{border-color:rgba(5,150,105,.36);background:linear-gradient(120deg,rgba(236,253,245,.92),rgba(255,255,255,.94));color:#065f46}
+.global-sync-block.stale{border-color:rgba(220,38,38,.34);background:linear-gradient(120deg,rgba(254,242,242,.94),rgba(255,255,255,.94));color:#7f1d1d}
+
 nav{
   position:relative;
   overflow:hidden;

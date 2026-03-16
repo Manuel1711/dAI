@@ -1,4 +1,5 @@
 const NAV = `
+<div id="global-sync-block" class="global-sync-block">Sync status: loading…</div>
 <nav>
   <a href="./index.html">Home</a>
   <a href="./agents.html">Agents</a>
@@ -13,6 +14,29 @@ function setActiveNav() {
     const href = a.getAttribute('href') || '';
     if (href.includes(page)) a.classList.add('active');
   });
+  refreshGlobalSyncBlock();
+}
+
+async function refreshGlobalSyncBlock() {
+  const el = document.getElementById('global-sync-block');
+  if (!el) return;
+  try {
+    const [snapshot, cp] = await Promise.all([loadSnapshot(), loadCheckpoint()]);
+    const generatedAt = snapshot?.generatedAt ? new Date(snapshot.generatedAt) : null;
+    const ageMin = generatedAt ? Math.max(0, Math.floor((Date.now() - generatedAt.getTime()) / 60000)) : null;
+    const live = Number.isFinite(ageMin) ? ageMin <= 20 : false;
+
+    const block = snapshot?.blockNumber ?? cp?.lastSafeBlock ?? '-';
+    const stamp = generatedAt && !Number.isNaN(generatedAt.getTime()) ? generatedAt.toLocaleString() : '-';
+
+    el.classList.toggle('live', !!live);
+    el.classList.toggle('stale', !live);
+    el.innerHTML = `<b>${live ? 'LIVE' : 'STALE'}</b> · block <b>${block}</b> · updated <b>${ageMin ?? '-'}m</b> ago · <span>${stamp}</span>`;
+  } catch {
+    el.classList.remove('live');
+    el.classList.add('stale');
+    el.textContent = 'STALE · sync status unavailable';
+  }
 }
 
 function initFancyUI(){

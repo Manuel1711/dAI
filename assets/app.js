@@ -63,6 +63,10 @@ async function loadTopClientsNetwork() {
   try { return await fetchJson('./data/analytics/fig_top_clients_agents_network.json'); }
   catch { return null; }
 }
+async function loadTopAgentsNetwork() {
+  try { return await fetchJson('./data/analytics/fig_top_agents_clients_network.json'); }
+  catch { return null; }
+}
 
 function avg(arr){return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0}
 function fmtDate(s){ if(!s) return '-'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(); }
@@ -854,6 +858,93 @@ function renderTopClientsNetwork(fig){
   });
 }
 
+function renderTopAgentsNetwork(fig){
+  const root = document.getElementById('fig-top-agents-root');
+  if (!root) return;
+  const agents = [...(fig?.agents || [])].sort((a, b) => Number(b.totalFeedback || 0) - Number(a.totalFeedback || 0));
+  const clients = [...(fig?.clients || [])].sort((a, b) => Number(b.totalFromTopAgents || 0) - Number(a.totalFromTopAgents || 0));
+  const edges = fig?.edges || [];
+  if (!agents.length || !clients.length || !edges.length) {
+    root.innerHTML = `<p>Figure data not available yet.</p>`;
+    return;
+  }
+
+  const width = 1120, height = 560;
+  const margin = { top: 30, right: 80, bottom: 30, left: 80 };
+  const leftX = margin.left + 80;
+  const rightX = width - margin.right - 80;
+
+  const maxAgent = Math.max(1, ...agents.map((a) => Number(a.totalFeedback || 0)));
+  const maxClient = Math.max(1, ...clients.map((c) => Number(c.totalFromTopAgents || 0)));
+  const maxEdge = Math.max(1, ...edges.map((e) => Number(e.weight || 0)));
+
+  const agentY = new Map();
+  agents.forEach((a, i) => agentY.set(a.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / agents.length));
+  const clientY = new Map();
+  clients.forEach((c, i) => clientY.set(c.id, margin.top + ((i + 0.5) * (height - margin.top - margin.bottom)) / clients.length));
+
+  const edgeSvg = edges.map((e) => {
+    const y1 = agentY.get(e.agentId), y2 = clientY.get(e.clientId);
+    if (!Number.isFinite(y1) || !Number.isFinite(y2)) return '';
+    const w = 0.8 + 7 * (Number(e.weight || 0) / maxEdge);
+    return `<path class='ta-edge' data-agent='${e.agentId}' data-client='${e.clientId}' data-weight='${Number(e.weight || 0)}' d='M ${leftX + 12} ${y1} C ${leftX + 220} ${y1}, ${rightX - 220} ${y2}, ${rightX - 12} ${y2}' stroke='rgba(37,99,235,0.35)' stroke-width='${w.toFixed(2)}' fill='none'></path>`;
+  }).join('');
+
+  const agentSvg = agents.map((a, i) => {
+    const y = agentY.get(a.id);
+    const r = 5 + 11 * (Number(a.totalFeedback || 0) / maxAgent);
+    return `<circle class='ta-agent' data-id='${a.id}' data-total='${Number(a.totalFeedback || 0)}' cx='${leftX}' cy='${y}' r='${r.toFixed(2)}' fill='#2563eb'></circle><text x='${leftX - 14}' y='${y + 4}' text-anchor='end' font-size='12' font-weight='700'>#${i + 1} ${a.label}</text>`;
+  }).join('');
+
+  const clientSvg = clients.map((c, i) => {
+    const y = clientY.get(c.id);
+    const r = 4 + 9 * (Number(c.totalFromTopAgents || 0) / maxClient);
+    return `<circle class='ta-client' data-id='${c.id}' data-total='${Number(c.totalFromTopAgents || 0)}' cx='${rightX}' cy='${y}' r='${r.toFixed(2)}' fill='#7c3aed'></circle><text x='${rightX + 14}' y='${y + 4}' text-anchor='start' font-size='12' font-weight='700'>#${i + 1} ${c.label}</text>`;
+  }).join('');
+
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${width} ${height}' width='100%' height='auto' role='img' aria-label='Top agents connected to clients network'>
+        <text x='${leftX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#1d4ed8'>Top agents</text>
+        <text x='${rightX}' y='18' text-anchor='middle' font-size='13' font-weight='800' fill='#5b21b6'>Clients reached</text>
+        ${edgeSvg}
+        ${agentSvg}
+        ${clientSvg}
+      </svg>
+      <div id='ta-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const tip = root.querySelector('#ta-tooltip');
+  if (!wrap || !tip) return;
+
+  const showTip = (ev, html) => {
+    const bounds = wrap.getBoundingClientRect();
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 12))}px`;
+    tip.style.top = `${Math.min(bounds.height - 90, Math.max(8, ev.clientY - bounds.top + 12))}px`;
+    tip.innerHTML = html;
+  };
+  const hideTip = () => { tip.style.display = 'none'; };
+
+  root.querySelectorAll('.ta-edge').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-agent')}</b> → <b>${el.getAttribute('data-client')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Link <b>${el.getAttribute('data-agent')}</b> → <b>${el.getAttribute('data-client')}</b><br/>Events: <b>${Number(el.getAttribute('data-weight') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.ta-agent').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Top agent <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Top agent <b>${el.getAttribute('data-id')}</b><br/>Total feedback: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+  root.querySelectorAll('.ta-client').forEach((el) => {
+    el.addEventListener('mousemove', (ev) => showTip(ev, `Client <b>${el.getAttribute('data-id')}</b><br/>Events from top agents: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseenter', (ev) => showTip(ev, `Client <b>${el.getAttribute('data-id')}</b><br/>Events from top agents: <b>${Number(el.getAttribute('data-total') || 0).toLocaleString()}</b>`));
+    el.addEventListener('mouseleave', hideTip);
+  });
+}
+
 function renderFig08(fig){
   const root = document.getElementById('fig08-root');
   if (!root) return;
@@ -967,6 +1058,7 @@ window.renderAnalytics = async function renderAnalytics(){
   const fig07 = await loadFig07();
   const fig08 = await loadFig08();
   const figTopClients = await loadTopClientsNetwork();
+  const figTopAgents = await loadTopAgentsNetwork();
   const agents = data.agents || [];
   const enriched = agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
 
@@ -1022,5 +1114,6 @@ window.renderAnalytics = async function renderAnalytics(){
   renderFig07(fig07);
   renderFig08(fig08);
   renderTopClientsNetwork(figTopClients);
+  renderTopAgentsNetwork(figTopAgents);
   initFancyUI();
 }

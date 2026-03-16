@@ -14,6 +14,7 @@ OUT_FILE_00B = OUT_DIR / 'fig00b.event_intensity.json'
 OUT_FILE_07 = OUT_DIR / 'fig07.first_feedback_delay_hist.json'
 OUT_FILE_08 = OUT_DIR / 'fig08.mean_feedback_curve.json'
 OUT_FILE_TC = OUT_DIR / 'fig_top_clients_agents_network.json'
+OUT_FILE_TA = OUT_DIR / 'fig_top_agents_clients_network.json'
 
 
 def load_empirics_module(path: Path):
@@ -251,6 +252,58 @@ def main():
 
     OUT_FILE_TC.write_text(json.dumps(payload_tc, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_TC}')
+
+    # Top agents -> clients network (reverse perspective)
+    if len(net):
+        top_agents_a = (
+            net.groupby('agentId', as_index=False)
+            .size()
+            .rename(columns={'size': 'n_feedback'})
+            .sort_values(['n_feedback', 'agentId'], ascending=[False, True])
+            .head(12)
+        )
+        net_top_a = net[net['agentId'].isin(top_agents_a['agentId'])].copy()
+        edges_a = (
+            net_top_a.groupby(['agentId', 'clientAddress'], as_index=False)
+            .size()
+            .rename(columns={'size': 'weight'})
+            .sort_values('weight', ascending=False)
+        )
+        top_clients_a = (
+            edges_a.groupby('clientAddress', as_index=False)['weight'].sum()
+            .sort_values('weight', ascending=False)
+            .head(24)
+        )
+        edges_a = edges_a[edges_a['clientAddress'].isin(top_clients_a['clientAddress']) & (edges_a['weight'] >= 1)].copy()
+        agent_totals_a = top_agents_a.set_index('agentId')['n_feedback'].to_dict()
+        payload_ta = {
+            'figure': 'top_agents_clients_network',
+            'agents': [
+                {
+                    'id': a,
+                    'label': a,
+                    'totalFeedback': int(agent_totals_a.get(a, 0)),
+                }
+                for a in edges_a['agentId'].drop_duplicates().tolist()
+            ],
+            'clients': [
+                {
+                    'id': c,
+                    'label': f"{c[:6]}...{c[-4:]}" if c.startswith('0x') and len(c) > 12 else c,
+                    'totalFromTopAgents': int(top_clients_a.set_index('clientAddress').to_dict()['weight'].get(c, 0)),
+                }
+                for c in edges_a['clientAddress'].drop_duplicates().tolist()
+            ],
+            'edges': [
+                {'agentId': str(r.agentId), 'clientId': str(r.clientAddress), 'weight': int(r.weight)}
+                for r in edges_a.itertuples(index=False)
+            ],
+        }
+    else:
+        payload_ta = {'figure': 'top_agents_clients_network', 'agents': [], 'clients': [], 'edges': []}
+
+    OUT_FILE_TA.write_text(json.dumps(payload_ta, ensure_ascii=False), encoding='utf-8')
+    print(f'Wrote {OUT_FILE_TA}')
 
 
 if __name__ == '__main__':

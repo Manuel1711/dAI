@@ -507,11 +507,18 @@ window.renderAgentDetail = async function renderAgentDetail(){
   }
 
   const metrics = deriveAgentMetrics(a, tagMap);
-  const agentIdNumeric = agentIdToNumber(a.agentId);
+  const numericId = displayAgentId(a.agentId);
+  const endpoint = a.endpoint || a.endpointURI || a.serviceEndpoint || a.url || null;
+  const identityLink = ipfsToHttp(a.identityURI);
+  const endpointLink = ipfsToHttp(endpoint);
+  const identityHtml = identityLink ? `<a href='${identityLink}' target='_blank' rel='noopener noreferrer'>${a.identityURI}</a>` : (a.identityURI || '-');
+  const endpointHtml = endpointLink ? `<a href='${endpointLink}' target='_blank' rel='noopener noreferrer'>${endpoint}</a>` : (endpoint || 'Not provided');
+  const status = deriveStatus(a);
+  const displayName = a.name || `Agent #${numericId}`;
   const characteristicsHtml = metrics.characteristics.slice(0, 8)
-    .map((x)=>`<li><b>${x.tag}</b>: ${x.mean.toFixed(2)} (n=${x.count})</li>`).join('');
+    .map((x)=>`<li><b>${x.tag}</b><span>${x.mean.toFixed(2)} · n=${x.count}</span></li>`).join('');
   const topTagsHtml = metrics.topTags
-    .map((x)=>`<li><b>${x.tag}</b> — ${x.count} (${x.category})</li>`).join('');
+    .map((x)=>`<li><b>${x.tag}</b><span>${x.count} · ${x.category}</span></li>`).join('');
 
   const feedbackRows = (a.feedbackHistory || []).map((f)=> {
     const t = String(f.tag1 || '').trim().toLowerCase();
@@ -520,34 +527,59 @@ window.renderAgentDetail = async function renderAgentDetail(){
   }).join('');
 
   document.getElementById('agent-root').innerHTML = `
-    <div class='card'>
-      <div class='agent-detail-head'>
-        <img class='agent-avatar-lg' src='${pickAgentImage(a)}' alt='${(a.name||a.agentId)}' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
-        <h2>${a.name || a.agentId}</h2>
+    <section class='agent-detail-wrap'>
+      <div class='card agent-hero-card'>
+        <div class='agent-hero'>
+          <img class='agent-hero-avatar' src='${pickAgentImage(a)}' alt='${displayName}' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
+          <div class='agent-hero-main'>
+            <div class='agent-hero-title-row'>
+              <h2>${displayName}</h2>
+              <span class='badge'>ID #${numericId}</span>
+              <span class='badge'>${a.category || 'Unknown'}</span>
+              ${statusPill(status)}
+            </div>
+            <p class='agent-hero-desc'>${a.description || 'No description provided for this agent yet.'}</p>
+          </div>
+        </div>
       </div>
-      <p>${a.description || 'No description'}</p>
-      <p><span class='badge'>${a.category || 'Unknown'}</span> <span class='badge'>#${displayAgentId(a.agentId)}</span></p>
-      <p><b>Agent ID (numeric):</b> ${displayAgentId(a.agentId)}</p>
-      <p><b>Owner:</b> ${a.owner || '-'}</p>
-      <p><b>Status:</b> ${statusPill(deriveStatus(a))}</p>
-      <p><b>Identity URI:</b> ${a.identityURI || '-'}</p>
-      <p><b>Created At:</b> ${fmtDate(a.createdAt)}</p>
-      <p><b>Main Score (non-C1):</b> ${metrics.scoreMain.toFixed(2)} /100 (${metrics.scoreMainCount} feedback used)</p>
-      <p><b>Legacy Score v1:</b> ${Number(a.scoreV1 || 0).toFixed(2)} /100</p>
-      <p><b>Total Feedback:</b> ${a.feedbackCount || 0}</p>
-      <p><b>Characteristic feedback (C1):</b> ${metrics.characteristicCount}</p>
-      <p><b>Unique raters:</b> ${a.uniqueRaters ?? '-'}</p>
-      <p><b>Last activity:</b> ${fmtDate(a.lastActivityAt)}</p>
-      <h3 style='margin-top:14px;'>Characteristics evaluated (top)</h3>
-      <ol>${characteristicsHtml || '<li>No characteristic tags yet</li>'}</ol>
-      <h3 style='margin-top:14px;'>Most used tags</h3>
-      <ol>${topTagsHtml || '<li>No tags yet</li>'}</ol>
-    </div>
-    <h3 style='margin-top:16px;'>Feedback Registry History</h3>
-    <table class='table'>
-      <thead><tr><th>Timestamp</th><th>Score</th><th>tag1</th><th>Category</th><th>Comment</th><th>TxHash</th></tr></thead>
-      <tbody>${feedbackRows || '<tr><td colspan="6">No feedback</td></tr>'}</tbody>
-    </table>`;
+      <div class='agent-detail-grid'>
+        <div class='card agent-info-card'><h3>Owner</h3><p class='owner-short'>${a.owner || '-'}</p></div>
+        <div class='card agent-info-card'><h3>Identity URI</h3><p class='agent-breakline'>${identityHtml}</p></div>
+        <div class='card agent-info-card'><h3>Endpoint</h3><p class='agent-breakline'>${endpointHtml}</p></div>
+        <div class='card agent-info-card'><h3>Timeline</h3><p>Created: ${fmtDate(a.createdAt)}</p><p>Last activity: ${fmtDate(a.lastActivityAt)}</p></div>
+      </div>
+
+      <div class='agent-kpi-grid'>
+        <div class='card agent-kpi-card'><h3>Main score</h3><div class='kpi'>${metrics.scoreMain.toFixed(2)}</div><p>from ${metrics.scoreMainCount} non-C1 feedback</p></div>
+        <div class='card agent-kpi-card'><h3>Feedback count</h3><div class='kpi'>${Number(a.feedbackCount || 0).toLocaleString()}</div></div>
+        <div class='card agent-kpi-card'><h3>Unique raters</h3><div class='kpi'>${Number(a.uniqueRaters || 0).toLocaleString()}</div></div>
+        <div class='card agent-kpi-card'><h3>Characteristic count</h3><div class='kpi'>${Number(metrics.characteristicCount || 0).toLocaleString()}</div></div>
+      </div>
+
+      <div class='agent-detail-grid'>
+        <div class='card agent-list-card'>
+          <h3>Top characteristics</h3>
+          <ul class='agent-stat-list'>${characteristicsHtml || '<li><b>None yet</b><span>No characteristic tags yet</span></li>'}</ul>
+        </div>
+        <div class='card agent-list-card'>
+          <h3>Most used tags</h3>
+          <ul class='agent-stat-list'>${topTagsHtml || '<li><b>None yet</b><span>No tags yet</span></li>'}</ul>
+        </div>
+      </div>
+
+      <section class='card agent-feedback-card'>
+        <div class='agent-feedback-head'>
+          <h3>Feedback Registry History</h3>
+          <span class='badge'>Agent #${numericId}</span>
+        </div>
+        <div class='agents-table-wrap'>
+          <table class='table agents-table'>
+            <thead><tr><th>Timestamp</th><th>Score</th><th>tag1</th><th>Category</th><th>Comment</th><th>TxHash</th></tr></thead>
+            <tbody>${feedbackRows || '<tr><td colspan="6" class="agent-empty">No feedback has been submitted for this agent.</td></tr>'}</tbody>
+          </table>
+        </div>
+      </section>
+    </section>`;
   initFancyUI();
 }
 

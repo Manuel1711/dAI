@@ -15,6 +15,7 @@ OUT_FILE_07 = OUT_DIR / 'fig07.first_feedback_delay_hist.json'
 OUT_FILE_08 = OUT_DIR / 'fig08.mean_feedback_curve.json'
 OUT_FILE_TC = OUT_DIR / 'fig_top_clients_agents_network.json'
 OUT_FILE_TA = OUT_DIR / 'fig_top_agents_clients_network.json'
+CHECKPOINTS = ROOT / 'data/live/checkpoints.json'
 
 
 def load_empirics_module(path: Path):
@@ -102,6 +103,25 @@ def load_feedback_events_full(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=['agentId', 'clientAddress', 'blockNumber', 'value'])
 
 
+def load_horizon_block(snapshot_path: Path, checkpoints_path: Path) -> int | None:
+    vals = []
+    try:
+        s = json.loads(snapshot_path.read_text(encoding='utf-8'))
+        bn = s.get('blockNumber')
+        if bn is not None:
+            vals.append(int(bn))
+    except Exception:
+        pass
+    try:
+        c = json.loads(checkpoints_path.read_text(encoding='utf-8'))
+        bn = c.get('lastSafeBlock')
+        if bn is not None:
+            vals.append(int(bn))
+    except Exception:
+        pass
+    return max(vals) if vals else None
+
+
 def main():
     empirics = load_empirics_module(EMPIRICS_SOURCE)
     reg_first = load_reg_first(IDENTITY_EVENTS)
@@ -118,7 +138,9 @@ def main():
     out00a = empirics.compute_fig00a_cumulative_activity_data(reg_first, fb)
 
     block_min = int(min(reg_first['reg_block'].min(), fb['blockNumber'].min())) if len(fb) else int(reg_first['reg_block'].min())
-    block_max = int(max(reg_first['reg_block'].max(), fb['blockNumber'].max())) if len(fb) else int(reg_first['reg_block'].max())
+    block_max_data = int(max(reg_first['reg_block'].max(), fb['blockNumber'].max())) if len(fb) else int(reg_first['reg_block'].max())
+    horizon_block = load_horizon_block(SNAPSHOT, CHECKPOINTS)
+    block_max = max(block_max_data, int(horizon_block)) if horizon_block is not None else block_max_data
     out00b = empirics.compute_fig00b_event_intensity_data(reg_first, fb, block_min=block_min, block_max=block_max, bin_width=5000)
 
     fb_full = load_feedback_events_full(feedback_events_path)
@@ -151,15 +173,30 @@ def main():
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    x_union = [int(x) for x in out00a['x_union']]
+    reg_y = [int(y) for y in out00a['reg_y']]
+    fb_y = [int(y) for y in out00a['fb_y']]
+    if horizon_block is not None:
+        hb = int(horizon_block)
+        if not x_union:
+            x_union = [hb]
+            reg_y = [0]
+            fb_y = [0]
+        elif x_union[-1] < hb:
+            x_union.append(hb)
+            reg_y.append(reg_y[-1])
+            fb_y.append(fb_y[-1])
+
     payload00a = {
         'source': str(EMPIRICS_SOURCE),
         'feedback_source': feedback_source,
         'figure': 'fig00a_cumulative_activity_data',
         'n_registered_agents': int(len(reg_first)),
         'n_feedback_events': int(len(fb)),
-        'x_union': [int(x) for x in out00a['x_union']],
-        'reg_y': [int(y) for y in out00a['reg_y']],
-        'fb_y': [int(y) for y in out00a['fb_y']],
+        'horizon_block': int(horizon_block) if horizon_block is not None else None,
+        'x_union': x_union,
+        'reg_y': reg_y,
+        'fb_y': fb_y,
     }
     OUT_FILE_00A.write_text(json.dumps(payload00a, ensure_ascii=False), encoding='utf-8')
     print(f'Wrote {OUT_FILE_00A}')

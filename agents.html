@@ -4,27 +4,35 @@
   <meta charset='utf-8'/>
   <meta name='viewport' content='width=device-width, initial-scale=1'/>
   <title>ERC8004 Agents - List</title>
-  <link rel='stylesheet' href='./assets/styles.css?v=startup-20260315-1'/>
+  <link rel='stylesheet' href='./assets/styles.css?v=agents-order-20260316-1'/>
 </head>
 <body>
   <div class='container'>
     <div id='nav'></div>
     <h1>Agents List</h1>
-    <div class='toolbar'>
-      <input id='search' class='input' placeholder='Search by name, id, owner, category...'/>
-      <select id='sort' class='input'>
-        <option value='score'>Sort: Main Score non-C1 (desc)</option>
-        <option value='feedback'>Sort: Feedback count (desc)</option>
-        <option value='recent'>Sort: Recent activity</option>
-        <option value='name'>Sort: Name (A-Z)</option>
-      </select>
-    </div>
-    <div id='agents-meta' class='meta-row'></div>
-    <table class='table'>
-      <thead><tr><th>Agent</th><th>Category</th><th>Owner</th><th>Reputation</th><th>Feedback</th><th>Status</th><th>Last activity</th></tr></thead>
-      <tbody id='agents-table'></tbody>
-    </table>
-    <button id='load-more' class='btn-secondary' style='display:none;'>Load more</button>
+
+    <section class='card agents-toolbar-card'>
+      <div class='toolbar agents-toolbar'>
+        <input id='search' class='input' placeholder='Search by name, id, owner, category...'/>
+        <select id='sort' class='input'>
+          <option value='score'>Sort: Main Score non-C1 (desc)</option>
+          <option value='feedback'>Sort: Feedback count (desc)</option>
+          <option value='recent'>Sort: Recent activity</option>
+          <option value='name'>Sort: Name (A-Z)</option>
+        </select>
+      </div>
+      <div id='agents-meta' class='meta-row agents-meta-row'></div>
+    </section>
+
+    <section class='card agents-table-card'>
+      <div class='agents-table-wrap'>
+        <table class='table agents-table'>
+          <thead><tr><th>Agent</th><th>Category</th><th>Owner</th><th>Reputation</th><th>Feedback</th><th>Status</th><th>Last activity</th></tr></thead>
+          <tbody id='agents-table'></tbody>
+        </table>
+      </div>
+      <button id='load-more' class='btn-secondary' style='display:none;'>Load more</button>
+    </section>
   </div>
   <script src='./assets/app.js?v=agents-fix-20260315-1'></script>
   <script>renderAgents()</script>

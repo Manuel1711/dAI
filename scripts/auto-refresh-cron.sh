@@ -19,6 +19,16 @@ fi
 
 cd "$REPO"
 
+# Ensure modern Node in cron environment (nvm is not loaded by default in cron)
+export NVM_DIR="/home/manuel/.nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # shellcheck disable=SC1090
+  . "$NVM_DIR/nvm.sh"
+  nvm use 22 >/dev/null
+fi
+
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] node=$(node -v 2>/dev/null || echo missing) python=$(python3 --version 2>/dev/null || echo missing)"
+
 # Refresh remote refs (do not rebase upfront; local unstaged changes may exist)
 git fetch origin main || true
 

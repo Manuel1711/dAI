@@ -24,8 +24,7 @@ const CACHE_PATH = path.join(REPO, 'data', 'metadata-cache.json');
 const EXISTING_CACHE_PATH = CACHE_PATH; // same file, merge mode
 
 const TIMEOUT_MS = 8000;
-const CONCURRENCY = 16;
-const MAX_AGENTS = 5000; // process top N agents per run (incremental)
+const CONCURRENCY = 24; // higher concurrency since most are local data: URIs
 
 // ---------- helpers ----------
 
@@ -167,7 +166,7 @@ async function main() {
       if (cached && (cached.name || cached.image)) return false; // already cached
       return true;
     })
-    .slice(0, MAX_AGENTS);
+    ;
 
   console.log(`[metadata-cache] agents to process: ${targets.length}`);
 

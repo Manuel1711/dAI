@@ -157,9 +157,12 @@ async function main() {
   }
 
   // Find agents that need work: no cache entry OR cached entry has no name/image
+  // Skip agents with no URI (nothing to fetch)
   const targets = agents
     .filter(a => {
       if (!needsHydration(a)) return false; // already has good data in snapshot
+      const uri = a.identityURI || a.agentURI;
+      if (!uri) return false; // no URI → nothing to fetch
       const cached = existing[a.agentId];
       if (cached && (cached.name || cached.image)) return false; // already cached
       return true;

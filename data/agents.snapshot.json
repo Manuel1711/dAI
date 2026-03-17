@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24676966,
-  "generatedAt": "2026-03-17T11:47:47.053Z",
+  "blockNumber": 24677015,
+  "generatedAt": "2026-03-17T11:57:54.090Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24676967,
-    "fromBlockFeedback": 24676967,
+    "fromBlockIdentity": 24677016,
+    "fromBlockFeedback": 24677016,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -429811,6 +429811,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-17T09:54:35.000Z"
+    },
+    {
+      "agentId": "0x7158",
+      "name": "Zyfai Rebalancer Agent for 0x956C101f03efDF383292A66642F5d3c561aE287c",
+      "owner": "0x956c101f03efdf383292a66642f5d3c561ae287c",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreienimrh2u54fxwtxtjipk32hfxp3ffh3v7nayr6iwbubqhnv44p7a",
+      "createdAt": "2026-03-17T11:42:47.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-17T11:42:47.000Z"
+    },
+    {
+      "agentId": "0x7159",
+      "name": "My test agent",
+      "owner": "0x999126b92d1e547ca9721ecf32674ba835d78318",
+      "category": "Unknown",
+      "description": "It does things",
+      "identityURI": "ipfs://QmdoKqjfWxkH7EYTweXGp2ZjKbY8EHAHHsKKkeuUJ8qa45",
+      "createdAt": "2026-03-17T11:46:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-17T11:46:47.000Z"
     },
     {
       "agentId": "0x716",

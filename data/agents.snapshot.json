@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24674156,
-  "generatedAt": "2026-03-17T02:22:24.294Z",
+  "blockNumber": 24674206,
+  "generatedAt": "2026-03-17T02:31:39.370Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24674157,
-    "fromBlockFeedback": 24674157,
+    "fromBlockIdentity": 24674207,
+    "fromBlockFeedback": 24674207,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -438350,7 +438350,7 @@
     {
       "agentId": "0x949",
       "name": "Agent 0x949",
-      "owner": "0x3ecf93a3853a3e33342f1cbf34b4f6f9ff8b8b3b",
+      "owner": "0xa01d097487cc67c1cad30ea18c3eb03494902c54",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": "https://ag0.xyz",

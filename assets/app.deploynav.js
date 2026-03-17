@@ -166,9 +166,39 @@ async function enrichAgentsMetadataClient(agents, cap = 240, concurrency = 12){
   await Promise.all(Array.from({ length: Math.max(1, Math.min(concurrency, 16)) }, () => worker()));
 }
 
+// Load pre-built server-side metadata cache (avoids live IPFS/HTTP fetches in browser)
+let serverMetadataCache = null;
+async function loadServerMetadataCache() {
+  if (serverMetadataCache !== null) return serverMetadataCache;
+  try {
+    const res = await fetch('./data/metadata-cache.json', { cache: 'default' });
+    if (res.ok) serverMetadataCache = await res.json();
+    else serverMetadataCache = {};
+  } catch { serverMetadataCache = {}; }
+  return serverMetadataCache;
+}
+
+// Apply server cache to agents before client hydration
+function applyServerMetadataCache(agents, cache) {
+  if (!cache || !agents) return;
+  for (const a of agents) {
+    const entry = cache[a.agentId];
+    if (!entry) continue;
+    if ((!a.name || isGenericAgentName(a.name)) && entry.name) a.name = entry.name;
+    if (!a.description && entry.description) a.description = entry.description;
+    if (!a.image && entry.image) a.image = entry.image;
+  }
+}
+
 async function loadSnapshot() {
-  const data = await fetchJson('./data/agents.snapshot.json');
-  await enrichAgentsMetadataClient(data?.agents || []);
+  const [data, cache] = await Promise.all([
+    fetchJson('./data/agents.snapshot.json'),
+    loadServerMetadataCache()
+  ]);
+  // Apply server-side cache first (zero extra fetches)
+  applyServerMetadataCache(data?.agents, cache);
+  // Only hydrate remaining uncached agents client-side — small fallback cap (server cache handles the bulk)
+  await enrichAgentsMetadataClient(data?.agents || [], 30, 4);
   return data;
 }
 async function loadCheckpoint() {

@@ -42,9 +42,12 @@ export START_BLOCK="${START_BLOCK:-0}"
 node scripts/indexer-loop.mjs --once
 python3 scripts/build-analytics-data.py
 
+# Build metadata cache (pre-fetch IPFS/HTTP metadata server-side)
+node scripts/build-metadata-cache.mjs || echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] metadata-cache warn: non-fatal error"
+
 # Commit/push only if changed
-if ! git diff --quiet -- data/agents.snapshot.json data/live data/analytics; then
-  git add data/agents.snapshot.json data/live/*.json data/live/*.jsonl data/analytics/*.json || true
+if ! git diff --quiet -- data/agents.snapshot.json data/live data/analytics data/metadata-cache.json; then
+  git add data/agents.snapshot.json data/live/*.json data/live/*.jsonl data/analytics/*.json data/metadata-cache.json || true
   if ! git diff --staged --quiet; then
     git commit -m "chore: auto refresh live index + analytics snapshot"
     git pull --rebase --autostash origin main

@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24684216,
-  "generatedAt": "2026-03-18T12:07:36.514Z",
+  "blockNumber": 24684265,
+  "generatedAt": "2026-03-18T12:18:07.798Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24684217,
-    "fromBlockFeedback": 24684217,
+    "fromBlockIdentity": 24684266,
+    "fromBlockFeedback": 24684266,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430428,6 +430428,21 @@
       "lastActivityAt": "2026-03-18T11:51:11.000Z"
     },
     {
+      "agentId": "0x717F",
+      "name": "Zyfai Rebalancer Agent for 0x719431109d2d5b10d3d57AEB3AeFb7e8683B1E18",
+      "owner": "0x719431109d2d5b10d3d57aeb3aefb7e8683b1e18",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreicpuodezd5ib5bjuq3nean2drsgqsvxua2dmltdekbmmiudmcljdi",
+      "createdAt": "2026-03-18T12:02:59.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-18T12:02:59.000Z"
+    },
+    {
       "agentId": "0x718",
       "name": "Agent 0x718",
       "owner": "0xca0d6c9ef96e0be03c8579fa40c410d14a081807",
@@ -430441,6 +430456,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:41:59.000Z"
+    },
+    {
+      "agentId": "0x7180",
+      "name": "Agent 0x7180",
+      "owner": "0xda977767452c5dd021624511f14df67b6c9c2c1b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-18T12:05:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-18T12:05:47.000Z"
     },
     {
       "agentId": "0x719",

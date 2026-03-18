@@ -1372,27 +1372,155 @@ function renderFig08(fig){
 function renderFigTag07(fig){
   const root = document.getElementById('fig-tag07-root');
   if (!root) return;
-  const rows = fig?.category_summary || [];
-  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+Number(r.count||0),0)));
+  const rows = (fig?.category_summary || [])
+    .map((r) => ({ category: String(r.category || 'Unknown'), count: Number(r.count || 0), share: Number(r.share || 0) }))
+    .sort((a,b) => b.count - a.count);
+  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+r.count,0)));
   if (!rows.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
-  const W = 820, H = 360, m = {t:26,r:20,b:42,l:220}, pw=W-m.l-m.r, ph=H-m.t-m.b;
-  const maxV = Math.max(1, ...rows.map(r=>Number(r.count||0)));
-  const y = (i)=> m.t + (i+0.5)*(ph/rows.length), xw = (v)=> (Number(v||0)/maxV)*pw;
-  const bars = rows.map((r,i)=>`<rect x='${m.l}' y='${y(i)-14}' width='${xw(r.count)}' height='28' fill='${['#2563eb','#10b981','#f59e0b','#6b7280'][i%4]}' opacity='0.78'/><text x='${m.l-10}' y='${y(i)+5}' text-anchor='end' font-size='13' font-weight='600'>${r.category}</text><text x='${m.l+xw(r.count)+8}' y='${y(i)+5}' font-size='12' font-weight='700'>${Number(r.count).toLocaleString()} (${(100*Number(r.share||0)).toFixed(1)}%)</text>`).join('');
-  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 field completeness'><line x1='${m.l}' y1='${m.t}' x2='${m.l}' y2='${H-m.b}' stroke='currentColor' opacity='0.5'/>${bars}<text x='${W/2}' y='${H-12}' text-anchor='middle' font-size='13' font-weight='700'>Category frequency (non-empty tag1, n=${total.toLocaleString()})</text></svg></div>`;
+
+  const W = 920, H = 380;
+  const m = { t: 26, r: 22, b: 52, l: 260 };
+  const pw = W - m.l - m.r;
+  const ph = H - m.t - m.b;
+  const maxV = Math.max(1, ...rows.map((r) => r.count));
+  const xTicks = roundTickValues(0, maxV, 6);
+  const y = (i) => m.t + (i + 0.5) * (ph / rows.length);
+  const x = (v) => m.l + (Number(v || 0) / maxV) * pw;
+  const palette = ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];
+
+  const grid = xTicks.map((v) => `<line x1='${x(v)}' y1='${m.t}' x2='${x(v)}' y2='${H-m.b}' stroke='currentColor' opacity='0.10'/><text x='${x(v)}' y='${H-m.b+22}' text-anchor='middle' font-size='12' font-weight='600'>${Math.round(v).toLocaleString()}</text>`).join('');
+  const bars = rows.map((r,i) => {
+    const w = Math.max(2, x(r.count) - m.l);
+    return `<rect class='t7-bar' data-label='${r.category.replace(/'/g, '&apos;')}' data-count='${r.count}' data-share='${(100*r.share).toFixed(2)}' x='${m.l}' y='${y(i)-14}' width='${w}' height='28' rx='6' fill='${palette[i % palette.length]}' opacity='0.86'/><text x='${m.l-10}' y='${y(i)+5}' text-anchor='end' font-size='13' font-weight='700'>${r.category}</text><text x='${m.l+w+8}' y='${y(i)+5}' font-size='12' font-weight='700'>${r.count.toLocaleString()}</text>`;
+  }).join('');
+
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 field completeness by category'>
+        ${grid}${bars}
+        <line x1='${m.l}' y1='${m.t}' x2='${m.l}' y2='${H-m.b}' stroke='currentColor' opacity='0.45'/>
+        <line x1='${m.l}' y1='${H-m.b}' x2='${W-m.r}' y2='${H-m.b}' stroke='currentColor' opacity='0.45'/>
+        <text x='${W/2}' y='${H-10}' text-anchor='middle' font-size='14' font-weight='800'>Category frequency (non-empty tag1 n=${total.toLocaleString()})</text>
+      </svg>
+      <div id='fig-tag07-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const tip = root.querySelector('#fig-tag07-tooltip');
+  if (!wrap || !tip) return;
+  root.querySelectorAll('.t7-bar').forEach((el) => {
+    const show = (ev) => {
+      root.querySelectorAll('.t7-bar').forEach((b) => b.setAttribute('opacity', b === el ? '1' : '0.32'));
+      const bounds = wrap.getBoundingClientRect();
+      tip.style.display = 'block';
+      tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 10))}px`;
+      tip.style.top = `${Math.min(bounds.height - 88, Math.max(8, ev.clientY - bounds.top + 10))}px`;
+      tip.innerHTML = `<b>${el.getAttribute('data-label')}</b><br/>Count: <b>${Number(el.getAttribute('data-count') || 0).toLocaleString()}</b><br/>Share: <b>${Number(el.getAttribute('data-share') || 0).toFixed(1)}%</b>`;
+    };
+    el.addEventListener('mousemove', show);
+    el.addEventListener('mouseenter', show);
+    el.addEventListener('mouseleave', () => {
+      root.querySelectorAll('.t7-bar').forEach((b) => b.setAttribute('opacity', '0.86'));
+      tip.style.display = 'none';
+    });
+  });
 }
 
 function renderFigTag08(fig){
   const root = document.getElementById('fig-tag08-root');
   if (!root) return;
-  const rows = fig?.macroareas || [];
-  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+Number(r.frequency||0),0)));
+  const rows = (fig?.macroareas || [])
+    .map((r) => ({ label: String(r.macroarea || 'Unknown'), value: Number(r.frequency || 0) }))
+    .filter((r) => r.value > 0)
+    .sort((a,b) => b.value - a.value);
+  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+r.value,0)));
   if (!rows.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
-  const W = 820, H = 320, m = {t:30,r:24,b:36,l:24}, pw=W-m.l-m.r;
-  let x = m.l;
-  const segs = rows.map((r,i)=>{ const w = pw*(Number(r.frequency||0)/total); const out = `<rect x='${x}' y='${H/2-24}' width='${w}' height='48' fill='${['#0ea5e9','#10b981','#f59e0b','#f97316','#8b5cf6','#22c55e','#64748b'][i%7]}' opacity='0.85'/><title>${r.macroarea}: ${Number(r.frequency).toLocaleString()}</title>`; x += w; return out; }).join('');
-  const labels = rows.map((r,i)=>`<text x='${m.l + pw + 10}' y='${42 + i*18}' font-size='12' font-weight='600' fill='${['#0ea5e9','#10b981','#f59e0b','#f97316','#8b5cf6','#22c55e','#64748b'][i%7]}'>■ ${r.macroarea} (${(100*Number(r.frequency||0)/total).toFixed(1)}%)</text>`).join('');
-  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 composition including empty'>${segs}${labels}<text x='${W/2}' y='${H-10}' text-anchor='middle' font-size='13' font-weight='700'>Macroarea composition (non-empty tag1, n=${total.toLocaleString()})</text></svg></div>`;
+
+  const W = 880, H = 360;
+  const cx = 220, cy = 180, rOuter = 118, rInner = 58;
+  const palette = ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4','#14b8a6','#64748b'];
+
+  const arcPath = (a0, a1) => {
+    const large = (a1 - a0) > Math.PI ? 1 : 0;
+    const x0 = cx + rOuter * Math.cos(a0), y0 = cy + rOuter * Math.sin(a0);
+    const x1 = cx + rOuter * Math.cos(a1), y1 = cy + rOuter * Math.sin(a1);
+    const x2 = cx + rInner * Math.cos(a1), y2 = cy + rInner * Math.sin(a1);
+    const x3 = cx + rInner * Math.cos(a0), y3 = cy + rInner * Math.sin(a0);
+    return `M ${x0} ${y0} A ${rOuter} ${rOuter} 0 ${large} 1 ${x1} ${y1} L ${x2} ${y2} A ${rInner} ${rInner} 0 ${large} 0 ${x3} ${y3} Z`;
+  };
+
+  let acc = -Math.PI/2;
+  const slices = rows.map((r, i) => {
+    const a0 = acc;
+    const da = (r.value / total) * Math.PI * 2;
+    const a1 = a0 + da;
+    acc = a1;
+    const mid = (a0 + a1) / 2;
+    const ox = 8 * Math.cos(mid), oy = 8 * Math.sin(mid);
+    return `<path class='t8-slice' data-idx='${i}' data-label='${r.label.replace(/'/g, '&apos;')}' data-value='${r.value}' data-share='${(100*r.value/total).toFixed(2)}' data-ox='${ox.toFixed(2)}' data-oy='${oy.toFixed(2)}' d='${arcPath(a0,a1)}' fill='${palette[i % palette.length]}' opacity='0.90'/>`;
+  }).join('');
+
+  const legend = rows.map((r,i)=>`<g class='t8-item' data-idx='${i}'><rect x='460' y='${48+i*34}' width='14' height='14' rx='3' fill='${palette[i % palette.length]}'/><text x='482' y='${59+i*34}' font-size='13' font-weight='700'>${r.label}</text><text x='848' y='${59+i*34}' text-anchor='end' font-size='12' font-weight='700'>${r.value.toLocaleString()} · ${(100*r.value/total).toFixed(1)}%</text></g>`).join('');
+
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 composition pie chart'>
+        ${slices}
+        <circle cx='${cx}' cy='${cy}' r='${rInner-2}' fill='var(--panel, #fff)' opacity='0.96'/>
+        <text x='${cx}' y='${cy-4}' text-anchor='middle' font-size='12' font-weight='700' opacity='0.8'>Tag1</text>
+        <text x='${cx}' y='${cy+14}' text-anchor='middle' font-size='13' font-weight='800'>n=${total.toLocaleString()}</text>
+        ${legend}
+      </svg>
+      <div id='fig-tag08-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const tip = root.querySelector('#fig-tag08-tooltip');
+  if (!wrap || !tip) return;
+
+  const setActive = (idx, ev, srcEl) => {
+    root.querySelectorAll('.t8-slice').forEach((el) => {
+      const on = Number(el.getAttribute('data-idx')) === idx;
+      const ox = on ? Number(el.getAttribute('data-ox') || 0) : 0;
+      const oy = on ? Number(el.getAttribute('data-oy') || 0) : 0;
+      el.setAttribute('transform', `translate(${ox} ${oy})`);
+      el.setAttribute('opacity', on ? '1' : '0.35');
+      el.setAttribute('stroke', on ? 'white' : 'none');
+      el.setAttribute('stroke-width', on ? '2.5' : '0');
+    });
+    const bounds = wrap.getBoundingClientRect();
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 10))}px`;
+    tip.style.top = `${Math.min(bounds.height - 88, Math.max(8, ev.clientY - bounds.top + 10))}px`;
+    tip.innerHTML = `<b>${srcEl.getAttribute('data-label')}</b><br/>Frequency: <b>${Number(srcEl.getAttribute('data-value') || 0).toLocaleString()}</b><br/>Share: <b>${Number(srcEl.getAttribute('data-share') || 0).toFixed(1)}%</b>`;
+  };
+  const clear = () => {
+    root.querySelectorAll('.t8-slice').forEach((el) => {
+      el.setAttribute('transform', 'translate(0 0)');
+      el.setAttribute('opacity', '0.90');
+      el.setAttribute('stroke', 'none');
+    });
+    tip.style.display = 'none';
+  };
+
+  root.querySelectorAll('.t8-slice').forEach((el) => {
+    const idx = Number(el.getAttribute('data-idx'));
+    const on = (ev) => setActive(idx, ev, el);
+    el.addEventListener('mousemove', on);
+    el.addEventListener('mouseenter', on);
+    el.addEventListener('mouseleave', clear);
+  });
+  root.querySelectorAll('.t8-item').forEach((el) => {
+    const idx = Number(el.getAttribute('data-idx'));
+    const slice = root.querySelector(`.t8-slice[data-idx='${idx}']`);
+    if (!slice) return;
+    const on = (ev) => setActive(idx, ev, slice);
+    el.addEventListener('mousemove', on);
+    el.addEventListener('mouseenter', on);
+    el.addEventListener('mouseleave', clear);
+  });
 }
 
 function renderFigTag09(fig){
@@ -1404,22 +1532,63 @@ function renderFigTag09(fig){
     { key:'work_area', title:'Work area', color:'#f59e0b' },
     { key:'unclassified', title:'Unclassified', color:'#6b7280' },
   ];
-  const W = 1040, H = 560;
-  const panelW = 490, panelH = 250;
-  const offset = [{x:20,y:20},{x:530,y:20},{x:20,y:290},{x:530,y:290}];
-  const blocks = groups.map((g,gi)=>{
-    const items = (fig?.[g.key] || []).slice(0,8);
-    const maxV = Math.max(1, ...items.map(x=>Number(x.frequency||0)));
+
+  const W = 1120, H = 600;
+  const panelW = 530, panelH = 268;
+  const offset = [{x:20,y:20},{x:570,y:20},{x:20,y:310},{x:570,y:310}];
+
+  const blocks = groups.map((g,gi) => {
+    const items = (fig?.[g.key] || []).slice(0,8).map((x) => ({ tag: String(x.tag || ''), value: Number(x.frequency || 0) }));
+    const maxV = Math.max(1, ...items.map((x) => x.value));
     const o = offset[gi];
-    const rows = items.map((x,i)=>{
-      const y = o.y + 42 + i*24;
-      const w = 280 * Number(x.frequency||0) / maxV;
-      return `<text x='${o.x+8}' y='${y-4}' font-size='11' font-weight='600'>${x.tag}</text><rect x='${o.x+8}' y='${y}' width='${w}' height='14' rx='3' fill='${g.color}' opacity='0.75'/><text x='${o.x+300}' y='${y+11}' text-anchor='end' font-size='11' font-weight='700'>${Number(x.frequency||0)}</text>`;
+    const y0 = o.y + 48;
+    const x0 = o.x + 200;
+    const x1 = o.x + panelW - 24;
+    const bw = x1 - x0;
+    const ticks = roundTickValues(0, maxV, 4);
+    const grid = ticks.map((t) => {
+      const xx = x0 + (Number(t || 0) / maxV) * bw;
+      return `<line x1='${xx}' y1='${y0-16}' x2='${xx}' y2='${o.y+panelH-18}' stroke='currentColor' opacity='0.08'/><text x='${xx}' y='${o.y+panelH-6}' text-anchor='middle' font-size='10' font-weight='600'>${Math.round(t)}</text>`;
     }).join('');
-    return `<rect x='${o.x}' y='${o.y}' width='${panelW}' height='${panelH}' rx='8' fill='none' stroke='currentColor' opacity='0.15'/><text x='${o.x+8}' y='${o.y+20}' font-size='13' font-weight='800'>${g.title}</text>${rows}`;
+    const rows = items.map((x,i) => {
+      const yy = y0 + i*24;
+      const w = Math.max(2, bw * x.value / maxV);
+      return `<text x='${x0-8}' y='${yy+11}' text-anchor='end' font-size='11' font-weight='600'>${x.tag}</text><rect class='t9-bar' data-group='${g.title.replace(/'/g, '&apos;')}' data-tag='${x.tag.replace(/'/g, '&apos;')}' data-value='${x.value}' x='${x0}' y='${yy}' width='${w}' height='14' rx='4' fill='${g.color}' opacity='0.82'/><text x='${x0+w+6}' y='${yy+11}' font-size='10.5' font-weight='700'>${x.value}</text>`;
+    }).join('');
+    return `<rect x='${o.x}' y='${o.y}' width='${panelW}' height='${panelH}' rx='10' fill='none' stroke='currentColor' opacity='0.15'/><text x='${o.x+10}' y='${o.y+20}' font-size='13' font-weight='800'>${g.title}</text>${grid}${rows}`;
   }).join('');
-  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Top terms by tag category'>${blocks}</svg></div>`;
+
+  root.innerHTML = `<div class='fig00a-panel'>
+    <div class='fig00a-wrap' style='position:relative'>
+      <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Top terms by tag category'>
+        ${blocks}
+      </svg>
+      <div id='fig-tag09-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
+    </div>
+  </div>`;
+
+  const wrap = root.querySelector('.fig00a-wrap');
+  const tip = root.querySelector('#fig-tag09-tooltip');
+  if (!wrap || !tip) return;
+
+  root.querySelectorAll('.t9-bar').forEach((el) => {
+    const show = (ev) => {
+      root.querySelectorAll('.t9-bar').forEach((b) => b.setAttribute('opacity', b === el ? '1' : '0.28'));
+      const bounds = wrap.getBoundingClientRect();
+      tip.style.display = 'block';
+      tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 10))}px`;
+      tip.style.top = `${Math.min(bounds.height - 88, Math.max(8, ev.clientY - bounds.top + 10))}px`;
+      tip.innerHTML = `<b>${el.getAttribute('data-group')}</b><br/>Tag: <b>${el.getAttribute('data-tag')}</b><br/>Frequency: <b>${Number(el.getAttribute('data-value') || 0).toLocaleString()}</b>`;
+    };
+    el.addEventListener('mousemove', show);
+    el.addEventListener('mouseenter', show);
+    el.addEventListener('mouseleave', () => {
+      root.querySelectorAll('.t9-bar').forEach((b) => b.setAttribute('opacity', '0.82'));
+      tip.style.display = 'none';
+    });
+  });
 }
+
 
 window.renderAnalytics = async function renderAnalytics(){ 
   document.getElementById('nav').innerHTML = NAV;

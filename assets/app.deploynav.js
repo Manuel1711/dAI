@@ -1377,21 +1377,9 @@ function renderFig08(fig){
   });
 }
 
-function renderFigTag07(fig, tagMap, feedbackEvents){
+function renderFigTag07(fig){
   const root = document.getElementById('fig-tag07-root');
   if (!root) return;
-
-  const mapCategory = (tag) => {
-    const k = String(tag || '').trim().toLowerCase();
-    if (!k) return 'empty';
-    const hit = tagMap?.[k] || tagMap?.[String(tag || '').trim()] || null;
-    const c = String(hit?.category || '').toLowerCase();
-    if (c === 'characteristic') return 'characteristic';
-    if (c === 'work_area') return 'work_area';
-    if (c === 'verbal' || c === 'adjectives') return 'adjectives';
-    if (c === 'unclassified') return 'unclassified';
-    return 'unclassified';
-  };
 
   const rows = ['empty', 'unclassified', 'work_area', 'adjectives', 'characteristic'];
   const rowLabel = {
@@ -1402,36 +1390,17 @@ function renderFigTag07(fig, tagMap, feedbackEvents){
     characteristic: 'characteristic',
   };
 
-  const events = Array.isArray(feedbackEvents) ? feedbackEvents : [];
-  const nBins = 25;
-  const matrix = rows.map(() => Array.from({ length: nBins }, () => 0));
+  const nBins = Math.max(1, Number(fig?.matrix?.n_bins || 25));
+  let matrix = rows.map(() => Array.from({ length: nBins }, () => 0));
 
-  if (events.length) {
-    const N = events.length;
-    events.forEach((ev, i) => {
-      const r = rows.indexOf(mapCategory(ev?.tag1));
-      const b = Math.min(nBins - 1, Math.floor((i * nBins) / N));
-      if (r >= 0 && b >= 0) matrix[r][b] += 1;
-    });
-  } else {
-    // Fallback from aggregated data (keeps expected layout if raw events unavailable)
-    const cat = (fig?.category_summary || []).reduce((m, x) => {
-      const k = String(x.category || '').toLowerCase();
-      m[k] = Number(x.count || 0); return m;
-    }, {});
-    const totalRows = Math.max(1, Number(fig?.total_rows || 1));
-    const totalNonEmpty = Math.max(0, Number(fig?.total_nonempty || 0));
-    const emptyCount = Math.max(0, totalRows - totalNonEmpty);
-    const approx = {
-      empty: emptyCount,
-      unclassified: Number(cat.unclassified || 0),
-      work_area: Number(cat.work_area || 0),
-      adjectives: Number(cat.adjectives || 0),
-      characteristic: Number(cat.characteristic || 0),
-    };
-    rows.forEach((rk,ri)=>{
-      const v = approx[rk] || 0;
-      for (let b=0;b<nBins;b++) matrix[ri][b] = Math.round(v / nBins);
+  const sourceRows = Array.isArray(fig?.matrix?.rows) ? fig.matrix.rows.map((x)=>String(x||'').toLowerCase()) : null;
+  const sourceVals = Array.isArray(fig?.matrix?.values) ? fig.matrix.values : null;
+  if (sourceRows && sourceVals && sourceRows.length && sourceVals.length) {
+    const rowIdx = new Map(sourceRows.map((r,i)=>[r,i]));
+    matrix = rows.map((rk) => {
+      const i = rowIdx.get(rk);
+      const arr = i === undefined ? [] : (Array.isArray(sourceVals[i]) ? sourceVals[i] : []);
+      return Array.from({ length: nBins }, (_,b)=> Math.max(0, Number(arr[b] || 0)));
     });
   }
 
@@ -1675,7 +1644,6 @@ window.renderAnalytics = async function renderAnalytics(){
   const fig07 = await loadFig07();
   const fig08 = await loadFig08();
   const figTag07 = await loadFigTag07();
-  const feedbackEvents = await loadFeedbackEvents();
   const figTag08 = await loadFigTag08();
   const figTag09 = await loadFigTag09();
   const figTopClients = await loadTopClientsNetwork();
@@ -1736,7 +1704,7 @@ window.renderAnalytics = async function renderAnalytics(){
   renderFig08(fig08);
   renderTopClientsNetwork(figTopClients);
   renderTopAgentsNetwork(figTopAgents);
-  renderFigTag07(figTag07, tagMap, feedbackEvents);
+  renderFigTag07(figTag07);
   renderFigTag08(figTag08);
   renderFigTag09(figTag09);
   initFancyUI();

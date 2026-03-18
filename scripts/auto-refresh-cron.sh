@@ -41,6 +41,7 @@ export START_BLOCK="${START_BLOCK:-0}"
 # Refresh live data + analytics
 node scripts/indexer-loop.mjs --once
 python3 scripts/build-analytics-data.py
+python3 scripts/build-tag-analytics-from-tag-source.py
 
 # Build metadata cache (pre-fetch IPFS/HTTP metadata server-side)
 node scripts/build-metadata-cache.mjs || echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] metadata-cache warn: non-fatal error"

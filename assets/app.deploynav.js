@@ -1430,7 +1430,7 @@ function renderFigTag07(fig){
     const x = hm.x + bi * cw;
     const y = hm.y + ri * ch;
     const share = shareMatrix[ri]?.[bi] || 0;
-    return `<rect class='t7-cell' data-row='${rowLabel[rows[ri]]}' data-bin='${bi+1}' data-val='${v}' data-share='${share.toFixed(4)}' x='${x}' y='${y}' width='${cw}' height='${ch}' rx='0' fill='${colorAt(share)}' stroke='rgba(255,255,255,0)' stroke-width='0'/><text x='${x+cw/2}' y='${y+ch/2+5}' text-anchor='middle' font-size='12.5' font-weight='800' fill='${share>0.56?'#fff':'#0f172a'}'>${v}</text>`;
+    return `<rect class='t7-cell' data-row='${rowLabel[rows[ri]]}' data-bin='${bi+1}' data-val='${v}' data-share='${share.toFixed(4)}' x='${x}' y='${y}' width='${cw}' height='${ch}' rx='0' fill='${colorAt(share)}' stroke='rgba(255,255,255,0)' stroke-width='0'/>`;
   }).join('')).join('');
 
   const xTicks = [1,5,10,15,20,25].map((q)=>`<text x='${hm.x + (q-0.5)*cw}' y='${hm.y + hm.h + 26}' text-anchor='middle' font-size='13' font-weight='800'>Q${q}</text>`).join('');

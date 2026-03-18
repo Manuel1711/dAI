@@ -35,6 +35,14 @@ function initFuturisticBackground(){
   const DPR_MAX = 1.6;
   const nodes = [];
   const chains = [];
+  const pulses = [];
+  const pointer = {
+    x: window.innerWidth * 0.7,
+    y: window.innerHeight * 0.3,
+    targetX: window.innerWidth * 0.7,
+    targetY: window.innerHeight * 0.3,
+    active: false
+  };
 
   const rnd = (a, b) => a + Math.random() * (b - a);
 
@@ -78,6 +86,25 @@ function initFuturisticBackground(){
   const draw = (t) => {
     ctx.clearRect(0, 0, w, h);
 
+    pointer.x += (pointer.targetX - pointer.x) * 0.07;
+    pointer.y += (pointer.targetY - pointer.y) * 0.07;
+
+    const gridGap = 64;
+    ctx.strokeStyle = 'rgba(79,70,229,0.045)';
+    ctx.lineWidth = 1;
+    for (let gx = 0; gx <= w; gx += gridGap) {
+      ctx.beginPath();
+      ctx.moveTo(gx, 0);
+      ctx.lineTo(gx, h);
+      ctx.stroke();
+    }
+    for (let gy = 0; gy <= h; gy += gridGap) {
+      ctx.beginPath();
+      ctx.moveTo(0, gy);
+      ctx.lineTo(w, gy);
+      ctx.stroke();
+    }
+
     for (const ch of chains) {
       const y = ch.y + Math.sin(t * 0.00035 + ch.phase) * 10;
       ctx.beginPath();
@@ -106,6 +133,17 @@ function initFuturisticBackground(){
       if (a.y < -20) a.y = h + 20;
       if (a.y > h + 20) a.y = -20;
 
+      const px = a.x - pointer.x;
+      const py = a.y - pointer.y;
+      const p2 = px * px + py * py;
+      if (p2 < 42000) {
+        const pull = (1 - p2 / 42000) * 0.02;
+        a.vx += ((pointer.x - a.x) * pull) * 0.002;
+        a.vy += ((pointer.y - a.y) * pull) * 0.002;
+      }
+      a.vx *= 0.995;
+      a.vy *= 0.995;
+
       for (let j = i + 1; j < nodes.length; j++) {
         const b = nodes[j];
         const dx = a.x - b.x;
@@ -127,11 +165,55 @@ function initFuturisticBackground(){
       ctx.fill();
     }
 
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i];
+      p.life -= 1;
+      if (p.life <= 0) {
+        pulses.splice(i, 1);
+        continue;
+      }
+      const tt = 1 - p.life / p.maxLife;
+      const rr = p.r0 + tt * 42;
+      const alpha = 0.20 * (1 - tt);
+      ctx.strokeStyle = `rgba(56,189,248,${alpha})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, rr, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    const glow = ctx.createRadialGradient(pointer.x, pointer.y, 8, pointer.x, pointer.y, 180);
+    glow.addColorStop(0, 'rgba(56,189,248,0.22)');
+    glow.addColorStop(0.35, 'rgba(99,102,241,0.13)');
+    glow.addColorStop(1, 'rgba(99,102,241,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(pointer.x, pointer.y, 180, 0, Math.PI * 2);
+    ctx.fill();
+
     raf = requestAnimationFrame(draw);
   };
 
   resize();
   window.addEventListener('resize', resize, { passive: true });
+
+  window.addEventListener('pointermove', (ev) => {
+    pointer.targetX = ev.clientX;
+    pointer.targetY = ev.clientY;
+    pointer.active = true;
+  }, { passive: true });
+
+  window.addEventListener('pointerleave', () => {
+    pointer.active = false;
+    pointer.targetX = w * 0.7;
+    pointer.targetY = h * 0.3;
+  }, { passive: true });
+
+  window.addEventListener('pointerdown', (ev) => {
+    pulses.push({ x: ev.clientX, y: ev.clientY, life: 36, maxLife: 36, r0: 8 });
+    if (pulses.length > 14) pulses.shift();
+  }, { passive: true });
+
   raf = requestAnimationFrame(draw);
 
   document.addEventListener('visibilitychange', () => {

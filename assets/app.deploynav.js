@@ -59,18 +59,13 @@ function initFuturisticBackground(){
     chains.length = 0;
     blocks.length = 0;
     agentBadges.length = 0;
-    const nodeCount = Math.max(24, Math.min(56, Math.floor(w / 34)));
+    const nodeCount = Math.max(42, Math.min(110, Math.floor(w / 18)));
     const aiIcons = ['🤖','🧠','⚡','🛰️','🛡️','🔗','📡','🧬'];
 
     for (let i = 0; i < nodeCount; i++) {
-      const cols = Math.ceil(Math.sqrt(nodeCount * 1.7));
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const sx = ((col + 1) * w) / (cols + 1);
-      const sy = ((row + 1) * h) / (Math.ceil(nodeCount / cols) + 1);
       nodes.push({
-        x: sx + rnd(-34, 34),
-        y: sy + rnd(-28, 28),
+        x: rnd(-120, w + 120),
+        y: rnd(-120, h + 120),
         vx: rnd(-0.16, 0.16),
         vy: rnd(-0.14, 0.14),
         r: rnd(14, 20),
@@ -146,22 +141,6 @@ function initFuturisticBackground(){
       ctx.stroke();
     }
 
-    const gridGap = 38;
-    ctx.strokeStyle = 'rgba(79,70,229,0.16)';
-    ctx.lineWidth = 1.4;
-    for (let gx = 0; gx <= w; gx += gridGap) {
-      ctx.beginPath();
-      ctx.moveTo(gx, 0);
-      ctx.lineTo(gx, h);
-      ctx.stroke();
-    }
-    for (let gy = 0; gy <= h; gy += gridGap) {
-      ctx.beginPath();
-      ctx.moveTo(0, gy);
-      ctx.lineTo(w, gy);
-      ctx.stroke();
-    }
-
     ctx.shadowBlur = 0;
     ctx.shadowColor = 'transparent';
 
@@ -169,23 +148,21 @@ function initFuturisticBackground(){
       const a = nodes[i];
       a.x += a.vx;
       a.y += a.vy;
-      if (a.x < -20) a.x = w + 20;
-      if (a.x > w + 20) a.x = -20;
-      if (a.y < -20) a.y = h + 20;
-      if (a.y > h + 20) a.y = -20;
+      if (a.x < -140) a.x = w + 140;
+      if (a.x > w + 140) a.x = -140;
+      if (a.y < -140) a.y = h + 140;
+      if (a.y > h + 140) a.y = -140;
 
       const px = a.x - pointer.x;
       const py = a.y - pointer.y;
       const p2 = px * px + py * py;
-      if (interaction.dragNode === null && p2 < 18000) {
-        const pull = (1 - p2 / 18000) * 0.01;
-        a.vx += ((pointer.x - a.x) * pull) * 0.0012;
-        a.vy += ((pointer.y - a.y) * pull) * 0.0012;
+      if (interaction.dragNode === null && p2 < 22000) {
+        const pull = (1 - p2 / 22000) * 0.008;
+        a.vx += ((pointer.x - a.x) * pull) * 0.001;
+        a.vy += ((pointer.y - a.y) * pull) * 0.001;
       }
-      a.vx += ((w * 0.5 - a.x) * 0.00003);
-      a.vy += ((h * 0.5 - a.y) * 0.00003);
-      a.vx *= 0.992;
-      a.vy *= 0.992;
+      a.vx *= 0.994;
+      a.vy *= 0.994;
 
       for (let j = i + 1; j < nodes.length; j++) {
         const b = nodes[j];
@@ -199,7 +176,7 @@ function initFuturisticBackground(){
           b.vx -= dx * repel;
           b.vy -= dy * repel;
         }
-        if (d2 > 98000 || d2 < 1600) continue;
+        if (d2 > 140000 || d2 < 1600) continue;
         const alpha = 0.82 * (1 - d2 / 98000);
         const palette = [
           `rgba(250,204,21,${alpha})`,
@@ -215,16 +192,18 @@ function initFuturisticBackground(){
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
 
-        const prog = ((t * 0.00075) + ((i * 17 + j * 23) % 100) / 100) % 1;
-        const sx = a.x + (b.x - a.x) * prog;
-        const sy = a.y + (b.y - a.y) * prog;
-        const spark = ctx.createRadialGradient(sx, sy, 0.5, sx, sy, 8.5);
-        spark.addColorStop(0, `rgba(255,248,181,${Math.min(0.98, alpha + 0.32)})`);
-        spark.addColorStop(1, 'rgba(250,204,21,0)');
-        ctx.fillStyle = spark;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 8.5, 0, Math.PI * 2);
-        ctx.fill();
+        for (let s = 0; s < 3; s++) {
+          const prog = ((t * (0.00075 + s * 0.00018)) + (((i * 17 + j * 23 + s * 31) % 100) / 100)) % 1;
+          const sx = a.x + (b.x - a.x) * prog;
+          const sy = a.y + (b.y - a.y) * prog;
+          const spark = ctx.createRadialGradient(sx, sy, 0.5, sx, sy, 8.5);
+          spark.addColorStop(0, `rgba(255,248,181,${Math.min(0.98, alpha + 0.32)})`);
+          spark.addColorStop(1, 'rgba(250,204,21,0)');
+          ctx.fillStyle = spark;
+          ctx.beginPath();
+          ctx.arc(sx, sy, 8.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
       const nodeGlow = ctx.createRadialGradient(a.x, a.y, 2, a.x, a.y, a.r + 12);

@@ -52,7 +52,10 @@ body::after{
   inset:0;
   z-index:0;
   pointer-events:none;
-  background:linear-gradient(180deg,rgba(10,14,26,.15),rgba(10,14,26,.35));
+  background:
+    radial-gradient(circle at 18% 22%, rgba(56,189,248,.12), transparent 40%),
+    radial-gradient(circle at 82% 78%, rgba(168,85,247,.10), transparent 44%),
+    linear-gradient(180deg,rgba(10,14,26,.20),rgba(10,14,26,.46));
 }
 @keyframes goldBarsFlow{
   0%{transform:translate3d(-120px,0,0)}

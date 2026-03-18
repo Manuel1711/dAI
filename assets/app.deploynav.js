@@ -1404,15 +1404,20 @@ function renderFigTag07(fig){
     });
   }
 
-  const maxVal = Math.max(1, ...matrix.flat());
+  const colTotals = Array.from({ length: nBins }, (_, bi) => matrix.reduce((s, row) => s + Number(row[bi] || 0), 0));
+  const shareMatrix = matrix.map((row) => row.map((v, bi) => {
+    const d = Number(colTotals[bi] || 0);
+    return d > 0 ? Number(v || 0) / d : 0;
+  }));
+
   const W = 1240, H = 520;
   const hm = { x: 210, y: 80, w: 900, h: 320 };
   const cw = hm.w / nBins;
   const ch = hm.h / rows.length;
 
-  const colorAt = (v) => {
-    // yellow -> dark blue
-    const t = Math.max(0, Math.min(1, v / maxVal));
+  const colorAt = (share) => {
+    // yellow -> dark blue, normalized 0..1 (within-bin share)
+    const t = Math.max(0, Math.min(1, Number(share || 0)));
     const c0 = [250, 204, 21];
     const c1 = [30, 58, 138];
     const r = Math.round(c0[0] + (c1[0] - c0[0]) * t);
@@ -1424,8 +1429,8 @@ function renderFigTag07(fig){
   const cells = matrix.map((row, ri) => row.map((v, bi) => {
     const x = hm.x + bi * cw;
     const y = hm.y + ri * ch;
-    const t = v / maxVal;
-    return `<rect class='t7-cell' data-row='${rowLabel[rows[ri]]}' data-bin='${bi+1}' data-val='${v}' x='${x+1.5}' y='${y+1.5}' width='${cw-3}' height='${ch-3}' rx='4' fill='${colorAt(v)}' stroke='rgba(15,23,42,0.16)' stroke-width='1'/><text x='${x+cw/2}' y='${y+ch/2+5}' text-anchor='middle' font-size='12.5' font-weight='800' fill='${t>0.55?'#fff':'#0f172a'}'>${v}</text>`;
+    const share = shareMatrix[ri]?.[bi] || 0;
+    return `<rect class='t7-cell' data-row='${rowLabel[rows[ri]]}' data-bin='${bi+1}' data-val='${v}' data-share='${share.toFixed(4)}' x='${x}' y='${y}' width='${cw}' height='${ch}' rx='0' fill='${colorAt(share)}' stroke='rgba(255,255,255,0)' stroke-width='0'/><text x='${x+cw/2}' y='${y+ch/2+5}' text-anchor='middle' font-size='12.5' font-weight='800' fill='${share>0.56?'#fff':'#0f172a'}'>${v}</text>`;
   }).join('')).join('');
 
   const xTicks = [1,5,10,15,20,25].map((q)=>`<text x='${hm.x + (q-0.5)*cw}' y='${hm.y + hm.h + 26}' text-anchor='middle' font-size='13' font-weight='800'>Q${q}</text>`).join('');
@@ -1433,19 +1438,19 @@ function renderFigTag07(fig){
 
   const cb = { x: hm.x + hm.w + 30, y: hm.y, w: 26, h: hm.h };
   const gradId = 't7-grad';
-  const cTicks = [0,0.25,0.5,0.75,1].map((u)=>({u,v:Math.round(u*maxVal)}));
+  const cTicks = [0,0.25,0.5,0.75,1].map((u)=>({u,v:u.toFixed(2)}));
   const cTickEls = cTicks.map(({u,v})=>`<line x1='${cb.x+cb.w+4}' y1='${cb.y + cb.h*(1-u)}' x2='${cb.x+cb.w+12}' y2='${cb.y + cb.h*(1-u)}' stroke='currentColor' opacity='0.7'/><text x='${cb.x+cb.w+16}' y='${cb.y + cb.h*(1-u)+4}' font-size='12' font-weight='800'>${v}</text>`).join('');
 
   root.innerHTML = `<div class='fig00a-panel'>
     <div class='fig00a-wrap' style='position:relative'>
       <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 heatmap by quantiles'>
-        <defs><linearGradient id='${gradId}' x1='0' y1='1' x2='0' y2='0'><stop offset='0%' stop-color='${colorAt(0)}'/><stop offset='100%' stop-color='${colorAt(maxVal)}'/></linearGradient></defs>
-        <text x='${hm.x}' y='42' font-size='20' font-weight='900'>Tag1 heatmap by quantiles (25 bins)</text>
-        <text x='${hm.x}' y='62' font-size='13.5' font-weight='700' opacity='0.8'>Y: empty/unclassified/work area/adjectives/characteristic · X: Q1..Q25</text>
+        <defs><linearGradient id='${gradId}' x1='0' y1='1' x2='0' y2='0'><stop offset='0%' stop-color='${colorAt(0)}'/><stop offset='100%' stop-color='${colorAt(1)}'/></linearGradient><filter id='t7-glow'><feDropShadow dx='0' dy='1.2' stdDeviation='1.2' flood-color='rgba(15,23,42,0.24)'/></filter></defs>
+        <text x='${hm.x}' y='42' font-size='20' font-weight='900'>Tag1 heatmap by quantiles (25 bins · within-bin share)</text>
+        <text x='${hm.x}' y='62' font-size='13.5' font-weight='700' opacity='0.8'>Y: empty/unclassified/work area/adjectives/characteristic · X: Q1..Q25 · color: share in bin (0..1)</text>
         ${cells}
         ${xTicks}
         ${yTicks}
-        <rect x='${cb.x}' y='${cb.y}' width='${cb.w}' height='${cb.h}' fill='url(#${gradId})' stroke='rgba(15,23,42,0.2)'/>
+        <rect x='${cb.x}' y='${cb.y}' width='${cb.w}' height='${cb.h}' fill='url(#${gradId})' stroke='rgba(15,23,42,0.2)' filter='url(#t7-glow)'/><text x='${cb.x + cb.w/2}' y='${cb.y-10}' text-anchor='middle' font-size='12' font-weight='800'>within-bin share</text>
         ${cTickEls}
       </svg>
       <div id='fig-tag07-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
@@ -1457,16 +1462,16 @@ function renderFigTag07(fig){
   if (!wrap || !tip) return;
   root.querySelectorAll('.t7-cell').forEach((el)=>{
     const show = (ev) => {
-      root.querySelectorAll('.t7-cell').forEach((x)=>x.setAttribute('stroke-width', x===el ? '2.3' : '1'));
+      root.querySelectorAll('.t7-cell').forEach((x)=>{ x.setAttribute('stroke', x===el ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0)'); x.setAttribute('stroke-width', x===el ? '1.3' : '0'); });
       const b = wrap.getBoundingClientRect();
       tip.style.display = 'block';
       tip.style.left = `${Math.min(b.width - 280, Math.max(8, ev.clientX - b.left + 10))}px`;
       tip.style.top = `${Math.min(b.height - 96, Math.max(8, ev.clientY - b.top + 10))}px`;
-      tip.innerHTML = `<b>${el.getAttribute('data-row')}</b><br/>Quantile: <b>${el.getAttribute('data-bin')}</b><br/>Count: <b>${Number(el.getAttribute('data-val')||0).toLocaleString()}</b>`;
+      tip.innerHTML = `<b>${el.getAttribute('data-row')}</b><br/>Quantile: <b>${el.getAttribute('data-bin')}</b><br/>Count: <b>${Number(el.getAttribute('data-val')||0).toLocaleString()}</b><br/>Share in bin: <b>${(100*Number(el.getAttribute('data-share')||0)).toFixed(1)}%</b>`;
     };
     el.addEventListener('mouseenter', show);
     el.addEventListener('mousemove', show);
-    el.addEventListener('mouseleave', ()=>{ root.querySelectorAll('.t7-cell').forEach((x)=>x.setAttribute('stroke-width','1')); tip.style.display='none'; });
+    el.addEventListener('mouseleave', ()=>{ root.querySelectorAll('.t7-cell').forEach((x)=>{ x.setAttribute('stroke','rgba(255,255,255,0)'); x.setAttribute('stroke-width','0'); }); tip.style.display='none'; });
   });
 }
 

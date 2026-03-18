@@ -1437,8 +1437,8 @@ function renderFigTag08(fig){
   const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+r.value,0)));
   if (!rows.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
 
-  const W = 880, H = 360;
-  const cx = 220, cy = 180, rOuter = 118, rInner = 58;
+  const W = 1040, H = 440;
+  const cx = 280, cy = 220, rOuter = 156, rInner = 76;
   const palette = ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4','#14b8a6','#64748b'];
 
   const arcPath = (a0, a1) => {
@@ -1457,19 +1457,19 @@ function renderFigTag08(fig){
     const a1 = a0 + da;
     acc = a1;
     const mid = (a0 + a1) / 2;
-    const ox = 8 * Math.cos(mid), oy = 8 * Math.sin(mid);
+    const ox = 12 * Math.cos(mid), oy = 12 * Math.sin(mid);
     return `<path class='t8-slice' data-idx='${i}' data-label='${r.label.replace(/'/g, '&apos;')}' data-value='${r.value}' data-share='${(100*r.value/total).toFixed(2)}' data-ox='${ox.toFixed(2)}' data-oy='${oy.toFixed(2)}' d='${arcPath(a0,a1)}' fill='${palette[i % palette.length]}' opacity='0.90'/>`;
   }).join('');
 
-  const legend = rows.map((r,i)=>`<g class='t8-item' data-idx='${i}'><rect x='460' y='${48+i*34}' width='14' height='14' rx='3' fill='${palette[i % palette.length]}'/><text x='482' y='${59+i*34}' font-size='13' font-weight='700'>${r.label}</text><text x='848' y='${59+i*34}' text-anchor='end' font-size='12' font-weight='700'>${r.value.toLocaleString()} · ${(100*r.value/total).toFixed(1)}%</text></g>`).join('');
+  const legend = rows.map((r,i)=>`<g class='t8-item' data-idx='${i}'><rect x='560' y='${56+i*42}' width='18' height='18' rx='4' fill='${palette[i % palette.length]}'/><text x='588' y='${71+i*42}' font-size='16' font-weight='800'>${r.label}</text><text x='1012' y='${71+i*42}' text-anchor='end' font-size='15' font-weight='800'>${r.value.toLocaleString()} · ${(100*r.value/total).toFixed(1)}%</text></g>`).join('');
 
   root.innerHTML = `<div class='fig00a-panel'>
     <div class='fig00a-wrap' style='position:relative'>
       <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 composition pie chart'>
         ${slices}
         <circle cx='${cx}' cy='${cy}' r='${rInner-2}' fill='var(--panel, #fff)' opacity='0.96'/>
-        <text x='${cx}' y='${cy-4}' text-anchor='middle' font-size='12' font-weight='700' opacity='0.8'>Tag1</text>
-        <text x='${cx}' y='${cy+14}' text-anchor='middle' font-size='13' font-weight='800'>n=${total.toLocaleString()}</text>
+        <text x='${cx}' y='${cy-6}' text-anchor='middle' font-size='16' font-weight='800' opacity='0.85'>Tag1</text>
+        <text x='${cx}' y='${cy+18}' text-anchor='middle' font-size='18' font-weight='900'>n=${total.toLocaleString()}</text>
         ${legend}
       </svg>
       <div id='fig-tag08-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>

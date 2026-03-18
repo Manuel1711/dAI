@@ -15,7 +15,133 @@ function setActiveNav() {
     const href = a.getAttribute('href') || '';
     if (href.includes(page)) a.classList.add('active');
   });
+  initFuturisticBackground();
   refreshGlobalSyncBlock();
+}
+
+function initFuturisticBackground(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (document.getElementById('futuristic-bg')) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.id = 'futuristic-bg';
+  document.body.prepend(canvas);
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  let w = 0;
+  let h = 0;
+  let raf = 0;
+  const DPR_MAX = 1.6;
+  const nodes = [];
+  const chains = [];
+
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  const makeScene = () => {
+    nodes.length = 0;
+    chains.length = 0;
+    const nodeCount = Math.max(18, Math.min(46, Math.floor(w / 42)));
+    const chainCount = Math.max(5, Math.floor(w / 260));
+
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push({
+        x: rnd(0, w),
+        y: rnd(0, h),
+        vx: rnd(-0.08, 0.08),
+        vy: rnd(-0.06, 0.06),
+        r: rnd(1.2, 3.1),
+        hue: rnd(210, 280)
+      });
+    }
+
+    for (let i = 0; i < chainCount; i++) {
+      const y = ((i + 1) * h) / (chainCount + 1) + rnd(-22, 22);
+      const speed = rnd(0.15, 0.35);
+      const phase = rnd(0, Math.PI * 2);
+      chains.push({ y, speed, phase });
+    }
+  };
+
+  const resize = () => {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    const dpr = Math.min(DPR_MAX, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    makeScene();
+  };
+
+  const draw = (t) => {
+    ctx.clearRect(0, 0, w, h);
+
+    for (const ch of chains) {
+      const y = ch.y + Math.sin(t * 0.00035 + ch.phase) * 10;
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(37,99,235,0.08)';
+      ctx.lineWidth = 1;
+      for (let x = -20; x <= w + 20; x += 22) {
+        const yy = y + Math.sin((x * 0.018) + t * 0.001 * ch.speed + ch.phase) * 6;
+        if (x === -20) ctx.moveTo(x, yy);
+        else ctx.lineTo(x, yy);
+      }
+      ctx.stroke();
+
+      const pulseX = ((t * ch.speed * 0.08) % (w + 120)) - 60;
+      ctx.fillStyle = 'rgba(56,189,248,0.18)';
+      ctx.beginPath();
+      ctx.arc(pulseX, y, 3.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      a.x += a.vx;
+      a.y += a.vy;
+      if (a.x < -20) a.x = w + 20;
+      if (a.x > w + 20) a.x = -20;
+      if (a.y < -20) a.y = h + 20;
+      if (a.y > h + 20) a.y = -20;
+
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 > 14500) continue;
+        const alpha = 0.11 * (1 - d2 / 14500);
+        ctx.strokeStyle = `rgba(124,58,237,${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = `hsla(${a.hue}, 90%, 58%, 0.35)`;
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    raf = requestAnimationFrame(draw);
+  };
+
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+  raf = requestAnimationFrame(draw);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && raf) {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    } else if (!document.hidden && !raf) {
+      raf = requestAnimationFrame(draw);
+    }
+  });
 }
 
 async function refreshGlobalSyncBlock() {

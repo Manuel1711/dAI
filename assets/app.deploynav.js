@@ -228,6 +228,18 @@ async function loadFig08() {
   try { return await fetchJson('./data/analytics/fig08.mean_feedback_curve.json'); }
   catch { return null; }
 }
+async function loadFigTag07() {
+  try { return await fetchJson('./data/analytics/fig-tag07.field_completeness.json'); }
+  catch { return null; }
+}
+async function loadFigTag08() {
+  try { return await fetchJson('./data/analytics/fig-tag08.composition.json'); }
+  catch { return null; }
+}
+async function loadFigTag09() {
+  try { return await fetchJson('./data/analytics/fig-tag09.top_terms.json'); }
+  catch { return null; }
+}
 async function loadTopClientsNetwork() {
   try { return await fetchJson('./data/analytics/fig_top_clients_agents_network.json'); }
   catch { return null; }
@@ -1357,6 +1369,58 @@ function renderFig08(fig){
   });
 }
 
+function renderFigTag07(fig){
+  const root = document.getElementById('fig-tag07-root');
+  if (!root) return;
+  const rows = fig?.category_summary || [];
+  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+Number(r.count||0),0)));
+  if (!rows.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+  const W = 820, H = 360, m = {t:26,r:20,b:42,l:220}, pw=W-m.l-m.r, ph=H-m.t-m.b;
+  const maxV = Math.max(1, ...rows.map(r=>Number(r.count||0)));
+  const y = (i)=> m.t + (i+0.5)*(ph/rows.length), xw = (v)=> (Number(v||0)/maxV)*pw;
+  const bars = rows.map((r,i)=>`<rect x='${m.l}' y='${y(i)-14}' width='${xw(r.count)}' height='28' fill='${['#2563eb','#10b981','#f59e0b','#6b7280'][i%4]}' opacity='0.78'/><text x='${m.l-10}' y='${y(i)+5}' text-anchor='end' font-size='13' font-weight='600'>${r.category}</text><text x='${m.l+xw(r.count)+8}' y='${y(i)+5}' font-size='12' font-weight='700'>${Number(r.count).toLocaleString()} (${(100*Number(r.share||0)).toFixed(1)}%)</text>`).join('');
+  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 field completeness'><line x1='${m.l}' y1='${m.t}' x2='${m.l}' y2='${H-m.b}' stroke='currentColor' opacity='0.5'/>${bars}<text x='${W/2}' y='${H-12}' text-anchor='middle' font-size='13' font-weight='700'>Category frequency (non-empty tag1, n=${total.toLocaleString()})</text></svg></div>`;
+}
+
+function renderFigTag08(fig){
+  const root = document.getElementById('fig-tag08-root');
+  if (!root) return;
+  const rows = fig?.macroareas || [];
+  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+Number(r.frequency||0),0)));
+  if (!rows.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+  const W = 820, H = 320, m = {t:30,r:24,b:36,l:24}, pw=W-m.l-m.r;
+  let x = m.l;
+  const segs = rows.map((r,i)=>{ const w = pw*(Number(r.frequency||0)/total); const out = `<rect x='${x}' y='${H/2-24}' width='${w}' height='48' fill='${['#0ea5e9','#10b981','#f59e0b','#f97316','#8b5cf6','#22c55e','#64748b'][i%7]}' opacity='0.85'/><title>${r.macroarea}: ${Number(r.frequency).toLocaleString()}</title>`; x += w; return out; }).join('');
+  const labels = rows.map((r,i)=>`<text x='${m.l + pw + 10}' y='${42 + i*18}' font-size='12' font-weight='600' fill='${['#0ea5e9','#10b981','#f59e0b','#f97316','#8b5cf6','#22c55e','#64748b'][i%7]}'>■ ${r.macroarea} (${(100*Number(r.frequency||0)/total).toFixed(1)}%)</text>`).join('');
+  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 composition including empty'>${segs}${labels}<text x='${W/2}' y='${H-10}' text-anchor='middle' font-size='13' font-weight='700'>Macroarea composition (non-empty tag1, n=${total.toLocaleString()})</text></svg></div>`;
+}
+
+function renderFigTag09(fig){
+  const root = document.getElementById('fig-tag09-root');
+  if (!root) return;
+  const groups = [
+    { key:'characteristic', title:'Characteristic to evaluate', color:'#2563eb' },
+    { key:'adjectives', title:'Adjectives only', color:'#10b981' },
+    { key:'work_area', title:'Work area', color:'#f59e0b' },
+    { key:'unclassified', title:'Unclassified', color:'#6b7280' },
+  ];
+  const W = 1040, H = 560;
+  const panelW = 490, panelH = 250;
+  const offset = [{x:20,y:20},{x:530,y:20},{x:20,y:290},{x:530,y:290}];
+  const blocks = groups.map((g,gi)=>{
+    const items = (fig?.[g.key] || []).slice(0,8);
+    const maxV = Math.max(1, ...items.map(x=>Number(x.frequency||0)));
+    const o = offset[gi];
+    const rows = items.map((x,i)=>{
+      const y = o.y + 42 + i*24;
+      const w = 280 * Number(x.frequency||0) / maxV;
+      return `<text x='${o.x+8}' y='${y-4}' font-size='11' font-weight='600'>${x.tag}</text><rect x='${o.x+8}' y='${y}' width='${w}' height='14' rx='3' fill='${g.color}' opacity='0.75'/><text x='${o.x+300}' y='${y+11}' text-anchor='end' font-size='11' font-weight='700'>${Number(x.frequency||0)}</text>`;
+    }).join('');
+    return `<rect x='${o.x}' y='${o.y}' width='${panelW}' height='${panelH}' rx='8' fill='none' stroke='currentColor' opacity='0.15'/><text x='${o.x+8}' y='${o.y+20}' font-size='13' font-weight='800'>${g.title}</text>${rows}`;
+  }).join('');
+  root.innerHTML = `<div class='fig00a-panel'><svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Top terms by tag category'>${blocks}</svg></div>`;
+}
+
 window.renderAnalytics = async function renderAnalytics(){ 
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
@@ -1367,6 +1431,9 @@ window.renderAnalytics = async function renderAnalytics(){
   const fig00b = await loadFig00b();
   const fig07 = await loadFig07();
   const fig08 = await loadFig08();
+  const figTag07 = await loadFigTag07();
+  const figTag08 = await loadFigTag08();
+  const figTag09 = await loadFigTag09();
   const figTopClients = await loadTopClientsNetwork();
   const figTopAgents = await loadTopAgentsNetwork();
   const agents = data.agents || [];
@@ -1425,6 +1492,9 @@ window.renderAnalytics = async function renderAnalytics(){
   renderFig08(fig08);
   renderTopClientsNetwork(figTopClients);
   renderTopAgentsNetwork(figTopAgents);
+  renderFigTag07(figTag07);
+  renderFigTag08(figTag08);
+  renderFigTag09(figTag09);
   initFancyUI();
 }
 

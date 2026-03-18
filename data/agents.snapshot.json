@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24680560,
-  "generatedAt": "2026-03-17T23:52:47.815Z",
+  "blockNumber": 24680609,
+  "generatedAt": "2026-03-18T00:02:50.584Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24680561,
-    "fromBlockFeedback": 24680561,
+    "fromBlockIdentity": 24680610,
+    "fromBlockFeedback": 24680610,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430261,6 +430261,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-17T23:40:47.000Z"
+    },
+    {
+      "agentId": "0x7174",
+      "name": "Zyfai Rebalancer Agent for 0x18D6010F0843fA5b8835d5C16BEB22f0de85a7cd",
+      "owner": "0x18d6010f0843fa5b8835d5c16beb22f0de85a7cd",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreibex2k2kh4amsdn7nbct6vyh2jn7h5rmitqmljmajz5i7bicibbzi",
+      "createdAt": "2026-03-17T23:46:23.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-17T23:46:23.000Z"
     },
     {
       "agentId": "0x718",

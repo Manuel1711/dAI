@@ -90,7 +90,7 @@ function initFuturisticBackground(){
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
     const gridGap = 64;
-    ctx.strokeStyle = 'rgba(79,70,229,0.045)';
+    ctx.strokeStyle = 'rgba(79,70,229,0.10)';
     ctx.lineWidth = 1;
     for (let gx = 0; gx <= w; gx += gridGap) {
       ctx.beginPath();
@@ -108,8 +108,8 @@ function initFuturisticBackground(){
     for (const ch of chains) {
       const y = ch.y + Math.sin(t * 0.00035 + ch.phase) * 10;
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(37,99,235,0.08)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(37,99,235,0.17)';
+      ctx.lineWidth = 1.3;
       for (let x = -20; x <= w + 20; x += 22) {
         const yy = y + Math.sin((x * 0.018) + t * 0.001 * ch.speed + ch.phase) * 6;
         if (x === -20) ctx.moveTo(x, yy);
@@ -118,7 +118,7 @@ function initFuturisticBackground(){
       ctx.stroke();
 
       const pulseX = ((t * ch.speed * 0.08) % (w + 120)) - 60;
-      ctx.fillStyle = 'rgba(56,189,248,0.18)';
+      ctx.fillStyle = 'rgba(56,189,248,0.34)';
       ctx.beginPath();
       ctx.arc(pulseX, y, 3.6, 0, Math.PI * 2);
       ctx.fill();
@@ -150,7 +150,7 @@ function initFuturisticBackground(){
         const dy = a.y - b.y;
         const d2 = dx * dx + dy * dy;
         if (d2 > 14500) continue;
-        const alpha = 0.11 * (1 - d2 / 14500);
+        const alpha = 0.22 * (1 - d2 / 14500);
         ctx.strokeStyle = `rgba(124,58,237,${alpha})`;
         ctx.lineWidth = 1;
         ctx.beginPath();

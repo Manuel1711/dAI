@@ -35,8 +35,6 @@ function initFuturisticBackground(){
   const DPR_MAX = 1.6;
   const nodes = [];
   const chains = [];
-  const blocks = [];
-  const agentBadges = [];
   const pulses = [];
   const pointer = {
     x: window.innerWidth * 0.7,
@@ -57,10 +55,8 @@ function initFuturisticBackground(){
   const makeScene = () => {
     nodes.length = 0;
     chains.length = 0;
-    blocks.length = 0;
-    agentBadges.length = 0;
-    const nodeCount = Math.max(42, Math.min(110, Math.floor(w / 18)));
-    const aiIcons = ['🤖','🧠','⚡','🛰️','🛡️','🔗','📡','🧬'];
+    const nodeCount = Math.max(30, Math.min(72, Math.floor(w / 24)));
+    const aiIcons = ['🤖'];
 
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
@@ -74,32 +70,6 @@ function initFuturisticBackground(){
       });
     }
 
-    const blockCols = Math.max(4, Math.floor(w / 240));
-    const blockRows = Math.max(3, Math.floor(h / 220));
-    for (let r = 0; r < blockRows; r++) {
-      for (let c = 0; c < blockCols; c++) {
-        if (Math.random() > 0.7) continue;
-        blocks.push({
-          x: (c + 0.5) * (w / blockCols) + rnd(-30, 30),
-          y: (r + 0.6) * (h / blockRows) + rnd(-26, 26),
-          w: rnd(56, 96),
-          h: rnd(26, 42),
-          phase: rnd(0, Math.PI * 2)
-        });
-      }
-    }
-
-    const badges = ['🤖','🧠','⚡','⛓️','🛰️','🛡️'];
-    const badgeCount = 0;
-    for (let i = 0; i < badgeCount; i++) {
-      agentBadges.push({
-        x: rnd(40, w - 40),
-        y: rnd(50, h - 60),
-        icon: badges[i % badges.length],
-        drift: rnd(0.15, 0.55),
-        phase: rnd(0, Math.PI * 2)
-      });
-    }
   };
 
   const resize = () => {
@@ -120,26 +90,8 @@ function initFuturisticBackground(){
     pointer.x += (pointer.targetX - pointer.x) * 0.07;
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
-    ctx.fillStyle = 'rgba(10,14,26,0.72)';
+    ctx.fillStyle = 'rgba(15,22,38,0.42)';
     ctx.fillRect(0, 0, w, h);
-
-    for (const b of blocks) {
-      const shimmer = (Math.sin(t * 0.0013 + b.phase) + 1) * 0.5;
-      const g = ctx.createLinearGradient(b.x - b.w / 2, b.y, b.x + b.w / 2, b.y);
-      g.addColorStop(0, `rgba(245,158,11,${0.14 + shimmer * 0.16})`);
-      g.addColorStop(0.5, `rgba(250,204,21,${0.20 + shimmer * 0.22})`);
-      g.addColorStop(1, `rgba(59,130,246,${0.16 + shimmer * 0.12})`);
-      ctx.fillStyle = g;
-      ctx.strokeStyle = `rgba(250,204,21,${0.34 + shimmer * 0.28})`;
-      ctx.lineWidth = 1.6;
-      const rx = b.x - b.w / 2;
-      const ry = b.y - b.h / 2;
-      ctx.beginPath();
-      if (typeof ctx.roundRect === 'function') ctx.roundRect(rx, ry, b.w, b.h, 7);
-      else ctx.rect(rx, ry, b.w, b.h);
-      ctx.fill();
-      ctx.stroke();
-    }
 
     ctx.shadowBlur = 0;
     ctx.shadowColor = 'transparent';
@@ -176,23 +128,23 @@ function initFuturisticBackground(){
           b.vx -= dx * repel;
           b.vy -= dy * repel;
         }
-        if (d2 > 140000 || d2 < 1600) continue;
-        const alpha = 0.82 * (1 - d2 / 98000);
+        if (d2 > 120000 || d2 < 1800) continue;
+        const alpha = 0.62 * (1 - d2 / 120000);
         const palette = [
           `rgba(250,204,21,${alpha})`,
           `rgba(245,158,11,${alpha})`,
           `rgba(255,234,138,${alpha})`
         ];
         ctx.strokeStyle = palette[(i + j) % palette.length];
-        ctx.shadowColor = 'rgba(250,204,21,0.98)';
-        ctx.shadowBlur = 16;
-        ctx.lineWidth = 4.8;
+        ctx.shadowColor = 'rgba(250,204,21,0.62)';
+        ctx.shadowBlur = 7;
+        ctx.lineWidth = 2.8;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
 
-        for (let s = 0; s < 3; s++) {
+        for (let s = 0; s < 1; s++) {
           const prog = ((t * (0.00075 + s * 0.00018)) + (((i * 17 + j * 23 + s * 31) % 100) / 100)) % 1;
           const sx = a.x + (b.x - a.x) * prog;
           const sy = a.y + (b.y - a.y) * prog;
@@ -231,22 +183,6 @@ function initFuturisticBackground(){
 
     ctx.shadowBlur = 0;
     ctx.shadowColor = 'transparent';
-
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font = '18px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
-    for (const badge of agentBadges) {
-      const by = badge.y + Math.sin(t * 0.0008 * badge.drift + badge.phase) * 7;
-      const bx = badge.x + Math.cos(t * 0.0007 * badge.drift + badge.phase) * 4;
-      ctx.fillStyle = 'rgba(255,255,255,0.60)';
-      ctx.beginPath();
-      ctx.arc(bx, by, 14, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(250,204,21,0.55)';
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
-      ctx.fillText(badge.icon, bx, by + 0.5);
-    }
 
     for (let i = pulses.length - 1; i >= 0; i--) {
       const p = pulses[i];
@@ -297,8 +233,6 @@ function initFuturisticBackground(){
       interaction.lastX = ev.clientX;
       interaction.lastY = ev.clientY;
       for (const n of nodes) { n.x += dx; n.y += dy; }
-      for (const b of blocks) { b.x += dx * 0.8; b.y += dy * 0.8; }
-      for (const a of agentBadges) { a.x += dx * 0.6; a.y += dy * 0.6; }
       for (const c of chains) { c.y += dy * 0.35; }
     }
   }, { passive: true });

@@ -49,8 +49,8 @@ function initFuturisticBackground(){
   const makeScene = () => {
     nodes.length = 0;
     chains.length = 0;
-    const nodeCount = Math.max(18, Math.min(46, Math.floor(w / 42)));
-    const chainCount = Math.max(5, Math.floor(w / 260));
+    const nodeCount = Math.max(34, Math.min(96, Math.floor(w / 20)));
+    const chainCount = Math.max(10, Math.floor(w / 140));
 
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
@@ -59,7 +59,7 @@ function initFuturisticBackground(){
         vx: rnd(-0.08, 0.08),
         vy: rnd(-0.06, 0.06),
         r: rnd(1.2, 3.1),
-        hue: rnd(210, 280)
+        hue: rnd(38, 290)
       });
     }
 
@@ -89,9 +89,9 @@ function initFuturisticBackground(){
     pointer.x += (pointer.targetX - pointer.x) * 0.07;
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
-    const gridGap = 64;
-    ctx.strokeStyle = 'rgba(79,70,229,0.10)';
-    ctx.lineWidth = 1;
+    const gridGap = 44;
+    ctx.strokeStyle = 'rgba(79,70,229,0.16)';
+    ctx.lineWidth = 1.4;
     for (let gx = 0; gx <= w; gx += gridGap) {
       ctx.beginPath();
       ctx.moveTo(gx, 0);
@@ -108,8 +108,8 @@ function initFuturisticBackground(){
     for (const ch of chains) {
       const y = ch.y + Math.sin(t * 0.00035 + ch.phase) * 10;
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(37,99,235,0.17)';
-      ctx.lineWidth = 1.3;
+      ctx.strokeStyle = 'rgba(37,99,235,0.30)';
+      ctx.lineWidth = 2.2;
       for (let x = -20; x <= w + 20; x += 22) {
         const yy = y + Math.sin((x * 0.018) + t * 0.001 * ch.speed + ch.phase) * 6;
         if (x === -20) ctx.moveTo(x, yy);
@@ -150,16 +150,21 @@ function initFuturisticBackground(){
         const dy = a.y - b.y;
         const d2 = dx * dx + dy * dy;
         if (d2 > 14500) continue;
-        const alpha = 0.22 * (1 - d2 / 14500);
-        ctx.strokeStyle = `rgba(124,58,237,${alpha})`;
-        ctx.lineWidth = 1;
+        const alpha = 0.34 * (1 - d2 / 14500);
+        const palette = [
+          `rgba(124,58,237,${alpha})`,
+          `rgba(56,189,248,${alpha})`,
+          `rgba(245,158,11,${alpha})`
+        ];
+        ctx.strokeStyle = palette[(i + j) % palette.length];
+        ctx.lineWidth = 1.9;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
       }
 
-      ctx.fillStyle = `hsla(${a.hue}, 90%, 58%, 0.35)`;
+      ctx.fillStyle = `hsla(${a.hue}, 94%, 60%, 0.55)`;
       ctx.beginPath();
       ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
       ctx.fill();

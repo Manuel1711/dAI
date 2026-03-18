@@ -32,6 +32,22 @@ body{
   pointer-events:none;
   opacity:1;
 }
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(
+      105deg,
+      rgba(200,162,77,.18) 0 2px,
+      rgba(255,219,128,.12) 2px 5px,
+      rgba(0,0,0,0) 5px 28px
+    );
+  mix-blend-mode:screen;
+  animation:goldBarsFlow 12s linear infinite;
+}
 body::after{
   content:"";
   position:fixed;
@@ -39,10 +55,15 @@ body::after{
   z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 20% 10%,rgba(56,189,248,.20),transparent 36%),
-    radial-gradient(circle at 80% 30%,rgba(168,85,247,.18),transparent 40%),
-    radial-gradient(circle at 50% 100%,rgba(37,99,235,.16),transparent 45%),
-    linear-gradient(180deg,rgba(248,250,255,.54),rgba(246,247,251,.62));
+    radial-gradient(circle at 12% 14%,rgba(56,189,248,.30),transparent 34%),
+    radial-gradient(circle at 82% 18%,rgba(251,191,36,.24),transparent 38%),
+    radial-gradient(circle at 88% 74%,rgba(168,85,247,.24),transparent 42%),
+    radial-gradient(circle at 18% 86%,rgba(16,185,129,.18),transparent 40%),
+    linear-gradient(180deg,rgba(248,250,255,.48),rgba(246,247,251,.56));
+}
+@keyframes goldBarsFlow{
+  0%{transform:translate3d(-120px,0,0)}
+  100%{transform:translate3d(120px,0,0)}
 }
 .container{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:26px}
 .global-sync-block{

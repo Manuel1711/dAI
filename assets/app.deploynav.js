@@ -1372,35 +1372,68 @@ function renderFig08(fig){
 function renderFigTag07(fig){
   const root = document.getElementById('fig-tag07-root');
   if (!root) return;
-  const rows = (fig?.category_summary || [])
-    .map((r) => ({ category: String(r.category || 'Unknown'), count: Number(r.count || 0), share: Number(r.share || 0) }))
-    .sort((a,b) => b.count - a.count);
-  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+r.count,0)));
-  if (!rows.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
 
-  const W = 920, H = 380;
-  const m = { t: 26, r: 22, b: 52, l: 260 };
-  const pw = W - m.l - m.r;
-  const ph = H - m.t - m.b;
-  const maxV = Math.max(1, ...rows.map((r) => r.count));
-  const xTicks = roundTickValues(0, maxV, 6);
-  const y = (i) => m.t + (i + 0.5) * (ph / rows.length);
-  const x = (v) => m.l + (Number(v || 0) / maxV) * pw;
-  const palette = ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];
+  const comp = (fig?.field_completeness || []).map((r) => ({
+    label: String(r.label || r.status || ''),
+    count: Number(r.count || 0),
+    share: Number(r.share || 0),
+  }));
+  const byCat = (fig?.category_summary || []).map((r) => ({
+    category: String(r.category || 'Unknown'),
+    count: Number(r.count || 0),
+    share: Number(r.share || 0),
+  }));
 
-  const grid = xTicks.map((v) => `<line x1='${x(v)}' y1='${m.t}' x2='${x(v)}' y2='${H-m.b}' stroke='currentColor' opacity='0.10'/><text x='${x(v)}' y='${H-m.b+22}' text-anchor='middle' font-size='12' font-weight='600'>${Math.round(v).toLocaleString()}</text>`).join('');
-  const bars = rows.map((r,i) => {
-    const w = Math.max(2, x(r.count) - m.l);
-    return `<rect class='t7-bar' data-label='${r.category.replace(/'/g, '&apos;')}' data-count='${r.count}' data-share='${(100*r.share).toFixed(2)}' x='${m.l}' y='${y(i)-14}' width='${w}' height='28' rx='6' fill='${palette[i % palette.length]}' opacity='0.86'/><text x='${m.l-10}' y='${y(i)+5}' text-anchor='end' font-size='13' font-weight='700'>${r.category}</text><text x='${m.l+w+8}' y='${y(i)+5}' font-size='12' font-weight='700'>${r.count.toLocaleString()}</text>`;
+  const totalRows = Math.max(1, Number(fig?.total_rows || comp.reduce((s,r)=>s+r.count,0)));
+  const totalNonEmpty = Math.max(1, Number(fig?.total_nonempty || byCat.reduce((s,r)=>s+r.count,0)));
+  const emptyCount = Math.max(0, totalRows - totalNonEmpty);
+  if (!comp.length || !byCat.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+
+  const cols = [...byCat.map((r)=>r.category), 'Empty tag1'];
+  const heatVals = [
+    [...byCat.map((r)=>r.count), 0],
+    [...byCat.map(()=>0), emptyCount],
+  ];
+  const rowNames = ['Non-empty tag1', 'Empty tag1'];
+  const maxHeat = Math.max(1, ...heatVals.flat());
+
+  const W = 1120, H = 460;
+  const left = { x: 30, y: 60, w: 460, h: 270 };
+  const right = { x: 530, y: 60, w: 560, h: 300 };
+
+  const colorBar = ['#2563eb', '#94a3b8'];
+  const segW = comp.map((r)=>left.w*(r.count/totalRows));
+
+  let acc = left.x;
+  const stack = comp.map((r,i) => {
+    const x = acc; const w = segW[i]; acc += w;
+    return `<rect class='t7-seg' data-label='${r.label.replace(/'/g, '&apos;')}' data-count='${r.count}' data-share='${(100*r.share).toFixed(2)}' x='${x}' y='${left.y+36}' width='${w}' height='54' rx='6' fill='${colorBar[i%colorBar.length]}' opacity='0.92'/><text x='${x + w/2}' y='${left.y+67}' text-anchor='middle' font-size='14' font-weight='800' fill='white'>${(100*r.share).toFixed(1)}%</text>`;
   }).join('');
+
+  const leftLegend = comp.map((r,i)=>`<g class='t7-leg' data-idx='${i}'><rect x='${left.x + i*220}' y='${left.y+108}' width='14' height='14' rx='3' fill='${colorBar[i%colorBar.length]}'/><text x='${left.x + i*220 + 22}' y='${left.y+120}' font-size='13.5' font-weight='700'>${r.label}: ${r.count.toLocaleString()}</text></g>`).join('');
+
+  const cw = right.w / cols.length;
+  const ch = right.h / rowNames.length;
+  const heatCells = heatVals.map((row,ri)=>row.map((v,ci)=>{
+    const t = v / maxHeat;
+    const alpha = 0.10 + 0.90 * t;
+    const x = right.x + ci*cw;
+    const y = right.y + ri*ch;
+    const txt = v > 0 ? v.toLocaleString() : '0';
+    return `<rect class='t7-cell' data-row='${rowNames[ri]}' data-col='${cols[ci].replace(/'/g, '&apos;')}' data-val='${v}' x='${x+2}' y='${y+2}' width='${cw-4}' height='${ch-4}' rx='8' fill='rgba(37,99,235,${alpha.toFixed(3)})' stroke='rgba(30,41,59,0.15)'/><text x='${x+cw/2}' y='${y+ch/2+5}' text-anchor='middle' font-size='14' font-weight='800' fill='${t>0.48?'#ffffff':'#0f172a'}'>${txt}</text>`;
+  }).join('')).join('');
+
+  const xLabels = cols.map((c,i)=>`<text x='${right.x + i*cw + cw/2}' y='${right.y + right.h + 24}' text-anchor='middle' font-size='12.5' font-weight='700'>${c}</text>`).join('');
+  const yLabels = rowNames.map((r,i)=>`<text x='${right.x - 10}' y='${right.y + i*ch + ch/2 + 5}' text-anchor='end' font-size='13' font-weight='800'>${r}</text>`).join('');
 
   root.innerHTML = `<div class='fig00a-panel'>
     <div class='fig00a-wrap' style='position:relative'>
-      <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 field completeness by category'>
-        ${grid}${bars}
-        <line x1='${m.l}' y1='${m.t}' x2='${m.l}' y2='${H-m.b}' stroke='currentColor' opacity='0.45'/>
-        <line x1='${m.l}' y1='${H-m.b}' x2='${W-m.r}' y2='${H-m.b}' stroke='currentColor' opacity='0.45'/>
-        <text x='${W/2}' y='${H-10}' text-anchor='middle' font-size='14' font-weight='800'>Category frequency (non-empty tag1 n=${total.toLocaleString()})</text>
+      <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 completeness and category heatmap'>
+        <text x='${left.x}' y='${left.y-18}' font-size='16' font-weight='900'>Completeness split</text>
+        <text x='${right.x}' y='${right.y-18}' font-size='16' font-weight='900'>Category × status heatmap</text>
+        ${stack}${leftLegend}
+        <text x='${left.x}' y='${left.y+164}' font-size='13.5' font-weight='700'>Total rows: ${totalRows.toLocaleString()} · Non-empty: ${totalNonEmpty.toLocaleString()} · Empty: ${emptyCount.toLocaleString()}</text>
+        ${heatCells}${xLabels}${yLabels}
       </svg>
       <div id='fig-tag07-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
     </div>
@@ -1409,21 +1442,33 @@ function renderFigTag07(fig){
   const wrap = root.querySelector('.fig00a-wrap');
   const tip = root.querySelector('#fig-tag07-tooltip');
   if (!wrap || !tip) return;
-  root.querySelectorAll('.t7-bar').forEach((el) => {
-    const show = (ev) => {
-      root.querySelectorAll('.t7-bar').forEach((b) => b.setAttribute('opacity', b === el ? '1' : '0.32'));
-      const bounds = wrap.getBoundingClientRect();
-      tip.style.display = 'block';
-      tip.style.left = `${Math.min(bounds.width - 260, Math.max(8, ev.clientX - bounds.left + 10))}px`;
-      tip.style.top = `${Math.min(bounds.height - 88, Math.max(8, ev.clientY - bounds.top + 10))}px`;
-      tip.innerHTML = `<b>${el.getAttribute('data-label')}</b><br/>Count: <b>${Number(el.getAttribute('data-count') || 0).toLocaleString()}</b><br/>Share: <b>${Number(el.getAttribute('data-share') || 0).toFixed(1)}%</b>`;
+
+  const moveTip = (ev, html) => {
+    const b = wrap.getBoundingClientRect();
+    tip.style.display = 'block';
+    tip.style.left = `${Math.min(b.width - 280, Math.max(8, ev.clientX - b.left + 10))}px`;
+    tip.style.top = `${Math.min(b.height - 96, Math.max(8, ev.clientY - b.top + 10))}px`;
+    tip.innerHTML = html;
+  };
+
+  root.querySelectorAll('.t7-seg').forEach((el)=>{
+    const show=(ev)=>{
+      root.querySelectorAll('.t7-seg').forEach((x)=>x.setAttribute('opacity', x===el?'1':'0.35'));
+      moveTip(ev, `<b>${el.getAttribute('data-label')}</b><br/>Count: <b>${Number(el.getAttribute('data-count')||0).toLocaleString()}</b><br/>Share: <b>${Number(el.getAttribute('data-share')||0).toFixed(1)}%</b>`);
     };
-    el.addEventListener('mousemove', show);
     el.addEventListener('mouseenter', show);
-    el.addEventListener('mouseleave', () => {
-      root.querySelectorAll('.t7-bar').forEach((b) => b.setAttribute('opacity', '0.86'));
-      tip.style.display = 'none';
-    });
+    el.addEventListener('mousemove', show);
+    el.addEventListener('mouseleave', ()=>{ root.querySelectorAll('.t7-seg').forEach((x)=>x.setAttribute('opacity','0.92')); tip.style.display='none'; });
+  });
+
+  root.querySelectorAll('.t7-cell').forEach((el)=>{
+    const show=(ev)=>{
+      root.querySelectorAll('.t7-cell').forEach((x)=>x.setAttribute('stroke-width', x===el?'2':'1'));
+      moveTip(ev, `<b>${el.getAttribute('data-row')}</b><br/>Category: <b>${el.getAttribute('data-col')}</b><br/>Count: <b>${Number(el.getAttribute('data-val')||0).toLocaleString()}</b>`);
+    };
+    el.addEventListener('mouseenter', show);
+    el.addEventListener('mousemove', show);
+    el.addEventListener('mouseleave', ()=>{ root.querySelectorAll('.t7-cell').forEach((x)=>x.setAttribute('stroke-width','1')); tip.style.display='none'; });
   });
 }
 

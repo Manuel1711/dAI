@@ -59,25 +59,24 @@ function initFuturisticBackground(){
     chains.length = 0;
     blocks.length = 0;
     agentBadges.length = 0;
-    const nodeCount = Math.max(40, Math.min(120, Math.floor(w / 16)));
-    const chainCount = Math.max(12, Math.floor(w / 120));
+    const nodeCount = Math.max(24, Math.min(56, Math.floor(w / 34)));
+    const aiIcons = ['🤖','🧠','⚡','🛰️','🛡️','🔗','📡','🧬'];
 
     for (let i = 0; i < nodeCount; i++) {
+      const cols = Math.ceil(Math.sqrt(nodeCount * 1.7));
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const sx = ((col + 1) * w) / (cols + 1);
+      const sy = ((row + 1) * h) / (Math.ceil(nodeCount / cols) + 1);
       nodes.push({
-        x: rnd(0, w),
-        y: rnd(0, h),
-        vx: rnd(-0.08, 0.08),
-        vy: rnd(-0.06, 0.06),
-        r: rnd(1.2, 3.1),
-        hue: rnd(38, 290)
+        x: sx + rnd(-34, 34),
+        y: sy + rnd(-28, 28),
+        vx: rnd(-0.16, 0.16),
+        vy: rnd(-0.14, 0.14),
+        r: rnd(14, 20),
+        hue: rnd(38, 52),
+        icon: aiIcons[i % aiIcons.length]
       });
-    }
-
-    for (let i = 0; i < chainCount; i++) {
-      const y = ((i + 1) * h) / (chainCount + 1) + rnd(-22, 22);
-      const speed = rnd(0.15, 0.35);
-      const phase = rnd(0, Math.PI * 2);
-      chains.push({ y, speed, phase, drift: rnd(0.7, 1.4) });
     }
 
     const blockCols = Math.max(4, Math.floor(w / 240));
@@ -96,7 +95,7 @@ function initFuturisticBackground(){
     }
 
     const badges = ['🤖','🧠','⚡','⛓️','🛰️','🛡️'];
-    const badgeCount = Math.max(18, Math.floor(w / 110));
+    const badgeCount = 0;
     for (let i = 0; i < badgeCount; i++) {
       agentBadges.push({
         x: rnd(40, w - 40),
@@ -126,11 +125,7 @@ function initFuturisticBackground(){
     pointer.x += (pointer.targetX - pointer.x) * 0.07;
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
-    const bg = ctx.createLinearGradient(0, 0, w, h);
-    bg.addColorStop(0, 'rgba(26,46,95,0.14)');
-    bg.addColorStop(0.45, 'rgba(122,26,26,0.10)');
-    bg.addColorStop(1, 'rgba(20,20,80,0.16)');
-    ctx.fillStyle = bg;
+    ctx.fillStyle = 'rgba(10,14,26,0.72)';
     ctx.fillRect(0, 0, w, h);
 
     for (const b of blocks) {
@@ -167,37 +162,6 @@ function initFuturisticBackground(){
       ctx.stroke();
     }
 
-    for (const ch of chains) {
-      const y = ch.y + Math.sin(t * 0.00035 + ch.phase) * 10;
-      const chainGrad = ctx.createLinearGradient(0, y - 20, w, y + 20);
-      chainGrad.addColorStop(0, 'rgba(250,204,21,0.42)');
-      chainGrad.addColorStop(0.5, 'rgba(245,158,11,0.56)');
-      chainGrad.addColorStop(1, 'rgba(59,130,246,0.44)');
-      ctx.beginPath();
-      ctx.strokeStyle = chainGrad;
-      ctx.shadowColor = 'rgba(250,204,21,0.95)';
-      ctx.shadowBlur = 18;
-      ctx.lineWidth = 5.4;
-      for (let x = -20; x <= w + 20; x += 18) {
-        const yy = y + Math.sin((x * 0.018) + t * 0.001 * ch.speed + ch.phase) * 7;
-        if (x === -20) ctx.moveTo(x, yy);
-        else ctx.lineTo(x, yy);
-      }
-      ctx.stroke();
-
-      for (let k = 0; k < 4; k++) {
-        const pulseX = (((t * ch.speed * 0.14 * ch.drift) + k * (w / 4)) % (w + 160)) - 80;
-        const pulseY = y + Math.sin((pulseX * 0.018) + t * 0.001 * ch.speed + ch.phase) * 7;
-        const pulseGrad = ctx.createRadialGradient(pulseX, pulseY, 1, pulseX, pulseY, 9);
-        pulseGrad.addColorStop(0, 'rgba(255,245,157,0.95)');
-        pulseGrad.addColorStop(1, 'rgba(250,204,21,0)');
-        ctx.fillStyle = pulseGrad;
-        ctx.beginPath();
-        ctx.arc(pulseX, pulseY, 9, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
     ctx.shadowBlur = 0;
     ctx.shadowColor = 'transparent';
 
@@ -213,48 +177,77 @@ function initFuturisticBackground(){
       const px = a.x - pointer.x;
       const py = a.y - pointer.y;
       const p2 = px * px + py * py;
-      if (p2 < 42000) {
-        const pull = (1 - p2 / 42000) * 0.02;
-        a.vx += ((pointer.x - a.x) * pull) * 0.002;
-        a.vy += ((pointer.y - a.y) * pull) * 0.002;
+      if (interaction.dragNode === null && p2 < 18000) {
+        const pull = (1 - p2 / 18000) * 0.01;
+        a.vx += ((pointer.x - a.x) * pull) * 0.0012;
+        a.vy += ((pointer.y - a.y) * pull) * 0.0012;
       }
-      a.vx *= 0.995;
-      a.vy *= 0.995;
+      a.vx += ((w * 0.5 - a.x) * 0.00003);
+      a.vy += ((h * 0.5 - a.y) * 0.00003);
+      a.vx *= 0.992;
+      a.vy *= 0.992;
 
       for (let j = i + 1; j < nodes.length; j++) {
         const b = nodes[j];
         const dx = a.x - b.x;
         const dy = a.y - b.y;
         const d2 = dx * dx + dy * dy;
-        if (d2 > 14500) continue;
-        const alpha = 0.62 * (1 - d2 / 14500);
+        if (d2 > 0 && d2 < 30000) {
+          const repel = (1 - d2 / 30000) * 0.00045;
+          a.vx += dx * repel;
+          a.vy += dy * repel;
+          b.vx -= dx * repel;
+          b.vy -= dy * repel;
+        }
+        if (d2 > 98000 || d2 < 1600) continue;
+        const alpha = 0.82 * (1 - d2 / 98000);
         const palette = [
-          `rgba(124,58,237,${alpha})`,
-          `rgba(56,189,248,${alpha})`,
-          `rgba(245,158,11,${alpha})`
+          `rgba(250,204,21,${alpha})`,
+          `rgba(245,158,11,${alpha})`,
+          `rgba(255,234,138,${alpha})`
         ];
         ctx.strokeStyle = palette[(i + j) % palette.length];
-        ctx.shadowColor = 'rgba(250,204,21,0.85)';
-        ctx.shadowBlur = 10;
-        ctx.lineWidth = 3.4;
+        ctx.shadowColor = 'rgba(250,204,21,0.98)';
+        ctx.shadowBlur = 16;
+        ctx.lineWidth = 4.8;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
 
-        const prog = ((t * 0.00028) + ((i * 17 + j * 23) % 100) / 100) % 1;
+        const prog = ((t * 0.00075) + ((i * 17 + j * 23) % 100) / 100) % 1;
         const sx = a.x + (b.x - a.x) * prog;
         const sy = a.y + (b.y - a.y) * prog;
-        ctx.fillStyle = `rgba(255,235,120,${Math.min(0.85, alpha + 0.28)})`;
+        const spark = ctx.createRadialGradient(sx, sy, 0.5, sx, sy, 8.5);
+        spark.addColorStop(0, `rgba(255,248,181,${Math.min(0.98, alpha + 0.32)})`);
+        spark.addColorStop(1, 'rgba(250,204,21,0)');
+        ctx.fillStyle = spark;
         ctx.beginPath();
-        ctx.arc(sx, sy, 2.2, 0, Math.PI * 2);
+        ctx.arc(sx, sy, 8.5, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      ctx.fillStyle = `hsla(${a.hue}, 94%, 60%, 0.55)`;
+      const nodeGlow = ctx.createRadialGradient(a.x, a.y, 2, a.x, a.y, a.r + 12);
+      nodeGlow.addColorStop(0, 'rgba(255,232,140,0.88)');
+      nodeGlow.addColorStop(1, 'rgba(255,232,140,0)');
+      ctx.fillStyle = nodeGlow;
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, a.r + 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(16,22,38,0.95)';
+      ctx.strokeStyle = 'rgba(250,204,21,0.95)';
+      ctx.lineWidth = 2.4;
       ctx.beginPath();
       ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
       ctx.fill();
+      ctx.stroke();
+
+      ctx.font = `${Math.max(14, Math.floor(a.r))}px "Apple Color Emoji","Segoe UI Emoji",sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,0.98)';
+      ctx.fillText(a.icon || '🤖', a.x, a.y + 0.5);
     }
 
     ctx.shadowBlur = 0;

@@ -1357,22 +1357,6 @@ function renderFig08(fig){
   });
 }
 
-function renderFigTag07() {
-  const root = document.getElementById('fig-tag07-root');
-  if (!root) return;
-  root.innerHTML = `<div class="fig00a-panel reveal"><img src="./assets/figures/fig-tag07.png" alt="Tag1 field completeness" style="width:100%;height:auto;display:block;border-radius:6px;"/></div>`;
-}
-function renderFigTag08() {
-  const root = document.getElementById('fig-tag08-root');
-  if (!root) return;
-  root.innerHTML = `<div class="fig00a-panel reveal"><img src="./assets/figures/fig-tag08.png" alt="Tag1 composition including empty" style="width:100%;height:auto;display:block;border-radius:6px;"/></div>`;
-}
-function renderFigTag09() {
-  const root = document.getElementById('fig-tag09-root');
-  if (!root) return;
-  root.innerHTML = `<div class="fig00a-panel reveal"><img src="./assets/figures/fig-tag09.png" alt="Top terms by tag category" style="width:100%;height:auto;display:block;border-radius:6px;"/></div>`;
-}
-
 window.renderAnalytics = async function renderAnalytics(){ 
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
@@ -1439,9 +1423,6 @@ window.renderAnalytics = async function renderAnalytics(){
   renderFig00b(fig00b);
   renderFig07(fig07);
   renderFig08(fig08);
-  renderFigTag07();
-  renderFigTag08();
-  renderFigTag09();
   renderTopClientsNetwork(figTopClients);
   renderTopAgentsNetwork(figTopAgents);
   initFancyUI();

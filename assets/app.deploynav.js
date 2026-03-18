@@ -90,7 +90,7 @@ function initFuturisticBackground(){
     pointer.x += (pointer.targetX - pointer.x) * 0.07;
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
-    ctx.fillStyle = 'rgba(15,22,38,0.42)';
+    ctx.fillStyle = 'rgba(20,30,50,0.24)';
     ctx.fillRect(0, 0, w, h);
 
     ctx.shadowBlur = 0;
@@ -635,7 +635,7 @@ window.renderHome = async function renderHome(){
   const live = ageMin <= 20;
 
   document.getElementById('status-chip').className = `status-chip ${live ? 'status-live' : 'status-stale'}`;
-  document.getElementById('status-chip').textContent = live ? `LIVE • updated ${ageMin}m ago` : `STALE • updated ${ageMin}m ago`;
+  document.getElementById('status-chip').textContent = live ? 'LIVE' : 'STALE';
 
   document.getElementById('home-kpis').innerHTML = `
     <div class='card'><h3>Agents indexed</h3><div class='kpi'>${total}</div></div>
@@ -643,9 +643,6 @@ window.renderHome = async function renderHome(){
     <div class='card'><h3>Avg Main Score (non-C1)</h3><div class='kpi'>${mean}</div></div>
     <div class='card'><h3>Total Feedback</h3><div class='kpi'>${feedback}</div></div>`;
 
-  const top = [...enriched].sort((a,b)=>(b._metrics.scoreMain||0)-(a._metrics.scoreMain||0)).slice(0,5)
-    .map((a)=>`<li><a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name}</a> — ${Number(a._metrics.scoreMain||0).toFixed(2)} (${a._metrics.scoreMainCount} fb used)</li>`).join('');
-  document.getElementById('top-agents').innerHTML = `<h3>Top agents by Main Score (non-C1)</h3><ol>${top || '<li>No agents</li>'}</ol>`;
 
   const cpText = cp ? ` | Last safe block: ${cp.lastSafeBlock ?? '-'} | Checkpoint updated: ${fmtDate(cp.updatedAt)}` : '';
   document.getElementById('meta').textContent = `Snapshot block: ${data.blockNumber} | Generated: ${fmtDate(data.generatedAt)}${cpText}`;

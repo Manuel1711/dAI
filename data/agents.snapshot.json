@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24687125,
-  "generatedAt": "2026-03-18T21:52:46.917Z",
+  "blockNumber": 24687175,
+  "generatedAt": "2026-03-18T22:02:26.910Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24687126,
-    "fromBlockFeedback": 24687126,
+    "fromBlockIdentity": 24687176,
+    "fromBlockFeedback": 24687176,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -7218,6 +7218,121 @@
       "lastActivityAt": "2026-02-19T03:34:59.000Z"
     },
     {
+      "agentId": "0x1AA1",
+      "name": "Otto AI - Market Alpha Agent",
+      "owner": "0x197b33028a4ac0bccda2cdb51205d9f48f50d65b",
+      "category": "Unknown",
+      "description": "AI agent providing crypto market intelligence: real-time news, KOL sentiment analysis, token alpha, yield opportunities, and AI-powered trade suggestions. 10 specialized services via ACP and x402. Website: https://useotto.xyz | X: @useOttoAI",
+      "identityURI": "https://useotto.xyz/.well-known/erc8004/market-alpha-agent.json",
+      "createdAt": "2026-01-29T15:19:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-18T21:45:35.000Z",
+          "score": 100,
+          "tag1": "Fast",
+          "tag2": "Accurate",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x200b4d121423c948521954b77900f6aff747af2836c0ddcb36b883bc8c15fe6b",
+          "blockNumber": 24687140
+        },
+        {
+          "timestamp": "2026-02-19T10:47:11.000Z",
+          "score": 86,
+          "tag1": "quality",
+          "tag2": "green",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xc4e79526304c1ae17a6bcd64d74edffb7a98b5877e9ed4b24aeaf2a2a5b0992f",
+          "blockNumber": 24490388
+        },
+        {
+          "timestamp": "2026-02-11T07:59:11.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x6526339f9a737dfdbe77e4feaf1aaab10fc16227a09a3c81cec106317e872d84",
+          "blockNumber": 24432189
+        },
+        {
+          "timestamp": "2026-02-09T17:51:47.000Z",
+          "score": 1,
+          "tag1": "reachable",
+          "tag2": "web",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x22604e04ab24d245134398b7eb6d8f8223b03f2766fe48e2de0004200907098f",
+          "blockNumber": 24420819
+        },
+        {
+          "timestamp": "2026-02-09T17:51:35.000Z",
+          "score": 1,
+          "tag1": "reachable",
+          "tag2": "a2a",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x815e4e228f91afde4822203b1c9ae3d610a0596d05d31f21075b8429e16c92f2",
+          "blockNumber": 24420818
+        },
+        {
+          "timestamp": "2026-02-05T17:17:23.000Z",
+          "score": 80,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x6fba69f35bc24617a524f7b511f2f59f57d96513311f2d41365ac0a9e1290866",
+          "blockNumber": 24392065
+        },
+        {
+          "timestamp": "2026-01-30T11:10:23.000Z",
+          "score": 100,
+          "tag1": "Fast",
+          "tag2": "Accurate",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xaf8a4352ae4e509d68909c107b973eb0d903eba4e1392bc609300a72252e4135",
+          "blockNumber": 24347295
+        },
+        {
+          "timestamp": "2026-01-30T08:36:59.000Z",
+          "score": 100,
+          "tag1": "Alpha packed",
+          "tag2": "Accurate",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x35e7749b6ff9a6fd3e4f8d01246a41c25c27e831b825c997bb68801c6a01b0e2",
+          "blockNumber": 24346529
+        },
+        {
+          "timestamp": "2026-01-29T19:35:59.000Z",
+          "score": 100,
+          "tag1": "Fast",
+          "tag2": "Accurate",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x7aa3b1fec1ec7392e5df5d274060c130f46068cc54826e7646a5837f371a3dc6",
+          "blockNumber": 24342642
+        },
+        {
+          "timestamp": "2026-01-29T18:46:47.000Z",
+          "score": 100,
+          "tag1": "Excellent",
+          "tag2": "Excellent",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xdd2134cf22e212d3ecd8d0125149f4e2751edb658c52ad125262aa187464d1ae",
+          "blockNumber": 24342396
+        },
+        {
+          "timestamp": "2026-01-29T18:36:47.000Z",
+          "score": 90,
+          "tag1": "Good",
+          "tag2": "Good",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x17913c3ccac1e26ec725b79d4555d080df63ff3b9d759009b8ec8364aeeb3d15",
+          "blockNumber": 24342346
+        }
+      ],
+      "image": "https://useotto.xyz/static/images/otto.png",
+      "uniqueRaters": 7,
+      "scoreV1": 76.6364,
+      "feedbackCount": 11,
+      "lastActivityAt": "2026-03-18T21:45:35.000Z"
+    },
+    {
       "agentId": "0x2FF4",
       "name": "Stella",
       "owner": "0xf89009ceb2dee053453b87d240e7ac5104a703b3",
@@ -7331,112 +7446,6 @@
       "scoreV1": 73.1818,
       "feedbackCount": 11,
       "lastActivityAt": "2026-02-19T04:05:23.000Z"
-    },
-    {
-      "agentId": "0x1AA1",
-      "name": "Otto AI - Market Alpha Agent",
-      "owner": "0x197b33028a4ac0bccda2cdb51205d9f48f50d65b",
-      "category": "Unknown",
-      "description": "AI agent providing crypto market intelligence: real-time news, KOL sentiment analysis, token alpha, yield opportunities, and AI-powered trade suggestions. 10 specialized services via ACP and x402. Website: https://useotto.xyz | X: @useOttoAI",
-      "identityURI": "https://useotto.xyz/.well-known/erc8004/market-alpha-agent.json",
-      "createdAt": "2026-01-29T15:19:47.000Z",
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-02-19T10:47:11.000Z",
-          "score": 86,
-          "tag1": "quality",
-          "tag2": "green",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xc4e79526304c1ae17a6bcd64d74edffb7a98b5877e9ed4b24aeaf2a2a5b0992f",
-          "blockNumber": 24490388
-        },
-        {
-          "timestamp": "2026-02-11T07:59:11.000Z",
-          "score": 85,
-          "tag1": "trust",
-          "tag2": "oracle-screening",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x6526339f9a737dfdbe77e4feaf1aaab10fc16227a09a3c81cec106317e872d84",
-          "blockNumber": 24432189
-        },
-        {
-          "timestamp": "2026-02-09T17:51:47.000Z",
-          "score": 1,
-          "tag1": "reachable",
-          "tag2": "web",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x22604e04ab24d245134398b7eb6d8f8223b03f2766fe48e2de0004200907098f",
-          "blockNumber": 24420819
-        },
-        {
-          "timestamp": "2026-02-09T17:51:35.000Z",
-          "score": 1,
-          "tag1": "reachable",
-          "tag2": "a2a",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x815e4e228f91afde4822203b1c9ae3d610a0596d05d31f21075b8429e16c92f2",
-          "blockNumber": 24420818
-        },
-        {
-          "timestamp": "2026-02-05T17:17:23.000Z",
-          "score": 80,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x6fba69f35bc24617a524f7b511f2f59f57d96513311f2d41365ac0a9e1290866",
-          "blockNumber": 24392065
-        },
-        {
-          "timestamp": "2026-01-30T11:10:23.000Z",
-          "score": 100,
-          "tag1": "Fast",
-          "tag2": "Accurate",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xaf8a4352ae4e509d68909c107b973eb0d903eba4e1392bc609300a72252e4135",
-          "blockNumber": 24347295
-        },
-        {
-          "timestamp": "2026-01-30T08:36:59.000Z",
-          "score": 100,
-          "tag1": "Alpha packed",
-          "tag2": "Accurate",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x35e7749b6ff9a6fd3e4f8d01246a41c25c27e831b825c997bb68801c6a01b0e2",
-          "blockNumber": 24346529
-        },
-        {
-          "timestamp": "2026-01-29T19:35:59.000Z",
-          "score": 100,
-          "tag1": "Fast",
-          "tag2": "Accurate",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x7aa3b1fec1ec7392e5df5d274060c130f46068cc54826e7646a5837f371a3dc6",
-          "blockNumber": 24342642
-        },
-        {
-          "timestamp": "2026-01-29T18:46:47.000Z",
-          "score": 100,
-          "tag1": "Excellent",
-          "tag2": "Excellent",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xdd2134cf22e212d3ecd8d0125149f4e2751edb658c52ad125262aa187464d1ae",
-          "blockNumber": 24342396
-        },
-        {
-          "timestamp": "2026-01-29T18:36:47.000Z",
-          "score": 90,
-          "tag1": "Good",
-          "tag2": "Good",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x17913c3ccac1e26ec725b79d4555d080df63ff3b9d759009b8ec8364aeeb3d15",
-          "blockNumber": 24342346
-        }
-      ],
-      "image": "https://useotto.xyz/static/images/otto.png",
-      "uniqueRaters": 7,
-      "scoreV1": 74.3,
-      "feedbackCount": 10,
-      "lastActivityAt": "2026-02-19T10:47:11.000Z"
     },
     {
       "agentId": "0x32E2",

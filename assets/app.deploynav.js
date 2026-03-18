@@ -5,8 +5,6 @@ const NAV = `
   <a href="./agents.html">Agents</a>
   <a href="./analytics.html">Analytics</a>
   <a href="./research.html">Research</a>
-  <a href="./pipeline.html">Pipeline</a>
-  <a href="./deploy.html">Deploy</a>
 </nav>`;
 
 function setActiveNav() {
@@ -90,7 +88,7 @@ function initFuturisticBackground(){
     pointer.x += (pointer.targetX - pointer.x) * 0.07;
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
-    ctx.fillStyle = 'rgba(20,30,50,0.24)';
+    ctx.fillStyle = 'rgba(20,30,50,0.10)';
     ctx.fillRect(0, 0, w, h);
 
     ctx.shadowBlur = 0;

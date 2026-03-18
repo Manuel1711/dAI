@@ -212,6 +212,14 @@ async function loadTagMap() {
     return {};
   }
 }
+async function loadFeedbackEvents() {
+  try {
+    const txt = await fetch('./data/live/feedback.events.jsonl').then((r) => r.text());
+    return txt.split(/\r?\n/).filter(Boolean).map((line) => { try { return JSON.parse(line); } catch { return null; } }).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
 async function loadFig00a() {
   try { return await fetchJson('./data/analytics/fig00a.cumulative_activity.json'); }
   catch { return null; }
@@ -1369,108 +1377,107 @@ function renderFig08(fig){
   });
 }
 
-function renderFigTag07(fig){
+function renderFigTag07(fig, tagMap, feedbackEvents){
   const root = document.getElementById('fig-tag07-root');
   if (!root) return;
 
-  const completeness = (fig?.field_completeness || []).map((r) => ({
-    label: String(r.label || r.status || ''),
-    count: Number(r.count || 0),
-    share: Number(r.share || 0),
-  }));
-  const categories = (fig?.category_summary || []).map((r) => ({
-    category: String(r.category || 'Unknown'),
-    count: Number(r.count || 0),
-    share: Number(r.share || 0),
-  }));
+  const mapCategory = (tag) => {
+    const k = String(tag || '').trim().toLowerCase();
+    if (!k) return 'empty';
+    const hit = tagMap?.[k] || tagMap?.[String(tag || '').trim()] || null;
+    const c = String(hit?.category || '').toLowerCase();
+    if (c === 'characteristic') return 'characteristic';
+    if (c === 'work_area') return 'work_area';
+    if (c === 'verbal' || c === 'adjectives') return 'adjectives';
+    if (c === 'unclassified') return 'unclassified';
+    return 'unclassified';
+  };
 
-  const totalRows = Math.max(1, Number(fig?.total_rows || completeness.reduce((s,r)=>s+r.count,0)));
-  const totalNonEmpty = Math.max(1, Number(fig?.total_nonempty || categories.reduce((s,r)=>s+r.count,0)));
-  const emptyCount = Math.max(0, totalRows - totalNonEmpty);
+  const rows = ['empty', 'unclassified', 'work_area', 'adjectives', 'characteristic'];
+  const rowLabel = {
+    empty: 'empty',
+    unclassified: 'unclassified',
+    work_area: 'work area',
+    adjectives: 'adjectives',
+    characteristic: 'characteristic',
+  };
 
-  if (!completeness.length || !categories.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
+  const events = Array.isArray(feedbackEvents) ? feedbackEvents : [];
+  const nBins = 25;
+  const matrix = rows.map(() => Array.from({ length: nBins }, () => 0));
 
-  // Build a matrix close to the reference figure: rows=status, cols=categories + empty column.
-  const colLabels = [...categories.map((c)=>c.category), 'Empty tag1'];
-  const rowLabels = ['Non-empty tag1', 'Empty tag1'];
-  const matrix = [
-    [...categories.map((c)=>c.count), 0],
-    [...categories.map(()=>0), emptyCount],
-  ];
+  if (events.length) {
+    const N = events.length;
+    events.forEach((ev, i) => {
+      const r = rows.indexOf(mapCategory(ev?.tag1));
+      const b = Math.min(nBins - 1, Math.floor((i * nBins) / N));
+      if (r >= 0 && b >= 0) matrix[r][b] += 1;
+    });
+  } else {
+    // Fallback from aggregated data (keeps expected layout if raw events unavailable)
+    const cat = (fig?.category_summary || []).reduce((m, x) => {
+      const k = String(x.category || '').toLowerCase();
+      m[k] = Number(x.count || 0); return m;
+    }, {});
+    const totalRows = Math.max(1, Number(fig?.total_rows || 1));
+    const totalNonEmpty = Math.max(0, Number(fig?.total_nonempty || 0));
+    const emptyCount = Math.max(0, totalRows - totalNonEmpty);
+    const approx = {
+      empty: emptyCount,
+      unclassified: Number(cat.unclassified || 0),
+      work_area: Number(cat.work_area || 0),
+      adjectives: Number(cat.adjectives || 0),
+      characteristic: Number(cat.characteristic || 0),
+    };
+    rows.forEach((rk,ri)=>{
+      const v = approx[rk] || 0;
+      for (let b=0;b<nBins;b++) matrix[ri][b] = Math.round(v / nBins);
+    });
+  }
 
   const maxVal = Math.max(1, ...matrix.flat());
-  const W = 1180, H = 500;
-  const left = { x: 34, y: 78, w: 390, h: 70 };
-  const hm = { x: 470, y: 78, w: 640, h: 280 };
+  const W = 1240, H = 520;
+  const hm = { x: 210, y: 80, w: 900, h: 320 };
+  const cw = hm.w / nBins;
+  const ch = hm.h / rows.length;
 
   const colorAt = (v) => {
-    // Blue gradient similar to seaborn Blues
+    // yellow -> dark blue
     const t = Math.max(0, Math.min(1, v / maxVal));
-    const c0 = [239, 246, 255];
-    const c1 = [30, 64, 175];
+    const c0 = [250, 204, 21];
+    const c1 = [30, 58, 138];
     const r = Math.round(c0[0] + (c1[0] - c0[0]) * t);
     const g = Math.round(c0[1] + (c1[1] - c0[1]) * t);
     const b = Math.round(c0[2] + (c1[2] - c0[2]) * t);
     return `rgb(${r},${g},${b})`;
   };
 
-  // Left mini completeness bar (visual anchor like reference summary strip)
-  const nonEmpty = completeness.find((x)=>/non-empty/i.test(x.label)) || completeness[0];
-  const empty = completeness.find((x)=>/empty/i.test(x.label) && !/non-empty/i.test(x.label)) || completeness[1] || { label:'Empty tag1', count:emptyCount, share:emptyCount/totalRows };
-  const segs = [nonEmpty, empty];
-  let ax = left.x;
-  const strip = segs.map((s, i) => {
-    const w = left.w * (s.count / totalRows);
-    const out = `<rect class='t7-strip' data-label='${s.label.replace(/'/g,'&apos;')}' data-count='${s.count}' data-share='${(100*s.share).toFixed(2)}' x='${ax}' y='${left.y}' width='${w}' height='${left.h}' rx='8' fill='${i===0?'#1d4ed8':'#94a3b8'}' opacity='0.95'/><text x='${ax+w/2}' y='${left.y+42}' text-anchor='middle' font-size='18' font-weight='900' fill='white'>${(100*s.share).toFixed(1)}%</text>`;
-    ax += w;
-    return out;
-  }).join('');
-
-  const legend = segs.map((s,i)=>`<g class='t7-strip-item' data-idx='${i}'><rect x='${left.x + i*198}' y='${left.y+88}' width='16' height='16' rx='4' fill='${i===0?'#1d4ed8':'#94a3b8'}'/><text x='${left.x + i*198 + 24}' y='${left.y+101}' font-size='14' font-weight='800'>${s.label}: ${s.count.toLocaleString()}</text></g>`).join('');
-
-  const cw = hm.w / colLabels.length;
-  const ch = hm.h / rowLabels.length;
-  const cells = matrix.map((row, ri) => row.map((v, ci) => {
-    const x = hm.x + ci*cw;
-    const y = hm.y + ri*ch;
+  const cells = matrix.map((row, ri) => row.map((v, bi) => {
+    const x = hm.x + bi * cw;
+    const y = hm.y + ri * ch;
     const t = v / maxVal;
-    const txt = v.toLocaleString();
-    return `<rect class='t7-cell' data-row='${rowLabels[ri]}' data-col='${colLabels[ci].replace(/'/g,'&apos;')}' data-val='${v}' x='${x+2.5}' y='${y+2.5}' width='${cw-5}' height='${ch-5}' rx='7' fill='${colorAt(v)}' stroke='rgba(15,23,42,0.22)' stroke-width='1'/><text x='${x+cw/2}' y='${y+ch/2+6}' text-anchor='middle' font-size='16' font-weight='900' fill='${t>0.5?'#fff':'#0f172a'}'>${txt}</text>`;
+    return `<rect class='t7-cell' data-row='${rowLabel[rows[ri]]}' data-bin='${bi+1}' data-val='${v}' x='${x+1.5}' y='${y+1.5}' width='${cw-3}' height='${ch-3}' rx='4' fill='${colorAt(v)}' stroke='rgba(15,23,42,0.16)' stroke-width='1'/><text x='${x+cw/2}' y='${y+ch/2+5}' text-anchor='middle' font-size='12.5' font-weight='800' fill='${t>0.55?'#fff':'#0f172a'}'>${v}</text>`;
   }).join('')).join('');
 
-  const xLab = colLabels.map((c,i)=>`<text x='${hm.x + i*cw + cw/2}' y='${hm.y + hm.h + 24}' text-anchor='middle' font-size='13' font-weight='800'>${c}</text>`).join('');
-  const yLab = rowLabels.map((r,i)=>`<text x='${hm.x - 10}' y='${hm.y + i*ch + ch/2 + 6}' text-anchor='end' font-size='14' font-weight='900'>${r}</text>`).join('');
+  const xTicks = [1,5,10,15,20,25].map((q)=>`<text x='${hm.x + (q-0.5)*cw}' y='${hm.y + hm.h + 26}' text-anchor='middle' font-size='13' font-weight='800'>Q${q}</text>`).join('');
+  const yTicks = rows.map((rk,i)=>`<text x='${hm.x-12}' y='${hm.y + i*ch + ch/2 + 5}' text-anchor='end' font-size='15' font-weight='900'>${rowLabel[rk]}</text>`).join('');
 
-  // Colorbar (right)
-  const cb = { x: hm.x + hm.w + 20, y: hm.y, w: 20, h: hm.h };
+  const cb = { x: hm.x + hm.w + 30, y: hm.y, w: 26, h: hm.h };
   const gradId = 't7-grad';
-  const cTicks = [0, 0.25, 0.5, 0.75, 1].map((u)=>({u, v: Math.round(u*maxVal)}));
-  const cTickEls = cTicks.map(({u,v}) => `<line x1='${cb.x+cb.w+4}' y1='${cb.y + cb.h*(1-u)}' x2='${cb.x+cb.w+10}' y2='${cb.y + cb.h*(1-u)}' stroke='currentColor' opacity='0.6'/><text x='${cb.x+cb.w+14}' y='${cb.y + cb.h*(1-u)+4}' font-size='11.5' font-weight='700'>${v.toLocaleString()}</text>`).join('');
+  const cTicks = [0,0.25,0.5,0.75,1].map((u)=>({u,v:Math.round(u*maxVal)}));
+  const cTickEls = cTicks.map(({u,v})=>`<line x1='${cb.x+cb.w+4}' y1='${cb.y + cb.h*(1-u)}' x2='${cb.x+cb.w+12}' y2='${cb.y + cb.h*(1-u)}' stroke='currentColor' opacity='0.7'/><text x='${cb.x+cb.w+16}' y='${cb.y + cb.h*(1-u)+4}' font-size='12' font-weight='800'>${v}</text>`).join('');
 
   root.innerHTML = `<div class='fig00a-panel'>
     <div class='fig00a-wrap' style='position:relative'>
-      <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 field completeness heatmap'>
-        <defs>
-          <linearGradient id='${gradId}' x1='0' y1='1' x2='0' y2='0'>
-            <stop offset='0%' stop-color='${colorAt(0)}'/>
-            <stop offset='100%' stop-color='${colorAt(maxVal)}'/>
-          </linearGradient>
-        </defs>
-
-        <text x='${left.x}' y='36' font-size='18' font-weight='900'>Tag1 completeness overview</text>
-        <text x='${hm.x}' y='36' font-size='18' font-weight='900'>Tag1 field completeness by category (heatmap)</text>
-
-        ${strip}
-        ${legend}
-        <text x='${left.x}' y='${left.y+132}' font-size='13.5' font-weight='700'>Total rows: ${totalRows.toLocaleString()} · Non-empty: ${totalNonEmpty.toLocaleString()} · Empty: ${emptyCount.toLocaleString()}</text>
-
+      <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 heatmap by quantiles'>
+        <defs><linearGradient id='${gradId}' x1='0' y1='1' x2='0' y2='0'><stop offset='0%' stop-color='${colorAt(0)}'/><stop offset='100%' stop-color='${colorAt(maxVal)}'/></linearGradient></defs>
+        <text x='${hm.x}' y='42' font-size='20' font-weight='900'>Tag1 heatmap by quantiles (25 bins)</text>
+        <text x='${hm.x}' y='62' font-size='13.5' font-weight='700' opacity='0.8'>Y: empty/unclassified/work area/adjectives/characteristic · X: Q1..Q25</text>
         ${cells}
-        ${xLab}
-        ${yLab}
-
-        <rect x='${cb.x}' y='${cb.y}' width='${cb.w}' height='${cb.h}' fill='url(#${gradId})' stroke='rgba(15,23,42,0.22)'/>
+        ${xTicks}
+        ${yTicks}
+        <rect x='${cb.x}' y='${cb.y}' width='${cb.w}' height='${cb.h}' fill='url(#${gradId})' stroke='rgba(15,23,42,0.2)'/>
         ${cTickEls}
-        <text x='${cb.x+cb.w+12}' y='${cb.y-10}' font-size='12' font-weight='800'>Count</text>
       </svg>
       <div id='fig-tag07-tooltip' class='fig-tooltip' style='display:none; position:absolute; pointer-events:none;'></div>
     </div>
@@ -1479,29 +1486,14 @@ function renderFigTag07(fig){
   const wrap = root.querySelector('.fig00a-wrap');
   const tip = root.querySelector('#fig-tag07-tooltip');
   if (!wrap || !tip) return;
-
-  const moveTip = (ev, html) => {
-    const b = wrap.getBoundingClientRect();
-    tip.style.display = 'block';
-    tip.style.left = `${Math.min(b.width - 280, Math.max(8, ev.clientX - b.left + 12))}px`;
-    tip.style.top = `${Math.min(b.height - 96, Math.max(8, ev.clientY - b.top + 12))}px`;
-    tip.innerHTML = html;
-  };
-
-  root.querySelectorAll('.t7-strip').forEach((el)=>{
-    const show = (ev) => {
-      root.querySelectorAll('.t7-strip').forEach((x)=>x.setAttribute('opacity', x===el ? '1' : '0.35'));
-      moveTip(ev, `<b>${el.getAttribute('data-label')}</b><br/>Count: <b>${Number(el.getAttribute('data-count')||0).toLocaleString()}</b><br/>Share: <b>${Number(el.getAttribute('data-share')||0).toFixed(1)}%</b>`);
-    };
-    el.addEventListener('mouseenter', show);
-    el.addEventListener('mousemove', show);
-    el.addEventListener('mouseleave', ()=>{ root.querySelectorAll('.t7-strip').forEach((x)=>x.setAttribute('opacity','0.95')); tip.style.display='none'; });
-  });
-
   root.querySelectorAll('.t7-cell').forEach((el)=>{
     const show = (ev) => {
-      root.querySelectorAll('.t7-cell').forEach((x)=>x.setAttribute('stroke-width', x===el ? '2.2' : '1'));
-      moveTip(ev, `<b>${el.getAttribute('data-row')}</b><br/>Category: <b>${el.getAttribute('data-col')}</b><br/>Count: <b>${Number(el.getAttribute('data-val')||0).toLocaleString()}</b>`);
+      root.querySelectorAll('.t7-cell').forEach((x)=>x.setAttribute('stroke-width', x===el ? '2.3' : '1'));
+      const b = wrap.getBoundingClientRect();
+      tip.style.display = 'block';
+      tip.style.left = `${Math.min(b.width - 280, Math.max(8, ev.clientX - b.left + 10))}px`;
+      tip.style.top = `${Math.min(b.height - 96, Math.max(8, ev.clientY - b.top + 10))}px`;
+      tip.innerHTML = `<b>${el.getAttribute('data-row')}</b><br/>Quantile: <b>${el.getAttribute('data-bin')}</b><br/>Count: <b>${Number(el.getAttribute('data-val')||0).toLocaleString()}</b>`;
     };
     el.addEventListener('mouseenter', show);
     el.addEventListener('mousemove', show);
@@ -1683,6 +1675,7 @@ window.renderAnalytics = async function renderAnalytics(){
   const fig07 = await loadFig07();
   const fig08 = await loadFig08();
   const figTag07 = await loadFigTag07();
+  const feedbackEvents = await loadFeedbackEvents();
   const figTag08 = await loadFigTag08();
   const figTag09 = await loadFigTag09();
   const figTopClients = await loadTopClientsNetwork();
@@ -1743,7 +1736,7 @@ window.renderAnalytics = async function renderAnalytics(){
   renderFig08(fig08);
   renderTopClientsNetwork(figTopClients);
   renderTopAgentsNetwork(figTopAgents);
-  renderFigTag07(figTag07);
+  renderFigTag07(figTag07, tagMap, feedbackEvents);
   renderFigTag08(figTag08);
   renderFigTag09(figTag09);
   initFancyUI();

@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24684166,
-  "generatedAt": "2026-03-18T11:58:31.050Z",
+  "blockNumber": 24684216,
+  "generatedAt": "2026-03-18T12:07:36.514Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24684167,
-    "fromBlockFeedback": 24684167,
+    "fromBlockIdentity": 24684217,
+    "fromBlockFeedback": 24684217,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430396,6 +430396,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-18T11:42:35.000Z"
+    },
+    {
+      "agentId": "0x717D",
+      "name": "Zyfai Rebalancer Agent for 0x6520dB71B78E75BBB1fEAAD0bd50137BcF9D7424",
+      "owner": "0x6520db71b78e75bbb1feaad0bd50137bcf9d7424",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreih52ski6nrt3rwpjzffa4kdbn742nln5yzingvldktn4erqonptm4",
+      "createdAt": "2026-03-18T11:49:35.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-18T11:49:35.000Z"
+    },
+    {
+      "agentId": "0x717E",
+      "name": "Agent 0x717E",
+      "owner": "0xda977767452c5dd021624511f14df67b6c9c2c1b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-18T11:51:11.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-18T11:51:11.000Z"
     },
     {
       "agentId": "0x718",

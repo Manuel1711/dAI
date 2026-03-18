@@ -1445,8 +1445,8 @@ function renderFigTag07(fig){
     <div class='fig00a-wrap' style='position:relative'>
       <svg viewBox='0 0 ${W} ${H}' width='100%' height='auto' role='img' aria-label='Tag1 heatmap by quantiles'>
         <defs><linearGradient id='${gradId}' x1='0' y1='1' x2='0' y2='0'><stop offset='0%' stop-color='${colorAt(0)}'/><stop offset='100%' stop-color='${colorAt(1)}'/></linearGradient><filter id='t7-glow'><feDropShadow dx='0' dy='1.2' stdDeviation='1.2' flood-color='rgba(15,23,42,0.24)'/></filter></defs>
-        <text x='${hm.x}' y='42' font-size='20' font-weight='900'>Tag1 heatmap by quantiles (25 bins · within-bin share)</text>
-        <text x='${hm.x}' y='62' font-size='13.5' font-weight='700' opacity='0.8'>Y: empty/unclassified/work area/adjectives/characteristic · X: Q1..Q25 · color: share in bin (0..1)</text>
+        <text x='${hm.x}' y='42' font-size='20' font-weight='900'>Tag1 category evolution over time (25 quantile bins)</text>
+        <text x='${hm.x}' y='62' font-size='13.5' font-weight='700' opacity='0.8'>Color = within-bin share (normalized 0..1)</text>
         ${cells}
         ${xTicks}
         ${yTicks}
@@ -1480,9 +1480,13 @@ function renderFigTag08(fig){
   if (!root) return;
   const rows = (fig?.macroareas || [])
     .map((r) => ({ label: String(r.macroarea || 'Unknown'), value: Number(r.frequency || 0) }))
-    .filter((r) => r.value > 0)
-    .sort((a,b) => b.value - a.value);
-  const total = Math.max(1, Number(fig?.total_nonempty || rows.reduce((s,r)=>s+r.value,0)));
+    .filter((r) => r.value > 0);
+
+  const emptyCount = Number(fig?.total_empty || 0);
+  if (emptyCount > 0) rows.push({ label: 'Empty tag1', value: emptyCount });
+
+  rows.sort((a,b) => b.value - a.value);
+  const total = Math.max(1, Number(fig?.total_rows || rows.reduce((s,r)=>s+r.value,0)));
   if (!rows.length) { root.innerHTML = `<p>Figure data not available yet.</p>`; return; }
 
   const W = 1040, H = 440;

@@ -35,6 +35,8 @@ function initFuturisticBackground(){
   const DPR_MAX = 1.6;
   const nodes = [];
   const chains = [];
+  const blocks = [];
+  const agentBadges = [];
   const pulses = [];
   const pointer = {
     x: window.innerWidth * 0.7,
@@ -49,8 +51,10 @@ function initFuturisticBackground(){
   const makeScene = () => {
     nodes.length = 0;
     chains.length = 0;
-    const nodeCount = Math.max(34, Math.min(96, Math.floor(w / 20)));
-    const chainCount = Math.max(10, Math.floor(w / 140));
+    blocks.length = 0;
+    agentBadges.length = 0;
+    const nodeCount = Math.max(40, Math.min(120, Math.floor(w / 16)));
+    const chainCount = Math.max(12, Math.floor(w / 120));
 
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
@@ -67,7 +71,34 @@ function initFuturisticBackground(){
       const y = ((i + 1) * h) / (chainCount + 1) + rnd(-22, 22);
       const speed = rnd(0.15, 0.35);
       const phase = rnd(0, Math.PI * 2);
-      chains.push({ y, speed, phase });
+      chains.push({ y, speed, phase, drift: rnd(0.7, 1.4) });
+    }
+
+    const blockCols = Math.max(4, Math.floor(w / 240));
+    const blockRows = Math.max(3, Math.floor(h / 220));
+    for (let r = 0; r < blockRows; r++) {
+      for (let c = 0; c < blockCols; c++) {
+        if (Math.random() > 0.7) continue;
+        blocks.push({
+          x: (c + 0.5) * (w / blockCols) + rnd(-30, 30),
+          y: (r + 0.6) * (h / blockRows) + rnd(-26, 26),
+          w: rnd(56, 96),
+          h: rnd(26, 42),
+          phase: rnd(0, Math.PI * 2)
+        });
+      }
+    }
+
+    const badges = ['🤖','🧠','⚡','⛓️','🛰️','🛡️'];
+    const badgeCount = Math.max(6, Math.floor(w / 280));
+    for (let i = 0; i < badgeCount; i++) {
+      agentBadges.push({
+        x: rnd(40, w - 40),
+        y: rnd(50, h - 60),
+        icon: badges[i % badges.length],
+        drift: rnd(0.15, 0.55),
+        phase: rnd(0, Math.PI * 2)
+      });
     }
   };
 
@@ -89,7 +120,32 @@ function initFuturisticBackground(){
     pointer.x += (pointer.targetX - pointer.x) * 0.07;
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
-    const gridGap = 44;
+    const bg = ctx.createLinearGradient(0, 0, w, h);
+    bg.addColorStop(0, 'rgba(26,46,95,0.14)');
+    bg.addColorStop(0.45, 'rgba(122,26,26,0.10)');
+    bg.addColorStop(1, 'rgba(20,20,80,0.16)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    for (const b of blocks) {
+      const shimmer = (Math.sin(t * 0.0013 + b.phase) + 1) * 0.5;
+      const g = ctx.createLinearGradient(b.x - b.w / 2, b.y, b.x + b.w / 2, b.y);
+      g.addColorStop(0, `rgba(245,158,11,${0.14 + shimmer * 0.16})`);
+      g.addColorStop(0.5, `rgba(250,204,21,${0.20 + shimmer * 0.22})`);
+      g.addColorStop(1, `rgba(59,130,246,${0.16 + shimmer * 0.12})`);
+      ctx.fillStyle = g;
+      ctx.strokeStyle = `rgba(250,204,21,${0.34 + shimmer * 0.28})`;
+      ctx.lineWidth = 1.6;
+      const rx = b.x - b.w / 2;
+      const ry = b.y - b.h / 2;
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') ctx.roundRect(rx, ry, b.w, b.h, 7);
+      else ctx.rect(rx, ry, b.w, b.h);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    const gridGap = 38;
     ctx.strokeStyle = 'rgba(79,70,229,0.16)';
     ctx.lineWidth = 1.4;
     for (let gx = 0; gx <= w; gx += gridGap) {
@@ -107,21 +163,31 @@ function initFuturisticBackground(){
 
     for (const ch of chains) {
       const y = ch.y + Math.sin(t * 0.00035 + ch.phase) * 10;
+      const chainGrad = ctx.createLinearGradient(0, y - 20, w, y + 20);
+      chainGrad.addColorStop(0, 'rgba(250,204,21,0.42)');
+      chainGrad.addColorStop(0.5, 'rgba(245,158,11,0.56)');
+      chainGrad.addColorStop(1, 'rgba(59,130,246,0.44)');
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(37,99,235,0.30)';
-      ctx.lineWidth = 2.2;
-      for (let x = -20; x <= w + 20; x += 22) {
-        const yy = y + Math.sin((x * 0.018) + t * 0.001 * ch.speed + ch.phase) * 6;
+      ctx.strokeStyle = chainGrad;
+      ctx.lineWidth = 3.6;
+      for (let x = -20; x <= w + 20; x += 18) {
+        const yy = y + Math.sin((x * 0.018) + t * 0.001 * ch.speed + ch.phase) * 7;
         if (x === -20) ctx.moveTo(x, yy);
         else ctx.lineTo(x, yy);
       }
       ctx.stroke();
 
-      const pulseX = ((t * ch.speed * 0.08) % (w + 120)) - 60;
-      ctx.fillStyle = 'rgba(56,189,248,0.34)';
-      ctx.beginPath();
-      ctx.arc(pulseX, y, 3.6, 0, Math.PI * 2);
-      ctx.fill();
+      for (let k = 0; k < 4; k++) {
+        const pulseX = (((t * ch.speed * 0.14 * ch.drift) + k * (w / 4)) % (w + 160)) - 80;
+        const pulseY = y + Math.sin((pulseX * 0.018) + t * 0.001 * ch.speed + ch.phase) * 7;
+        const pulseGrad = ctx.createRadialGradient(pulseX, pulseY, 1, pulseX, pulseY, 9);
+        pulseGrad.addColorStop(0, 'rgba(255,245,157,0.95)');
+        pulseGrad.addColorStop(1, 'rgba(250,204,21,0)');
+        ctx.fillStyle = pulseGrad;
+        ctx.beginPath();
+        ctx.arc(pulseX, pulseY, 9, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     for (let i = 0; i < nodes.length; i++) {
@@ -162,12 +228,36 @@ function initFuturisticBackground(){
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
+
+        const prog = ((t * 0.00028) + ((i * 17 + j * 23) % 100) / 100) % 1;
+        const sx = a.x + (b.x - a.x) * prog;
+        const sy = a.y + (b.y - a.y) * prog;
+        ctx.fillStyle = `rgba(255,235,120,${Math.min(0.85, alpha + 0.28)})`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 2.2, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       ctx.fillStyle = `hsla(${a.hue}, 94%, 60%, 0.55)`;
       ctx.beginPath();
       ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
       ctx.fill();
+    }
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '18px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
+    for (const badge of agentBadges) {
+      const by = badge.y + Math.sin(t * 0.0008 * badge.drift + badge.phase) * 7;
+      const bx = badge.x + Math.cos(t * 0.0007 * badge.drift + badge.phase) * 4;
+      ctx.fillStyle = 'rgba(255,255,255,0.60)';
+      ctx.beginPath();
+      ctx.arc(bx, by, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(250,204,21,0.55)';
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+      ctx.fillText(badge.icon, bx, by + 0.5);
     }
 
     for (let i = pulses.length - 1; i >= 0; i--) {

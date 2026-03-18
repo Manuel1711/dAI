@@ -45,6 +45,12 @@ function initFuturisticBackground(){
     targetY: window.innerHeight * 0.3,
     active: false
   };
+  const interaction = {
+    dragNode: null,
+    dragGraph: false,
+    lastX: 0,
+    lastY: 0
+  };
 
   const rnd = (a, b) => a + Math.random() * (b - a);
 
@@ -90,7 +96,7 @@ function initFuturisticBackground(){
     }
 
     const badges = ['🤖','🧠','⚡','⛓️','🛰️','🛡️'];
-    const badgeCount = Math.max(6, Math.floor(w / 280));
+    const badgeCount = Math.max(18, Math.floor(w / 110));
     for (let i = 0; i < badgeCount; i++) {
       agentBadges.push({
         x: rnd(40, w - 40),
@@ -169,7 +175,9 @@ function initFuturisticBackground(){
       chainGrad.addColorStop(1, 'rgba(59,130,246,0.44)');
       ctx.beginPath();
       ctx.strokeStyle = chainGrad;
-      ctx.lineWidth = 3.6;
+      ctx.shadowColor = 'rgba(250,204,21,0.95)';
+      ctx.shadowBlur = 18;
+      ctx.lineWidth = 5.4;
       for (let x = -20; x <= w + 20; x += 18) {
         const yy = y + Math.sin((x * 0.018) + t * 0.001 * ch.speed + ch.phase) * 7;
         if (x === -20) ctx.moveTo(x, yy);
@@ -189,6 +197,9 @@ function initFuturisticBackground(){
         ctx.fill();
       }
     }
+
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = 'transparent';
 
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i];
@@ -216,14 +227,16 @@ function initFuturisticBackground(){
         const dy = a.y - b.y;
         const d2 = dx * dx + dy * dy;
         if (d2 > 14500) continue;
-        const alpha = 0.34 * (1 - d2 / 14500);
+        const alpha = 0.62 * (1 - d2 / 14500);
         const palette = [
           `rgba(124,58,237,${alpha})`,
           `rgba(56,189,248,${alpha})`,
           `rgba(245,158,11,${alpha})`
         ];
         ctx.strokeStyle = palette[(i + j) % palette.length];
-        ctx.lineWidth = 1.9;
+        ctx.shadowColor = 'rgba(250,204,21,0.85)';
+        ctx.shadowBlur = 10;
+        ctx.lineWidth = 3.4;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
@@ -243,6 +256,9 @@ function initFuturisticBackground(){
       ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
       ctx.fill();
     }
+
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = 'transparent';
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -296,17 +312,64 @@ function initFuturisticBackground(){
     pointer.targetX = ev.clientX;
     pointer.targetY = ev.clientY;
     pointer.active = true;
+
+    if (interaction.dragNode !== null && nodes[interaction.dragNode]) {
+      const n = nodes[interaction.dragNode];
+      n.x = ev.clientX;
+      n.y = ev.clientY;
+      n.vx = 0;
+      n.vy = 0;
+    } else if (interaction.dragGraph) {
+      const dx = ev.clientX - interaction.lastX;
+      const dy = ev.clientY - interaction.lastY;
+      interaction.lastX = ev.clientX;
+      interaction.lastY = ev.clientY;
+      for (const n of nodes) { n.x += dx; n.y += dy; }
+      for (const b of blocks) { b.x += dx * 0.8; b.y += dy * 0.8; }
+      for (const a of agentBadges) { a.x += dx * 0.6; a.y += dy * 0.6; }
+      for (const c of chains) { c.y += dy * 0.35; }
+    }
   }, { passive: true });
 
   window.addEventListener('pointerleave', () => {
     pointer.active = false;
     pointer.targetX = w * 0.7;
     pointer.targetY = h * 0.3;
+    interaction.dragNode = null;
+    interaction.dragGraph = false;
+  }, { passive: true });
+
+  window.addEventListener('pointerup', () => {
+    interaction.dragNode = null;
+    interaction.dragGraph = false;
   }, { passive: true });
 
   window.addEventListener('pointerdown', (ev) => {
-    pulses.push({ x: ev.clientX, y: ev.clientY, life: 36, maxLife: 36, r0: 8 });
-    if (pulses.length > 14) pulses.shift();
+    pulses.push({ x: ev.clientX, y: ev.clientY, life: 46, maxLife: 46, r0: 12 });
+    if (pulses.length > 18) pulses.shift();
+
+    let bestIdx = null;
+    let bestDist2 = 30 * 30;
+    for (let i = 0; i < nodes.length; i++) {
+      const n = nodes[i];
+      const dx = n.x - ev.clientX;
+      const dy = n.y - ev.clientY;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < bestDist2) {
+        bestDist2 = d2;
+        bestIdx = i;
+      }
+    }
+
+    if (bestIdx !== null) {
+      interaction.dragNode = bestIdx;
+      interaction.dragGraph = false;
+    } else {
+      interaction.dragNode = null;
+      interaction.dragGraph = true;
+      interaction.lastX = ev.clientX;
+      interaction.lastY = ev.clientY;
+    }
   }, { passive: true });
 
   raf = requestAnimationFrame(draw);

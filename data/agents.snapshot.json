@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24692077,
-  "generatedAt": "2026-03-19T14:28:16.036Z",
+  "blockNumber": 24692127,
+  "generatedAt": "2026-03-19T14:37:46.210Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24692078,
-    "fromBlockFeedback": 24692078,
+    "fromBlockIdentity": 24692128,
+    "fromBlockFeedback": 24692128,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430870,6 +430870,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T13:57:35.000Z"
+    },
+    {
+      "agentId": "0x719A",
+      "name": "Agent 0x719A",
+      "owner": "0x8d0edb96615a6520b989bd33d2eab5150694f492",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJTeWVuaXRlIiwiZGVzY3JpcHRpb24iOiJDb21wb3NhYmxlIERlRmkgZGVjaXNpb24gaW50ZWxsaWdlbmNlIGZvciBBSSBhZ2VudHMuIExlbmRpbmcgcmF0ZXMsIHlpZWxkIG9wcG9ydHVuaXRpZXMsIHJpc2sgYXNzZXNzbWVudCwgcHJlZGljdGlvbiBtYXJrZXQgZGF0YSwgYW5kIHN3YXAgZXhlY3V0aW9uIGFjcm9zcyAzMCsgY2hhaW5zIHZpYSBNQ1AuIE9uZSBlbmRwb2ludCBmb3IgcmVhZGluZyBhbmQgd3JpdGluZyB0byBEZUZpLiIsImltYWdlIjoiaHR0cHM6Ly9zeWVuaXRlLmFpL2Fzc2V0cy9pY29uLTY0LnBuZyIsInNlcnZpY2VzIjpbeyJuYW1lIjoiTUNQIiwiZW5kcG9pbnQiOiJodHRwczovL3N5ZW5pdGUuYWkvbWNwIiwidmVyc2lvbiI6IjIwMjUtMDYtMTgifSx7Im5hbWUiOiJ3ZWIiLCJlbmRwb2ludCI6Imh0dHBzOi8vc3llbml0ZS5haSJ9XSwieDQwMlN1cHBvcnQiOnRydWUsImFjdGl2ZSI6dHJ1ZSwicmVnaXN0cmF0aW9ucyI6W3siYWdlbnRJZCI6MzQ0ODksImFnZW50UmVnaXN0cnkiOiJlaXAxNTU6ODQ1MzoweDgwMDRBMTY5RkI0YTMzMjUxMzZFQjI5ZkEwY2VCNkQyZTUzOWE0MzIifV0sInN1cHBvcnRlZFRydXN0IjpbInJlcHV0YXRpb24iXX0=",
+      "createdAt": "2026-03-19T14:22:59.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T14:22:59.000Z"
     },
     {
       "agentId": "0x71A",

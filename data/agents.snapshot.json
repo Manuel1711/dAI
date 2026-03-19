@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24691928,
-  "generatedAt": "2026-03-19T13:57:37.605Z",
+  "blockNumber": 24691978,
+  "generatedAt": "2026-03-19T14:08:05.133Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24691929,
-    "fromBlockFeedback": 24691929,
+    "fromBlockIdentity": 24691979,
+    "fromBlockFeedback": 24691979,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430855,6 +430855,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T12:56:11.000Z"
+    },
+    {
+      "agentId": "0x7199",
+      "name": "Agent 0x7199",
+      "owner": "0x2a15c6a98324e179dd9adf87bdd59f9c77f19d12",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://github.com/ucsandman/TreasuryClaw",
+      "createdAt": "2026-03-19T13:57:35.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T13:57:35.000Z"
     },
     {
       "agentId": "0x71A",

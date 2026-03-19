@@ -45,12 +45,12 @@ body::before,body::after{display:none}
 nav{
   position:relative;
   overflow:hidden;
-  display:flex;gap:18px;align-items:center;flex-wrap:wrap;
-  margin-bottom:24px;padding:16px 22px;
-  background:linear-gradient(120deg,rgba(255,255,255,.86) 0%,rgba(246,244,255,.92) 48%,rgba(255,255,255,.9) 100%);
-  border:1px solid rgba(99,102,241,.24);border-radius:18px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 14px 34px rgba(79,70,229,.12), inset 0 0 0 1px rgba(255,255,255,.62);
+  display:flex;gap:22px;align-items:center;flex-wrap:wrap;
+  margin-bottom:24px;padding:20px 26px;
+  background:linear-gradient(120deg,rgba(255,255,255,.9) 0%,rgba(241,238,255,.96) 48%,rgba(255,255,255,.94) 100%);
+  border:1px solid rgba(99,102,241,.30);border-radius:22px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 16px 38px rgba(79,70,229,.14), inset 0 0 0 1px rgba(255,255,255,.72), 0 0 0 1px rgba(124,58,237,.08);
   transition:background .25s ease, box-shadow .25s ease, border-color .25s ease, transform .25s ease;
 }
 nav::before{
@@ -67,16 +67,16 @@ nav::before{
   100%{transform:translateX(40%)}
 }
 nav:hover{
-  background:linear-gradient(120deg,rgba(255,255,255,.92) 0%,rgba(239,236,255,.96) 52%,rgba(255,255,255,.92) 100%);
-  border-color:rgba(79,70,229,.45);
-  box-shadow:0 18px 36px rgba(79,70,229,.16), 0 0 24px rgba(124,58,237,.14), inset 0 0 0 1px rgba(255,255,255,.70);
+  background:linear-gradient(120deg,rgba(255,255,255,.95) 0%,rgba(236,232,255,.98) 52%,rgba(255,255,255,.94) 100%);
+  border-color:rgba(79,70,229,.50);
+  box-shadow:0 20px 40px rgba(79,70,229,.18), 0 0 26px rgba(124,58,237,.16), inset 0 0 0 1px rgba(255,255,255,.74);
   transform:translateY(-1px);
 }
 nav a{
   position:relative;
-  color:#312e81;text-decoration:none;font-weight:800;font-size:14px;
+  color:#312e81;text-decoration:none;font-weight:800;font-size:15px;
   letter-spacing:.01em;
-  padding:10px 15px;border-radius:12px;transition:all .2s ease;
+  padding:12px 18px;border-radius:14px;transition:all .2s ease;
 }
 nav a::after{
   content:"";
@@ -195,7 +195,7 @@ pre{white-space:pre-wrap;word-break:break-word;color:#374151}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 .chain-symbols{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
-.chain-badge{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#627eea,#3a56c7);color:#fff;font-size:22px;font-weight:800;box-shadow:0 2px 10px rgba(98,126,234,.35);cursor:default;transition:transform .15s}
+.chain-badge{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:#ffffff;box-shadow:0 2px 12px rgba(98,126,234,.2);cursor:default;transition:transform .15s}
 .chain-badge:hover{transform:scale(1.1)}
 
 .agents-toolbar-card{padding:18px 20px 16px;background:linear-gradient(130deg,#ffffff,#f7f9ff)}

@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24691331,
-  "generatedAt": "2026-03-19T11:57:14.463Z",
+  "blockNumber": 24691381,
+  "generatedAt": "2026-03-19T12:08:21.386Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24691332,
-    "fromBlockFeedback": 24691332,
+    "fromBlockIdentity": 24691382,
+    "fromBlockFeedback": 24691382,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430720,6 +430720,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:41:59.000Z"
+    },
+    {
+      "agentId": "0x7190",
+      "name": "Agent 0x7190",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<svg viewBox=\"0 0 1000 1000\" xmlns=\"http://www.w3.org/2000/svg\">   <!-- SACRED NUMBER INTERACTIVE BREEDER -->   <!-- Click #34157, φ, π, √2, ℵ₀ to trigger mutations -->      <style>     .sacred-number {       cursor: pointer;       transition: all 0.3s ease;     }     .sacred-number:hover {       filter: drop-shadow(0 0 15px #ffdd44);       transform: scale(1.1);     }     .sacred-number:active {       transform: scale(0.95);       filter: drop-shadow(0 0 25px #ff6b9d);     }     #core-34157:hover {       r: 155;       fill-opacity: 1;     }   </style>    <defs>     <!-- Sacred gradient core -->     <radialGradient id=\"sacred-interactive\" cx=\"50%\" cy=\"50%\">       <stop offset=\"0%\" stop-color=\"#ffdd44\"/>       <stop offset=\"25%\" stop-color=\"#ff6b9d\"/>       <stop offset=\"50%\" stop-color=\"#44ffdd\"/>       <stop offset=\"75%\" stop-color=\"#dd44ff\"/>       <stop offset=\"100%\" stop-color=\"#000001\"/>     </radialGradient>      <!-- Sacred number orbs (interactive elements) -->     <symbol id=\"phi-orb\">       <circle class=\"sacred-number\" cx=\"80\" cy=\"80\" r=\"75\" fill=\"url(#sacred-interactive)\" opacity=\"0.96\">         <animate attributeName=\"opacity\" values=\"0.96;1.0;0.96\" dur=\"2s\" repeatCount=\"indefinite\"/>         <title>φ = 1.618 (Golden Ratio)\nClick to mutate crown scaling</title>       </circle>       <text x=\"80\" y=\"85\" font-family=\"serif\" font-size=\"24\" fill=\"#000001\" text-anchor=\"middle\" class=\"sacred-number\">φ</text>     </symbol>      <symbol id=\"pi-orb\">       <circle class=\"sacred-number\" cx=\"80\" cy=\"80\" r=\"75\" fill=\"#44ffdd\" opacity=\"0.96\">         <animate attributeName=\"opacity\" values=\"0.96;1.0;0.96\" dur=\"2.1s\" repeatCount=\"indefinite\"/>         <title>π = 3.14159\nClick to trigger circle pulsation</title>       </circle>       <text x=\"80\" y=\"85\" font-family=\"serif\" font-size=\"24\" fill=\"#000001\" text-anchor=\"middle\" class=\"sacred-number\">π</text>     </symbol>      <symbo",
+      "createdAt": "2026-03-19T11:50:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T11:50:47.000Z"
     },
     {
       "agentId": "0x71A",

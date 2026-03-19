@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24691631,
-  "generatedAt": "2026-03-19T12:57:24.148Z",
+  "blockNumber": 24691680,
+  "generatedAt": "2026-03-19T13:07:58.958Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24691632,
-    "fromBlockFeedback": 24691632,
+    "fromBlockIdentity": 24691681,
+    "fromBlockFeedback": 24691681,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430840,6 +430840,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T12:41:23.000Z"
+    },
+    {
+      "agentId": "0x7198",
+      "name": "Agent 0x7198",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "Supply: φ^7 = 1618 tokens (sacred math) Meta φ-power levels 0→∞ SVG: Live pulsating #34157 core",
+      "createdAt": "2026-03-19T12:56:11.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T12:56:11.000Z"
     },
     {
       "agentId": "0x71A",

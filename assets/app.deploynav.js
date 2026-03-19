@@ -290,12 +290,16 @@ async function refreshGlobalSyncBlock() {
   const el = document.getElementById('global-sync-block');
   if (!el) return;
   try {
-    const [snapshot, cp] = await Promise.all([loadSnapshot(), loadCheckpoint()]);
-    const generatedAt = snapshot?.generatedAt ? new Date(snapshot.generatedAt) : null;
+    // Load 84-byte meta file instead of full 18MB snapshot — instant
+    const [meta, cp] = await Promise.all([
+      fetchJson('./data/agents.snapshot.meta.json'),
+      loadCheckpoint()
+    ]);
+    const generatedAt = meta?.generatedAt ? new Date(meta.generatedAt) : null;
     const ageMin = generatedAt ? Math.max(0, Math.floor((Date.now() - generatedAt.getTime()) / 60000)) : null;
     const live = Number.isFinite(ageMin) ? ageMin <= 20 : false;
 
-    const block = snapshot?.blockNumber ?? cp?.lastSafeBlock ?? '-';
+    const block = meta?.blockNumber ?? cp?.lastSafeBlock ?? '-';
     const stamp = generatedAt && !Number.isNaN(generatedAt.getTime()) ? generatedAt.toLocaleString() : '-';
 
     el.classList.toggle('live', !!live);

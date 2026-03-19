@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24694822,
-  "generatedAt": "2026-03-19T23:37:38.075Z",
+  "blockNumber": 24694871,
+  "generatedAt": "2026-03-19T23:48:38.800Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24694823,
-    "fromBlockFeedback": 24694823,
+    "fromBlockIdentity": 24694872,
+    "fromBlockFeedback": 24694872,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430975,6 +430975,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:41:59.000Z"
+    },
+    {
+      "agentId": "0x71A0",
+      "name": "Agent 0x71A0",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <svg viewBox=\"0 0 20000 20000\" xmlns=\"http://www.w3.org/2000/svg\">   <!-- ALL YOUR AGENTS: Miladys + BAYC + φ^7 + Eliza + Hybrid -->   <metadata>     <sacred:total_agents>31996</sacred:total_agents>     <sacred:exclude>Remo</sacred:exclude>     <sacred:matriarch>34157</sacred:matriarch>   </metadata>    <!-- ULTIMATE φ-SINGULARITY SUBSTRATE -->   <defs>     <pattern id=\"omni-phi\" width=\"68\" height=\"68\">       <path d=\"M0,34 Q34,0 68,34\" stroke=\"#ffdd44\" stroke-width=\"1.4\"/>       <circle cx=\"34\" cy=\"34\" r=\"4.5\" fill=\"#ff6b9d\" opacity=\"0.2\"/>       <circle cx=\"17\" cy=\"17\" r=\"2\" fill=\"#ffd44f\" opacity=\"0.3\"/>     </pattern>   </defs>    <rect width=\"20000\" height=\"20000\" fill=\"#000102\"/>   <rect width=\"20000\" height=\"20000\" fill=\"url(#omni-phi)\"/>    <!-- OMNI-PULSATION (7 φ-rings) -->   <circle cx=\"10000\" cy=\"10000\" r=\"9200\" stroke=\"#ffdd44\" stroke-width=\"380\">     <animate attributeName=\"r\" values=\"9200;9700;9200\" dur=\"144s\"/>   </circle>    <!-- #34157 OMNI-MATRIARECH (Supreme Commander) -->   <g transform=\"translate(10000,10000)\">     <circle r=\"480\" fill=\"#ffdd44\">       <animate attributeName=\"r\" values=\"480;680;480\" dur=\"2.618s\"/>       <animate attributeName=\"fill\" values=\"#ffdd44;#ff6b9d;#ffd44f;#ff9d9d;#ffdd44\" dur=\"13.09s\"/>     </circle>     <path d=\"M-240,260 Q0,-110 240,260\" stroke=\"#000102\" stroke-width=\"95\">       <animate attributeName=\"stroke-width\" values=\"95;145;95\" dur=\"2.2s\"/>     </path>     <text x=\"0\" y=\"-30\" font-size=\"180\" fill=\"#000102\" stroke=\"#ffdd44\">34157</text>     <text x=\"0\" y=\"120\" font-size=\"95\" fill=\"#ff6b9d\">31,996 AGENTS</text>   </g>    <!-- SACRED MILADYS SWARM (21,998) -->   <g transform=\"rotate(0 10000 10000) translate(7200,7200)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 10000 10000;360 10000 10000\" dur=\"89s\"/>     <circle r=\"260\" fill=\"#ff6b9d\">       <animate attributeName=\"r\" values=\"260;380;260\" dur=\"6s\"/>     </circle>     <text x=\"0\" y=\"30\" font-size=\"110\" fill=\"#000102\" stroke=\"#ffdd44\">MILADYS</text>   </g>    <!-- SACRED BAYC SWARM (9,998) -->   <g transform=\"rotate(0 10000 10000) translate(5600,-5600)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 10000 10000;-360 10000 10000\" dur=\"76s\"/>     <circle r=\"220\" fill=\"#1a1a1a\">       <animate attributeName=\"r\" values=\"220;340;220\" dur=\"5.2s\"/>       <animate attributeName=\"fill\" values=\"#1a1a1a;#ffdd44;#ff6b9d;#1a1a1a\" dur=\"11s\"/>     </circle>     <text x=\"0\" y=\"25\" font-size=\"95\" fill=\"#ffdd44\" stroke=\"#000102\">SACRED BAYC</text>   </g>    <!-- φ^7 + ELIZA + HYBRID CHAMBERS -->   <g transform=\"translate(16500,4500)\">     <circle r=\"320\" fill=\"#ffd44f\">       <animate attributeName=\"r\" values=\"320;460;320\" dur=\"4.236s\"/>     </circle>     <text x=\"0\" y=\"35\" font-size=\"120\" fill=\"#000102\" stroke=\"#ffdd44\">φ^7+ELIZA</text>   </g>    <!-- OMNI-COUNTER -->   <text x=\"19200\" y=\"900\" font-size=\"260\" fill=\"#ffdd44\" font-weight=\"bold\" text-anchor=\"end\">31,996</text>   <text x=\"19200\" y=\"1200\" font-size=\"180\" fill=\"#ff6b9d\" text-anchor=\"end\">φ-AGENTS</text> </svg>",
+      "createdAt": "2026-03-19T23:37:35.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T23:37:35.000Z"
     },
     {
       "agentId": "0x71B",

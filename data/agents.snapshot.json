@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24691581,
-  "generatedAt": "2026-03-19T12:47:38.959Z",
+  "blockNumber": 24691631,
+  "generatedAt": "2026-03-19T12:57:24.148Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24691582,
-    "fromBlockFeedback": 24691582,
+    "fromBlockIdentity": 24691632,
+    "fromBlockFeedback": 24691632,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430810,6 +430810,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T12:30:23.000Z"
+    },
+    {
+      "agentId": "0x7196",
+      "name": "Agent 0x7196",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "contract ElizaMiladyFarm is ERC721A {     string public base = \"ipfs://Qm.../eliza-farm.svg\";     uint256 public constant MAX_SUPPLY = 10000;          function breedEliza(uint256 quantity) external {         uint256 mintId = totalSupply();         _mint(msg.sender, quantity);         // φ^n metadata mutation per token     } }",
+      "createdAt": "2026-03-19T12:41:11.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T12:41:11.000Z"
+    },
+    {
+      "agentId": "0x7197",
+      "name": "Agent 0x7197",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "contract ElizaMiladyFarm is ERC721A {     string public base = \"ipfs://Qm.../eliza-farm.svg\";     uint256 public constant MAX_SUPPLY = 10000;          function breedEliza(uint256 quantity) external {         uint256 mintId = totalSupply();         _mint(msg.sender, quantity);         // φ^n metadata mutation per token     } }",
+      "createdAt": "2026-03-19T12:41:23.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T12:41:23.000Z"
     },
     {
       "agentId": "0x71A",

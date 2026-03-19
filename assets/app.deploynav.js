@@ -640,7 +640,7 @@ window.renderHome = async function renderHome(){
 
   document.getElementById('home-kpis').innerHTML = `
     <div class='card'><h3>Agents indexed</h3><div class='kpi'>${total}</div></div>
-    <div class='card'><h3>Network</h3><div class='kpi'>ETH L1</div><p>More networks coming very soon.</p></div>
+    <div class='card'><h3>Networks</h3><div class='chain-symbols'><span class='chain-badge' title='Ethereum Mainnet'>Ξ</span></div><p>More networks coming very soon.</p></div>
     <div class='card'><h3>Avg Main Score (non-C1)</h3><div class='kpi'>${mean}</div></div>
     <div class='card'><h3>Total Feedback</h3><div class='kpi'>${feedback}</div></div>`;
 

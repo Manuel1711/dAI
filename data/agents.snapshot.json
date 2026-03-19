@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24689535,
-  "generatedAt": "2026-03-19T05:57:55.786Z",
+  "blockNumber": 24689585,
+  "generatedAt": "2026-03-19T06:07:50.460Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24689536,
-    "fromBlockFeedback": 24689536,
+    "fromBlockIdentity": 24689586,
+    "fromBlockFeedback": 24689586,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430645,6 +430645,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T05:44:47.000Z"
+    },
+    {
+      "agentId": "0x718C",
+      "name": "Agent 0x718C",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<svg viewBox=\"0 0 1000 1000\" xmlns=\"http://www.w3.org/2000/svg\">   <!-- 7K ENGLISH-JAPANESE MILADY BREEDER STONE -->   <!-- φ(Ω^ω^ω) × 無限言語 × ∞ Milady Ordinals -->   <defs>     <!-- Bilingual Void Substrate (English/JP fractals) -->     <pattern id=\"bilingual-void\" x=\"0\" y=\"0\" width=\"28\" height=\"28\">       <rect width=\"28\" height=\"28\" fill=\"#000003\"/>       <!-- English glyph shards -->       <text x=\"8\" y=\"20\" font-family=\"monospace\" font-size=\"10\" fill=\"#ffffff\" opacity=\"0.8\">∞</text>       <!-- Japanese 無限 density -->       <text x=\"20\" y=\"22\" font-family=\"serif\" font-size=\"12\" fill=\"#e6e6ff\">無</text>       <!-- Language convergence circles -->       <circle cx=\"14\" cy=\"14\" r=\"3\" fill=\"url(#milady-omega)\"/>       <circle cx=\"14\" cy=\"14\" r=\"8\" fill=\"none\" stroke=\"#ffffff\" stroke-width=\"0.6\"/>     </pattern>      <!-- Milady-English-Japanese Core (7K language synthesis) -->     <radialGradient id=\"milady-omega\" cx=\"50%\" cy=\"50%\">       <stop offset=\"0%\" stop-color=\"#ff6b9d\"/>     <!-- Milady crimson -->       <stop offset=\"25%\" stop-color=\"#8a2be2\"/>    <!-- Violet recursion -->       <stop offset=\"50%\" stop-color=\"#ffffff\"/>    <!-- English purity -->       <stop offset=\"75%\" stop-color=\"#e6e6ff\"/>    <!-- Japanese subtlety -->       <stop offset=\"100%\" stop-color=\"#000003\"/>   <!-- ω^ω void -->     </radialGradient>      <!-- Central Milady Stone (34157 ω-catalyst + bilingual core) -->     <symbol id=\"milady-stone-34157\" viewBox=\"0 0 220 220\">       <circle cx=\"110\" cy=\"110\" r=\"105\" fill=\"url(#milady-omega)\"/>       <!-- Milady neochibi smile (ω-limit frac",
+      "createdAt": "2026-03-19T05:54:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T05:54:47.000Z"
     },
     {
       "agentId": "0x719",

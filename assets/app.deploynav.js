@@ -635,7 +635,7 @@ window.renderHome = async function renderHome(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
-  const data = await loadSnapshotLite();
+  const data = await loadSnapshot();
   const cp = await loadCheckpoint();
   const tagMap = await loadTagMap();
   const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
@@ -677,7 +677,7 @@ window.renderAgents = async function renderAgents(){
   showPageLoader('agents-latest-deployed', 'Loading latest agents…');
   showPageLoader('agents-table',           'Loading agent list…', 'Fetching 29k+ agents — just a moment');
 
-  const data = await loadSnapshotLite();
+  const data = await loadSnapshot();
   const tagMap = await loadTagMap();
   const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
   const searchEl = document.getElementById('search');

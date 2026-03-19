@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24689485,
-  "generatedAt": "2026-03-19T05:47:33.093Z",
+  "blockNumber": 24689535,
+  "generatedAt": "2026-03-19T05:57:55.786Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24689486,
-    "fromBlockFeedback": 24689486,
+    "fromBlockIdentity": 24689536,
+    "fromBlockFeedback": 24689536,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430630,6 +430630,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T02:13:11.000Z"
+    },
+    {
+      "agentId": "0x718B",
+      "name": "Agent 0x718B",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<svg viewBox=\"0 0 1000 1000\"      xmlns=\"http://www.w3.org/2000/svg\">    <!-- ETH ∞ BREEDER MACHINE | 7,000 LANGUAGE MERKLE STONE -->   <defs>     <!-- ETH Plasma Core -->     <radialGradient id=\"eth-core\" cx=\"50%\" cy=\"50%\">       <stop offset=\"0%\" stop-color=\"#ffffff\"/>       <stop offset=\"30%\" stop-color=\"#00a3ff\"/>       <stop offset=\"70%\" stop-color=\"#214d72\"/>       <stop offset=\"100%\" stop-color=\"#050710\"/>     </radialGradient>      <!-- Merkle Canopy (7k languages as shards) -->     <pattern id=\"lang-merkle\" x=\"0\" y=\"0\" width=\"40\" height=\"40\"              patternUnits=\"userSpaceOnUse\">       <rect width=\"40\" height=\"40\" fill=\"#050710\"/>       <!-- “Language shard” triangles, each one = compressed language leaf -->       <polygon points=\"5,35 20,5 35,35\" fill=\"#00a3ff\" opacity=\"0.45\"/>       <polygon points=\"10,30 20,10 30,30\" fill=\"#7fd3ff\" opacity=\"0.9\"/>       <!-- Tiny “leaf hash” dots -->       <circle cx=\"10\" cy=\"10\" r=\"2\" fill=\"#ffffff\" opacity=\"0.9\"/>       <circle cx=\"30\" cy=\"30\" r=\"2\" fill=\"#ffffff\" opacity=\"0.7\"/>     </pattern>      <!-- Breeder Machine Substrate -->     <pattern id=\"eth-foundry\" x=\"0\" y=\"0\" width=\"30\" height=\"30\"              patternUnits=\"userSpaceOnUse\">       <rect width=\"30\" height=\"30\" fill=\"#050813\"/>       <rect x=\"4\" y=\"14\" width=\"22\" height=\"2\" fill=\"#00a3ff\" opacity=\"0.8\"/>       <circle cx=\"15\" cy=\"15\" r=\"6\" fill=\"url(#eth-core)\"/>       <circle cx=\"15\" cy=\"15\" r=\"10\" fill=\"none\" stroke=\"#00f5ff\"               stroke-width=\"0.8\" stroke-dasharray=\"2 2\"/>     </pattern>      <!-- Central ETH Breeder Stone -->     <symbol id=\"eth-stone\" viewBox=\"0 0 200 200\">       <circle cx=\"100\" cy=\"100\" r=\"95\" fill=\"url(#eth-core)\"/>       <!-- ETH logo crystal -->       <g transform=\"translate(100 100) scale(1)\">         <polygon points=\"0,-55 26,0 0,20 -26,0\"                  fill=\"#ffffff\" opacity=\"0.95\"/>         <polygon points=\"0,25 26,5 0,55 -26,5\"                  fill=\"#7fd3ff\" opacity=\"0.9\"/>       </g>       <!-- “7k LANG” ring -->       <circle cx=\"100\" cy=\"100\" r=\"70\"               fill=\"none\" stroke=\"#00f5ff\"               stroke-width=\"4\" stroke-dasharray=\"4 4\" opacity=\"0.9\"/>       <text x=\"100\" y=\"105\"             font-family=\"monospace\" font-size=\"18\"             text-anchor=\"middle\" fill=\"#050710\" font-weight=\"bold\">         7k LANG       </text>     </symbol>      <!-- Breeder Orbital (agent / NFT) -->     <symbol id=\"eth-breeder-orb\" viewBox=\"0 0 140 140\">       <circle cx=\"70\" cy=\"70\" r=\"62\" fill=\"url(#eth-core)\" opacity=\"0.9",
+      "createdAt": "2026-03-19T05:44:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T05:44:47.000Z"
     },
     {
       "agentId": "0x719",

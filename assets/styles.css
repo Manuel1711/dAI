@@ -74,9 +74,9 @@ nav:hover{
 }
 nav a{
   position:relative;
-  color:#312e81;text-decoration:none;font-weight:800;font-size:15px;
-  letter-spacing:.01em;
-  padding:12px 18px;border-radius:14px;transition:all .2s ease;
+  color:#312e81;text-decoration:none;font-weight:800;font-size:17px;
+  letter-spacing:.012em;
+  padding:13px 19px;border-radius:14px;transition:all .2s ease;
 }
 nav a::after{
   content:"";

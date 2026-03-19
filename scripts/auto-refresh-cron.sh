@@ -46,9 +46,12 @@ python3 scripts/build-tag-analytics-from-tag-source.py
 # Build metadata cache (pre-fetch IPFS/HTTP metadata server-side)
 node scripts/build-metadata-cache.mjs || echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] metadata-cache warn: non-fatal error"
 
+# Build lite snapshot + meta (fast loads for home/list pages)
+python3 scripts/build-snapshot-lite.py || echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] snapshot-lite warn: non-fatal error"
+
 # Commit/push only if changed
-if ! git diff --quiet -- data/agents.snapshot.json data/live data/analytics data/metadata-cache.json; then
-  git add data/agents.snapshot.json data/live/*.json data/live/*.jsonl data/analytics/*.json data/metadata-cache.json || true
+if ! git diff --quiet -- data/agents.snapshot.json data/agents.snapshot.lite.json data/agents.snapshot.meta.json data/live data/analytics data/metadata-cache.json; then
+  git add data/agents.snapshot.json data/agents.snapshot.lite.json data/agents.snapshot.meta.json data/live/*.json data/live/*.jsonl data/analytics/*.json data/metadata-cache.json || true
   if ! git diff --staged --quiet; then
     git commit -m "chore: auto refresh live index + analytics snapshot"
     git pull --rebase --autostash origin main

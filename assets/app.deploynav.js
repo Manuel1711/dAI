@@ -290,15 +290,12 @@ async function refreshGlobalSyncBlock() {
   const el = document.getElementById('global-sync-block');
   if (!el) return;
   try {
-    const [meta, cp] = await Promise.all([
-      fetchJson('./data/agents.snapshot.meta.json'),
-      loadCheckpoint()
-    ]);
-    const generatedAt = meta?.generatedAt ? new Date(meta.generatedAt) : null;
+    const [snapshot, cp] = await Promise.all([loadSnapshot(), loadCheckpoint()]);
+    const generatedAt = snapshot?.generatedAt ? new Date(snapshot.generatedAt) : null;
     const ageMin = generatedAt ? Math.max(0, Math.floor((Date.now() - generatedAt.getTime()) / 60000)) : null;
     const live = Number.isFinite(ageMin) ? ageMin <= 20 : false;
 
-    const block = meta?.blockNumber ?? cp?.lastSafeBlock ?? '-';
+    const block = snapshot?.blockNumber ?? cp?.lastSafeBlock ?? '-';
     const stamp = generatedAt && !Number.isNaN(generatedAt.getTime()) ? generatedAt.toLocaleString() : '-';
 
     el.classList.toggle('live', !!live);
@@ -462,15 +459,6 @@ function applyServerMetadataCache(agents, cache) {
   }
 }
 
-async function loadSnapshotLite() {
-  try {
-    const data = await fetchJson('./data/agents.snapshot.lite.json');
-    return data;
-  } catch {
-    return loadSnapshot();
-  }
-}
-
 async function loadSnapshot() {
   const [data, cache] = await Promise.all([
     fetchJson('./data/agents.snapshot.json'),
@@ -587,11 +575,6 @@ function pickAgentImage(a){
 }
 
 function deriveAgentMetrics(agent, tagMap) {
-  // Lite snapshot: no feedbackHistory — use precomputed scoreV1
-  if (!agent.feedbackHistory || agent.feedbackHistory.length === 0) {
-    const s = Number(agent.scoreV1 ?? 0);
-    return { scoreMain: s, scoreMainCount: Number(agent.feedbackCount || 0), characteristicCount: 0, characteristics: [], topTags: [] };
-  }
   const history = agent.feedbackHistory || [];
   const nonCharacteristic = [];
   const byCharacteristic = new Map();
@@ -663,19 +646,9 @@ window.renderHome = async function renderHome(){
   initFancyUI();
 }
 
-function showPageLoader(containerId, label='Loading…', sub=''){
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = `<div class='loading-overlay'><div class='loading-spinner'></div><div class='loading-label'>${label}</div>${sub ? `<div class='loading-sub'>${sub}</div>` : ''}</div>`;
-}
-
 window.renderAgents = async function renderAgents(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
-
-  showPageLoader('agents-top-feedback',    'Loading top agents…');
-  showPageLoader('agents-latest-deployed', 'Loading latest agents…');
-  showPageLoader('agents-table',           'Loading agent list…', 'Fetching 29k+ agents — just a moment');
 
   const data = await loadSnapshot();
   const tagMap = await loadTagMap();
@@ -1938,9 +1911,6 @@ function renderFigTag09(fig){
 window.renderAnalytics = async function renderAnalytics(){ 
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
-
-  showPageLoader('analytics-kpis',         'Loading analytics…', 'Crunching on-chain data');
-  showPageLoader('analytics-top-feedback', 'Loading charts…');
 
   const data = await loadSnapshot();
   const tagMap = await loadTagMap();

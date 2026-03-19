@@ -1,37 +1,24 @@
 #!/usr/bin/env python3
 """
 Genera data/agents.snapshot.lite.json per la vista lista/home.
-Rimuove feedbackHistory, tronca description, abbrevia owner.
-Il dettaglio agente carica il full snapshot solo on-demand.
+Rimuove solo feedbackHistory (il campo pesante). Mantiene tutti i metadati
+necessari per visualizzare nomi, immagini e link degli agenti.
 """
 import json, os
 
 SRC  = os.path.join(os.path.dirname(__file__), '..', 'data', 'agents.snapshot.json')
 DEST = os.path.join(os.path.dirname(__file__), '..', 'data', 'agents.snapshot.lite.json')
-DESC_MAX = 80
-
-def short_owner(addr):
-    if not addr or len(addr) < 10: return addr or ''
-    return addr[:6] + '…' + addr[-4:]
+DESC_MAX = 180
 
 with open(SRC) as f:
     data = json.load(f)
 
 lite_agents = []
 for a in data.get('agents', []):
-    desc = (a.get('description') or '').strip()
-    lite_agents.append({
-        'agentId':        a.get('agentId',''),
-        'name':           a.get('name',''),
-        'owner':          short_owner(a.get('owner','')),
-        'category':       a.get('category',''),
-        'description':    desc[:DESC_MAX] + ('…' if len(desc) > DESC_MAX else ''),
-        'scoreV1':        a.get('scoreV1'),
-        'feedbackCount':  a.get('feedbackCount', 0),
-        'uniqueRaters':   a.get('uniqueRaters', 0),
-        'lastActivityAt': a.get('lastActivityAt',''),
-        'createdAt':      a.get('createdAt',''),
-    })
+    row = {k: v for k, v in a.items() if k != 'feedbackHistory'}
+    desc = (row.get('description') or '').strip()
+    row['description'] = desc[:DESC_MAX] + ('…' if len(desc) > DESC_MAX else '')
+    lite_agents.append(row)
 
 out = {
     'blockNumber': data.get('blockNumber'),

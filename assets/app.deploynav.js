@@ -640,7 +640,7 @@ window.renderHome = async function renderHome(){
 
   document.getElementById('home-kpis').innerHTML = `
     <div class='card'><h3>Agents indexed</h3><div class='kpi'>${total}</div></div>
-    <div class='card'><h3>Networks</h3><div class='chain-symbols'><span class='chain-badge' title='Ethereum Mainnet'>Ξ</span></div><p>More networks coming very soon.</p></div>
+    <div class='card'><h3>Networks</h3><div class='chain-symbols'><span class='chain-badge' title='Ethereum Mainnet'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 784.37 1277.39' width='22' height='22'><polygon fill='#8A92B2' points='392.07,0 383.5,29.11 383.5,873.74 392.07,882.29 784.13,650.54'/><polygon fill='#62688F' points='392.07,0 -0,650.54 392.07,882.29 392.07,472.33'/><polygon fill='#62688F' points='392.07,956.52 387.24,962.41 387.24,1263.28 392.07,1277.38 784.37,724.89'/><polygon fill='#454A75' points='392.07,1277.38 392.07,956.52 -0,724.89'/><polygon fill='#8A92B2' points='392.07,882.29 784.13,650.54 392.07,472.33'/><polygon fill='#454A75' points='0,650.54 392.07,882.29 392.07,472.33'/></svg></span></div><p>More networks coming very soon.</p></div>
     <div class='card'><h3>Avg Main Score (non-C1)</h3><div class='kpi'>${mean}</div></div>
     <div class='card'><h3>Total Feedback</h3><div class='kpi'>${feedback}</div></div>`;
 

@@ -290,15 +290,12 @@ async function refreshGlobalSyncBlock() {
   const el = document.getElementById('global-sync-block');
   if (!el) return;
   try {
-    const [meta, cp] = await Promise.all([
-      fetchJson('./data/agents.snapshot.meta.json'),
-      loadCheckpoint()
-    ]);
-    const generatedAt = meta?.generatedAt ? new Date(meta.generatedAt) : null;
+    const [snapshot, cp] = await Promise.all([loadSnapshot(), loadCheckpoint()]);
+    const generatedAt = snapshot?.generatedAt ? new Date(snapshot.generatedAt) : null;
     const ageMin = generatedAt ? Math.max(0, Math.floor((Date.now() - generatedAt.getTime()) / 60000)) : null;
     const live = Number.isFinite(ageMin) ? ageMin <= 20 : false;
 
-    const block = meta?.blockNumber ?? cp?.lastSafeBlock ?? '-';
+    const block = snapshot?.blockNumber ?? cp?.lastSafeBlock ?? '-';
     const stamp = generatedAt && !Number.isNaN(generatedAt.getTime()) ? generatedAt.toLocaleString() : '-';
 
     el.classList.toggle('live', !!live);
@@ -462,22 +459,6 @@ function applyServerMetadataCache(agents, cache) {
   }
 }
 
-async function loadSnapshotLite() {
-  // Loads lite snapshot (no feedbackHistory, all other fields intact) — ~13MB vs 18MB
-  // Falls back to full snapshot if lite not available
-  try {
-    const [data, cache] = await Promise.all([
-      fetchJson('./data/agents.snapshot.lite.json'),
-      loadServerMetadataCache()
-    ]);
-    applyServerMetadataCache(data?.agents, cache);
-    await enrichAgentsMetadataClient(data?.agents || [], 30, 4);
-    return data;
-  } catch {
-    return loadSnapshot();
-  }
-}
-
 async function loadSnapshot() {
   const [data, cache] = await Promise.all([
     fetchJson('./data/agents.snapshot.json'),
@@ -594,14 +575,6 @@ function pickAgentImage(a){
 }
 
 function deriveAgentMetrics(agent, tagMap) {
-  // Lite snapshot: no feedbackHistory — use precomputed scoreV1 directly
-  if (!agent.feedbackHistory || agent.feedbackHistory.length === 0) {
-    return {
-      scoreMain: Number(agent.scoreV1 ?? 0),
-      scoreMainCount: Number(agent.feedbackCount || 0),
-      characteristicCount: 0, characteristics: [], topTags: []
-    };
-  }
   const history = agent.feedbackHistory || [];
   const nonCharacteristic = [];
   const byCharacteristic = new Map();
@@ -645,7 +618,7 @@ window.renderHome = async function renderHome(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
-  const data = await loadSnapshotLite();
+  const data = await loadSnapshot();
   const cp = await loadCheckpoint();
   const tagMap = await loadTagMap();
   const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
@@ -677,7 +650,7 @@ window.renderAgents = async function renderAgents(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
-  const data = await loadSnapshotLite();
+  const data = await loadSnapshot();
   const tagMap = await loadTagMap();
   const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
   const searchEl = document.getElementById('search');

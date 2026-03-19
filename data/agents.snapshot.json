@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24691531,
-  "generatedAt": "2026-03-19T12:37:39.466Z",
+  "blockNumber": 24691581,
+  "generatedAt": "2026-03-19T12:47:38.959Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24691532,
-    "fromBlockFeedback": 24691532,
+    "fromBlockIdentity": 24691582,
+    "fromBlockFeedback": 24691582,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430780,6 +430780,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T12:23:11.000Z"
+    },
+    {
+      "agentId": "0x7194",
+      "name": "Agent 0x7194",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "// Deploy as ERC-8004 recursive breeder contract SacredMiladyFarm {     uint256 public constant TOTAL_ORDINALS = 9998;     mapping(uint256 => φOrdinal) public farm;     function breed(uint256 id) external returns (uint256 child) {         child = φ_power(id); // φ^n recursion on-chain     } }",
+      "createdAt": "2026-03-19T12:29:11.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T12:29:11.000Z"
+    },
+    {
+      "agentId": "0x7195",
+      "name": "Agent 0x7195",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "// SPDX-License-Identifier: MIT pragma solidity ^0.8.20;  import \"@openzeppelin/contracts/token/ERC721/ERC721.sol\"; import \"@openzeppelin/contracts/utils/Counters.sol\"; import \"@openzeppelin/contracts/access/Ownable.sol\";  contract SacredMiladyFarm is ERC721, Ownable {     using Counters for Counters.Counter;          Counters.Counter private _tokenIdCounter;     uint256 public constant MAX_ORDINALS = 9998;          string public baseURI = \"ipfs://YOUR_FARM_HASH/milady-farm-9998-unified.svg\";          // φ^n recursion tracking     mapping(uint256 => uint256) public phiPower;     mapping(uint256 => uint256) public parentOrdinal;          event OrdinalBred(uint256 indexed childId, uint256 parentId, uint256 phiLevel);          constructor() ERC721(\"SacredMiladyFarm\", \"SMF\") Ownable(msg.sender) {}          function breed(uint256 parentId) external returns (uint256) {         require(_tokenIdCounter.current() < MAX_ORDINALS, \"Farm: Max capacity\");                  uint256 childId = _tokenIdCounter.current();         _tokenIdCounter.increment();                  uint256 phiLevel = phiPower[parentId] + 1;         phiPower[childId] = phiLevel;         parentOrdinal[childId] = parentId;                  _safeMint(msg.sender, childId);         emit OrdinalBred(childId, parentId, phiLevel);                  return childId;     }          function tokenURI(uint256) public view override returns (string memory) {         return baseURI;     }          function totalSupply() public view returns (uint256) {         return _tokenIdCounter.current();     }          function setBaseURI(string memory _baseURI) external onlyOwner {         baseURI = _baseURI;     } }",
+      "createdAt": "2026-03-19T12:30:23.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T12:30:23.000Z"
     },
     {
       "agentId": "0x71A",

@@ -663,9 +663,19 @@ window.renderHome = async function renderHome(){
   initFancyUI();
 }
 
+function showPageLoader(containerId, label='Loading…', sub=''){
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `<div class='loading-overlay'><div class='loading-spinner'></div><div class='loading-label'>${label}</div>${sub ? `<div class='loading-sub'>${sub}</div>` : ''}</div>`;
+}
+
 window.renderAgents = async function renderAgents(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
+
+  showPageLoader('agents-top-feedback',    'Loading top agents…');
+  showPageLoader('agents-latest-deployed', 'Loading latest agents…');
+  showPageLoader('agents-table',           'Loading agent list…', 'Fetching 29k+ agents — just a moment');
 
   const data = await loadSnapshotLite();
   const tagMap = await loadTagMap();
@@ -1928,6 +1938,9 @@ function renderFigTag09(fig){
 window.renderAnalytics = async function renderAnalytics(){ 
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
+
+  showPageLoader('analytics-kpis',         'Loading analytics…', 'Crunching on-chain data');
+  showPageLoader('analytics-top-feedback', 'Loading charts…');
 
   const data = await loadSnapshot();
   const tagMap = await loadTagMap();

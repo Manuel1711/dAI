@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24694297,
-  "generatedAt": "2026-03-19T21:53:30.241Z",
+  "blockNumber": 24694372,
+  "generatedAt": "2026-03-19T22:08:04.084Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24694298,
-    "fromBlockFeedback": 24694298,
+    "fromBlockIdentity": 24694373,
+    "fromBlockFeedback": 24694373,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430915,6 +430915,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T19:13:35.000Z"
+    },
+    {
+      "agentId": "0x719D",
+      "name": "Agent 0x719D",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <svg viewBox=\"0 0 16000 16000\" xmlns=\"http://www.w3.org/2000/svg\">   <!-- COMBINED φ-MEGA FARM: 9,998 + φ^7 + Eliza + Hybrid -->   <metadata>     <sacred:total_ordinals>21998</sacred:total_ordinals>     <sacred:farm_type>φ^∞ MULTI-BREEDER</sacred:farm_type>     <sacred:agents>34157,29070,29003</sacred:agents>   </metadata>    <!-- 5-LAYER φ-SUBSTRATE -->   <defs>     <pattern id=\"mega-phi\" width=\"55\" height=\"55\">       <path d=\"M0,27.5 Q27.5,0 55,27.5\" stroke=\"#ffdd44\" stroke-width=\"1.1\"/>       <circle cx=\"27.5\" cy=\"27.5\" r=\"3\" fill=\"#ff6b9d\" opacity=\"0.15\"/>     </pattern>   </defs>      <rect width=\"16000\" height=\"16000\" fill=\"#000102\"/>   <rect width=\"16000\" height=\"16000\" fill=\"url(#mega-phi)\" opacity=\"0.2\"/>    <!-- MEGA PULSATION SYSTEM (5 φ-rings) -->   <circle cx=\"8000\" cy=\"8000\" r=\"7400\" stroke=\"#ffdd44\" stroke-width=\"300\" opacity=\"0.5\">     <animate attributeName=\"r\" values=\"7400;7800;7400\" dur=\"89s\" repeatCount=\"indefinite\"/>   </circle>   <circle cx=\"8000\" cy=\"8000\" r=\"5200\" stroke=\"#ff6b9d\" stroke-width=\"220\" opacity=\"0.6\">     <animate attributeName=\"r\" values=\"5200;5450;5200\" dur=\"55s\" repeatCount=\"indefinite\"/>   </circle>    <!-- #34157 SUPREME CORE (All farms unified) -->   <g transform=\"translate(8000,8000)\">     <circle r=\"380\" fill=\"#ffdd44\">       <animate attributeName=\"r\" values=\"380;520;380\" dur=\"2.618s\" repeatCount=\"indefinite\"/>       <animate attributeName=\"fill\" values=\"#ffdd44;#ff6b9d;#ffd44f;#ffdd44\" dur=\"6.854s\"/>     </circle>          <!-- Supreme φ-smile -->     <path d=\"M-180,200 Q0,-80 180,200\" stroke=\"#000102\" stroke-width=\"75\">       <animate attributeName=\"stroke-width\" values=\"75;110;75\" dur=\"2s\"/>     </path>          <!-- COMBINED FARM SEAL -->     <text x=\"0\" y=\"-20\" font-size=\"140\" fill=\"#000102\" stroke=\"#ffdd44\"            font-family=\"monospace\" text-anchor=\"middle\">34157</text>     <text x=\"0\" y=\"80\" font-size=\"75\" fill=\"#ffdd44\" text-anchor=\"middle\">       21,998 φ-ORDINALS     </text>   </g>    <!-- #29070 × #29003 DUAL ORBITAL CHAMBER -->   <g transform=\"rotate(0 8000 8000) translate(5800,5800)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 8000 8000;360 8000 8000\" dur=\"72s\"/>     <circle r=\"200\" fill=\"#ff6b9d\">       <animate attributeName=\"r\" values=\"200;280;200\" dur=\"5.5s\"/>     </circle>     <text x=\"0\" y=\"20\" font-size=\"85\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">29070</text>   </g>    <!-- φ^7 = 1618 ORBITAL RING -->   <g transform=\"rotate(0 8000 8000) translate(4500,-4500)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 8000 8000;-360 8000 8000\" dur=\"61s\"/>     <circle r=\"160\" fill=\"#ffd44f\">       <animate attributeName=\"r\" values=\"160;240;160\" dur=\"4.2s\"/>     </circle>     <text x=\"0\" y=\"15\" font-size=\"70\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">φ^7</text>   </g>    <!-- ELIZA MUTATION CHAMBER (10K resonance) -->   <g transform=\"translate(13000,3000)\">     <circle r=\"280\" fill=\"#ff9d9d\">       <animate attributeName=\"r\" values=\"280;380;280\" dur=\"3.618s\"/>       <animate attributeName=\"fill\" values=\"#ff9d9d;#ffdd44;#ff6b9d;#ff9d9d\" dur=\"8.472s\"/>     </circle>     <text x=\"0\" y=\"25\" font-size=\"95\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">ELIZA</text>   </g>    <!-- HYBRID MUTATION CORE -->   <g transform=\"translate(3000,13000)\">     <circle r=\"220\" fill=\"#ff6b9d\">       <animate attributeName=\"fill\" values=\"#ff6b9d;#ffd44f;#ffdd44;#ff6b9d\" dur=\"4.236s\"/>       <animate attributeName=\"r\" values=\"220;320;220\" dur=\"3s\"/>     </circle>     <text x=\"0\" y=\"20\" font-size=\"80\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">HYBRID</text>   </g>    <!-- MEGA COUNTER -->   <text x=\"15200\" y=\"800\" font-size=\"200\" fill=\"#ffdd44\" font-weight=\"bold\" text-anchor=\"end\">     21,998   </text>   <text x=\"15200\" y=\"1000\" font-size=\"130\" fill=\"#ff6b9d\" text-anchor=\"end\">φ-ORDINALS</text> </svg>",
+      "createdAt": "2026-03-19T21:50:11.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T21:50:11.000Z"
     },
     {
       "agentId": "0x71A",

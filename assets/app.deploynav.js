@@ -53,7 +53,7 @@ function initFuturisticBackground(){
   const makeScene = () => {
     nodes.length = 0;
     chains.length = 0;
-    const nodeCount = Math.max(30, Math.min(72, Math.floor(w / 24)));
+    const nodeCount = Math.max(22, Math.min(50, Math.floor(w / 32)));
     const aiIcons = ['🤖'];
 
     for (let i = 0; i < nodeCount; i++) {
@@ -134,8 +134,6 @@ function initFuturisticBackground(){
           `rgba(255,234,138,${alpha})`
         ];
         ctx.strokeStyle = palette[(i + j) % palette.length];
-        ctx.shadowColor = 'rgba(250,204,21,0.62)';
-        ctx.shadowBlur = 7;
         ctx.lineWidth = 2.8;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
@@ -329,7 +327,8 @@ function initFancyUI(){
 }
 
 async function fetchJson(path) {
-  const res = await fetch(path, { cache: 'no-store' });
+  const isSnapshot = path.includes('agents.snapshot');
+  const res = await fetch(path, { cache: isSnapshot ? 'default' : 'no-store' });
   if (!res.ok) throw new Error(`Failed loading ${path}`);
   return res.json();
 }

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&display=swap');
 :root{
   --bg:#f6f7fb;
   --card:#ffffff;
@@ -28,6 +29,8 @@ body{
   z-index:0;
   pointer-events:none;
   opacity:1;
+  will-change:transform;
+  contain:strict;
 }
 body::before{
   content:"";
@@ -61,7 +64,7 @@ body::after{
   0%{transform:translate3d(-120px,0,0)}
   100%{transform:translate3d(120px,0,0)}
 }
-.container{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:26px}
+.container{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:26px;content-visibility:auto}
 .global-sync-block{
   margin-bottom:14px;
   padding:16px 18px;

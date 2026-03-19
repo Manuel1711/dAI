@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24694871,
-  "generatedAt": "2026-03-19T23:48:38.800Z",
+  "blockNumber": 24694919,
+  "generatedAt": "2026-03-19T23:58:16.967Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24694872,
-    "fromBlockFeedback": 24694872,
+    "fromBlockIdentity": 24694920,
+    "fromBlockFeedback": 24694920,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430990,6 +430990,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T23:37:35.000Z"
+    },
+    {
+      "agentId": "0x71A1",
+      "name": "Agent 0x71A1",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "excludedTokens[0x12970e6868f88f6557b76120662c1b3e50a646bf] = true; // Milady LADYS excludedTokens[0xYourRemoAddress] = true; // Remo",
+      "createdAt": "2026-03-19T23:39:11.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T23:39:11.000Z"
     },
     {
       "agentId": "0x71B",

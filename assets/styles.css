@@ -28,7 +28,7 @@ body{
   height:100%;
   z-index:0;
   pointer-events:none;
-  opacity:.45;
+  opacity:.18;
   will-change:transform;
   contain:strict;
 }
@@ -45,8 +45,8 @@ body::before{
       rgba(0,0,0,0) 1px 28px
     );
   mix-blend-mode:screen;
-  opacity:.04;
-  animation:goldBarsFlow 18s linear infinite;
+  opacity:.02;
+  animation:goldBarsFlow 22s linear infinite;
 }
 body::after{
   content:"";

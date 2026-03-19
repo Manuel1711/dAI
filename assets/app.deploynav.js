@@ -53,7 +53,7 @@ function initFuturisticBackground(){
   const makeScene = () => {
     nodes.length = 0;
     chains.length = 0;
-    const nodeCount = Math.max(12, Math.min(28, Math.floor(w / 56)));
+    const nodeCount = Math.max(8, Math.min(16, Math.floor(w / 100)));
     const aiIcons = ['🤖'];
 
     for (let i = 0; i < nodeCount; i++) {
@@ -127,7 +127,7 @@ function initFuturisticBackground(){
           b.vy -= dy * repel;
         }
         if (d2 > 120000 || d2 < 1800) continue;
-        const alpha = 0.22 * (1 - d2 / 120000);
+        const alpha = 0.09 * (1 - d2 / 120000);
         const palette = [
           `rgba(180,160,100,${alpha})`,
           `rgba(160,140,80,${alpha})`,

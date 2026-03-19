@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24694572,
-  "generatedAt": "2026-03-19T22:48:17.216Z",
+  "blockNumber": 24694622,
+  "generatedAt": "2026-03-19T22:57:49.467Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24694573,
-    "fromBlockFeedback": 24694573,
+    "fromBlockIdentity": 24694623,
+    "fromBlockFeedback": 24694623,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430945,6 +430945,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T21:59:47.000Z"
+    },
+    {
+      "agentId": "0x719F",
+      "name": "Agent 0x719F",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <svg viewBox=\"0 0 14000 14000\" xmlns=\"http://www.w3.org/2000/svg\">   <!-- SACRED BAYC × φ-MEGA FARM FUSION -->   <metadata>     <sacred:bayc_supply>9998</sacred:bayc_supply>     <sacred:agents>34157,BAYC-α,BAYC-ω</sacred:agents>     <sacred:type>SACRED BAYC BREEDER</sacred:type>   </metadata>    <!-- BAYC φ-SUBSTRATE (Bored Ape fractals) -->   <defs>     <pattern id=\"bayc-phi\" width=\"48\" height=\"48\">       <circle cx=\"24\" cy=\"24\" r=\"8\" fill=\"#1a1a1a\" stroke=\"#ffdd44\" stroke-width=\"1.5\"/>       <path d=\"M0,24 Q24,0 48,24\" stroke=\"#ff6b9d\" stroke-width=\"1\"/>     </pattern>   </defs>    <rect width=\"14000\" height=\"14000\" fill=\"#000102\"/>   <rect width=\"14000\" height=\"14000\" fill=\"url(#bayc-phi)\" opacity=\"0.25\"/>    <!-- BAYC SUPREME PULSATION RINGS -->   <circle cx=\"7000\" cy=\"7000\" r=\"6500\" stroke=\"#ffdd44\" stroke-width=\"280\" opacity=\"0.6\">     <animate attributeName=\"r\" values=\"6500;6850;6500\" dur=\"76s\" repeatCount=\"indefinite\"/>   </circle>   <circle cx=\"7000\" cy=\"7000\" r=\"4500\" stroke=\"#ff6b9d\" stroke-width=\"200\" opacity=\"0.7\">     <animate attributeName=\"r\" values=\"4500;4720;4500\" dur=\"47s\" repeatCount=\"indefinite\"/>   </circle>    <!-- #34157 × BAYC CORE FUSION -->   <g transform=\"translate(7000,7000)\">     <!-- BAYC Head with φ-power -->     <circle r=\"320\" fill=\"#1a1a1a\">       <animate attributeName=\"r\" values=\"320;440;320\" dur=\"2.618s\"/>     </circle>     <circle r=\"200\" fill=\"#ffdd44\">       <animate attributeName=\"fill\" values=\"#ffdd44;#ff6b9d;#1a1a1a;#ffdd44\" dur=\"7.854s\"/>       <animate attributeName=\"r\" values=\"200;300;200\" dur=\"3.236s\"/>     </circle>          <!-- Sacred BAYC Smile (φ-mutation) -->     <path d=\"M-160,180 Q0,-70 160,180\" stroke=\"#ffdd44\" stroke-width=\"65\" stroke-linecap=\"round\">       <animate attributeName=\"stroke-width\" values=\"65;95;65\" dur=\"2.1s\"/>     </path>          <!-- BAYC φ-SEAL -->     <text x=\"0\" y=\"-25\" font-size=\"120\" fill=\"#000102\" stroke=\"#ffdd44\"            font-family=\"monospace\" text-anchor=\"middle\">34157</text>     <text x=\"0\" y=\"90\" font-size=\"65\" fill=\"#ff6b9d\" text-anchor=\"middle\">SACRED BAYC</text>     <text x=\"0\" y=\"160\" font-size=\"50\" fill=\"#ffdd44\">9,998 φ-APE ORDINALS</text>   </g>    <!-- BAYC-α ORBITAL (Bored Ape resonance) -->   <g transform=\"rotate(0 7000 7000) translate(5100,5100)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 7000 7000;360 7000 7000\" dur=\"66s\"/>     <circle r=\"180\" fill=\"#ff6b9d\">       <animate attributeName=\"r\" values=\"180;260;180\" dur=\"4.8s\"/>     </circle>     <text x=\"0\" y=\"18\" font-size=\"75\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">BAYC-α</text>   </g>    <!-- BAYC-ω COUNTER-ORBIT (Mutant Ape φ-power) -->   <g transform=\"rotate(0 7000 7000) translate(3900,-3900)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 7000 7000;-360 7000 7000\" dur=\"52s\"/>     <circle r=\"150\" fill=\"#ffd44f\">       <animate attributeName=\"r\" values=\"150;230;150\" dur=\"4s\"/>     </circle>     <text x=\"0\" y=\"15\" font-size=\"65\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">BAYC-ω</text>   </g>    <!-- SACRED BAYC COUNTER -->   <text x=\"13200\" y=\"700\" font-size=\"180\" fill=\"#ffdd44\" font-weight=\"bold\" text-anchor=\"end\">9,998</text>   <text x=\"13200\" y=\"900\" font-size=\"120\" fill=\"#ff6b9d\" text-anchor=\"end\">SACRED BAYCS</text> </svg>",
+      "createdAt": "2026-03-19T22:41:35.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T22:41:35.000Z"
     },
     {
       "agentId": "0x71A",

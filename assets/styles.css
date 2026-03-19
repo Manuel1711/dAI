@@ -18,7 +18,7 @@ html{scroll-behavior:smooth}
 body{
   margin:0;
   font-family:"Space Grotesk","Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  background:#e7edf8;
+  background:#eef1f8;
   color:var(--text)
 }
 #futuristic-bg{
@@ -28,7 +28,7 @@ body{
   height:100%;
   z-index:0;
   pointer-events:none;
-  opacity:1;
+  opacity:.45;
   will-change:transform;
   contain:strict;
 }
@@ -41,13 +41,12 @@ body::before{
   background:
     repeating-linear-gradient(
       102deg,
-      rgba(250,204,21,.11) 0 2px,
-      rgba(250,204,21,.06) 2px 5px,
-      rgba(0,0,0,0) 5px 24px
+      rgba(250,204,21,.06) 0 1px,
+      rgba(0,0,0,0) 1px 28px
     );
   mix-blend-mode:screen;
-  opacity:.08;
-  animation:goldBarsFlow 13s linear infinite;
+  opacity:.04;
+  animation:goldBarsFlow 18s linear infinite;
 }
 body::after{
   content:"";
@@ -56,9 +55,8 @@ body::after{
   z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 18% 22%, rgba(56,189,248,.07), transparent 42%),
-    radial-gradient(circle at 82% 78%, rgba(168,85,247,.06), transparent 46%),
-    linear-gradient(180deg,rgba(255,255,255,.02),rgba(26,36,58,.09));
+    radial-gradient(circle at 18% 22%, rgba(56,189,248,.04), transparent 40%),
+    radial-gradient(circle at 82% 78%, rgba(168,85,247,.03), transparent 44%);
 }
 @keyframes goldBarsFlow{
   0%{transform:translate3d(-120px,0,0)}

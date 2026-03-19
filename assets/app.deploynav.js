@@ -53,7 +53,7 @@ function initFuturisticBackground(){
   const makeScene = () => {
     nodes.length = 0;
     chains.length = 0;
-    const nodeCount = Math.max(22, Math.min(50, Math.floor(w / 32)));
+    const nodeCount = Math.max(12, Math.min(28, Math.floor(w / 56)));
     const aiIcons = ['🤖'];
 
     for (let i = 0; i < nodeCount; i++) {
@@ -88,7 +88,7 @@ function initFuturisticBackground(){
     pointer.x += (pointer.targetX - pointer.x) * 0.07;
     pointer.y += (pointer.targetY - pointer.y) * 0.07;
 
-    ctx.fillStyle = 'rgba(20,30,50,0.10)';
+    ctx.fillStyle = 'rgba(238,241,248,0.18)';
     ctx.fillRect(0, 0, w, h);
 
     ctx.shadowBlur = 0;
@@ -127,14 +127,14 @@ function initFuturisticBackground(){
           b.vy -= dy * repel;
         }
         if (d2 > 120000 || d2 < 1800) continue;
-        const alpha = 0.62 * (1 - d2 / 120000);
+        const alpha = 0.22 * (1 - d2 / 120000);
         const palette = [
-          `rgba(250,204,21,${alpha})`,
-          `rgba(245,158,11,${alpha})`,
-          `rgba(255,234,138,${alpha})`
+          `rgba(180,160,100,${alpha})`,
+          `rgba(160,140,80,${alpha})`,
+          `rgba(200,180,120,${alpha})`
         ];
         ctx.strokeStyle = palette[(i + j) % palette.length];
-        ctx.lineWidth = 2.8;
+        ctx.lineWidth = 1.2;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);

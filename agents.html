@@ -12,18 +12,12 @@
   <div class='container'>
     <div id='nav'></div>
 
-    <section class='card agents-top-card no-reveal'>
-      <h3>Top agents by feedback volume</h3>
-      <div id='agents-top-feedback' class='agent-tiles'></div>
-    </section>
-
-    <section class='card agents-latest-card no-reveal'>
-      <h3>Latest deployed AI agents</h3>
-      <div id='agents-latest-deployed' class='agent-tiles'></div>
-    </section>
-
     <section class='card agents-toolbar-card no-reveal'>
       <div class='toolbar agents-toolbar'>
+        <div>
+          <div style='font-weight:800;font-size:14px;color:#4b5563;margin-bottom:6px;'>Chain scope</div>
+          <select id='chain-filter' class='input'></select>
+        </div>
         <input id='search' class='input' placeholder='Search by name, id, owner, category...'/>
         <select id='sort' class='input'>
           <option value='score'>Sort: Main Score non-C1 (desc)</option>
@@ -33,6 +27,16 @@
         </select>
       </div>
       <div id='agents-meta' class='meta-row agents-meta-row'></div>
+    </section>
+
+    <section class='card agents-top-card no-reveal'>
+      <h3>Top agents by feedback volume</h3>
+      <div id='agents-top-feedback' class='agent-tiles'></div>
+    </section>
+
+    <section class='card agents-latest-card no-reveal'>
+      <h3>Latest deployed AI agents</h3>
+      <div id='agents-latest-deployed' class='agent-tiles'></div>
     </section>
 
     <section class='card agents-table-card no-reveal'>

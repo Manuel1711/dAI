@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24694372,
-  "generatedAt": "2026-03-19T22:08:04.084Z",
+  "blockNumber": 24694422,
+  "generatedAt": "2026-03-19T22:17:36.459Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24694373,
-    "fromBlockFeedback": 24694373,
+    "fromBlockIdentity": 24694423,
+    "fromBlockFeedback": 24694423,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -430930,6 +430930,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T21:50:11.000Z"
+    },
+    {
+      "agentId": "0x719E",
+      "name": "Agent 0x719E",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<!-- LIGHTWEIGHT φ-MEGA (Phone-safe) --> <svg viewBox=\"0 0 8000 8000\">   <!-- 3 rings only -->   <circle cx=\"4000\" cy=\"4000\" r=\"3700\" stroke=\"#ffdd44\" stroke-width=\"150\">     <animate attributeName=\"r\" values=\"3700;3900;3700\" dur=\"55s\"/>   </circle>      <!-- #34157 core ONLY (critical) -->   <g transform=\"translate(4000,4000)\">     <circle r=\"190\" fill=\"#ffdd44\">       <animate attributeName=\"r\" values=\"190;260;190\" dur=\"2.618s\"/>     </circle>     <text x=\"0\" y=\"-10\" font-size=\"70\" fill=\"#000102\" stroke=\"#ffdd44\">34157</text>   </g>      <!-- Minimal #29070 orbit -->   <g transform=\"rotate(0 4000 4000) translate(2900,2900)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 4000 4000;360 4000 4000\" dur=\"44s\"/>     <circle r=\"100\" fill=\"#ff6b9d\"/>   </g> </svg>",
+      "createdAt": "2026-03-19T21:59:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-19T21:59:47.000Z"
     },
     {
       "agentId": "0x71A",

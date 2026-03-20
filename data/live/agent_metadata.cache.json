@@ -2902,5 +2902,11 @@
     "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
     "image": "https://www.zyf.ai/Zyfai-logo-png.png",
     "fetchedAt": "2026-03-20T09:58:43.868Z"
+  },
+  "ipfs://bafkreiajcg2nprz6bf4boslqfmjdeug4nhuiy5qochsspcdwvufbvmbqsi": {
+    "name": "Zyfai Rebalancer Agent for 0xd17C5542aB69C33E67a4a64C1FC13b2e729AD1Aa",
+    "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+    "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+    "fetchedAt": "2026-03-20T10:08:43.197Z"
   }
 }

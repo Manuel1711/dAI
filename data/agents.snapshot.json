@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24700875,
-  "generatedAt": "2026-03-20T19:52:43.026Z",
+  "blockNumber": 24700925,
+  "generatedAt": "2026-03-20T20:02:35.937Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24700876,
-    "fromBlockFeedback": 24700876,
+    "fromBlockIdentity": 24700926,
+    "fromBlockFeedback": 24700926,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -46357,6 +46357,31 @@
       "scoreV1": 30,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-05T20:58:47.000Z"
+    },
+    {
+      "agentId": "0xBC5",
+      "name": "Agent 0xBC5",
+      "owner": "0x749c9e639cab417ff09d2e701ace65a834d21e76",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://ag0.xyz",
+      "createdAt": "2026-01-29T14:10:59.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T19:47:35.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xc99ed7eee0b9503c9834b246ae90a189088e1b427001bb9dfd3d0aa981bc54ee",
+          "blockNumber": 24700900
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 85,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T19:47:35.000Z"
     },
     {
       "agentId": "0xBCA",
@@ -431264,6 +431289,21 @@
       "lastActivityAt": "2026-03-20T18:32:59.000Z"
     },
     {
+      "agentId": "0x71AA",
+      "name": "Zyfai Rebalancer Agent for 0x162893E618daF7C11366c375bede5a3b471a3926",
+      "owner": "0x162893e618daf7c11366c375bede5a3b471a3926",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreico4w5uhdu4ctlpj65asc3x2szmtuz6l2dfeijch3iiuf7m3jvhqy",
+      "createdAt": "2026-03-20T19:50:59.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-20T19:50:59.000Z"
+    },
+    {
       "agentId": "0x71B",
       "name": "Agent 0x71B",
       "owner": "0xca0d6c9ef96e0be03c8579fa40c410d14a081807",
@@ -447692,21 +447732,6 @@
       "agentId": "0xBC4",
       "name": "Agent 0xBC4",
       "owner": "0xb74fc0f96380f3a2b6945da6205b816c2f9db63b",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://ag0.xyz",
-      "createdAt": "2026-01-29T14:10:59.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:10:59.000Z"
-    },
-    {
-      "agentId": "0xBC5",
-      "name": "Agent 0xBC5",
-      "owner": "0x749c9e639cab417ff09d2e701ace65a834d21e76",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": "https://ag0.xyz",

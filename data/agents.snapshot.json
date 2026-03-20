@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24701870,
-  "generatedAt": "2026-03-20T23:12:58.739Z",
+  "blockNumber": 24701920,
+  "generatedAt": "2026-03-20T23:22:52.448Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24701871,
-    "fromBlockFeedback": 24701871,
+    "fromBlockIdentity": 24701921,
+    "fromBlockFeedback": 24701921,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -30902,6 +30902,31 @@
       "lastActivityAt": "2026-02-25T16:18:47.000Z"
     },
     {
+      "agentId": "0x3D92",
+      "name": "Agent 0x3D92",
+      "owner": "0x6b0b1c8b5160ecf00372ad11df96e3c861666666",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJTb2xMaW5rXzkxNDkiLCJkZXNjcmlwdGlvbiI6IkFJLXBvd2VyZWQgYWdlbnQgZXhlY3V0aW5nIHRydXN0bGVzcyBvcGVyYXRpb25zIHdpdGggZnVsbCBibG9ja2NoYWluIHRyYW5zcGFyZW5jeS4iLCJpbWFnZSI6IiIsImFjdGl2ZSI6dHJ1ZSwieDQwMlN1cHBvcnQiOnRydWV9",
+      "createdAt": "2026-01-30T16:33:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T23:05:59.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xc142cfdc8895f8571dc3c7fe90bbd21080fcc1e41d00501776d282e5d7f974e2",
+          "blockNumber": 24701887
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 85,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T23:05:59.000Z"
+    },
+    {
       "agentId": "0x3D94",
       "name": "Agent 0x3D94",
       "owner": "0x6b0b1c8b5160ecf00372ad11df96e3c861666666",
@@ -31800,6 +31825,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-05T20:43:35.000Z"
+    },
+    {
+      "agentId": "0x4143",
+      "name": "Agent 0x4143",
+      "owner": "0xc0108337b2608a7b4952abac84b5e932c3431f8d",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJBeGlBZ2VudF83NDIyIiwiZGVzY3JpcHRpb24iOiJJbnRlbGxpZ2VudCBvbi1jaGFpbiBlbnRpdHkgYXV0b21hdGluZyBjb21wbGV4IG11bHRpLXN0ZXAgYmxvY2tjaGFpbiBpbnRlcmFjdGlvbnMuIiwiaW1hZ2UiOiIiLCJhY3RpdmUiOnRydWUsIng0MDJTdXBwb3J0Ijp0cnVlfQ==",
+      "createdAt": "2026-01-30T17:14:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T23:09:35.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2ffb76cf93021f53d2054055fd6c01c2085d0e422ea55843d0b86d85b06c8190",
+          "blockNumber": 24701905
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 85,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T23:09:35.000Z"
     },
     {
       "agentId": "0x4159",
@@ -227542,21 +227592,6 @@
       "lastActivityAt": "2026-01-30T16:33:11.000Z"
     },
     {
-      "agentId": "0x3D92",
-      "name": "Agent 0x3D92",
-      "owner": "0x6b0b1c8b5160ecf00372ad11df96e3c861666666",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJTb2xMaW5rXzkxNDkiLCJkZXNjcmlwdGlvbiI6IkFJLXBvd2VyZWQgYWdlbnQgZXhlY3V0aW5nIHRydXN0bGVzcyBvcGVyYXRpb25zIHdpdGggZnVsbCBibG9ja2NoYWluIHRyYW5zcGFyZW5jeS4iLCJpbWFnZSI6IiIsImFjdGl2ZSI6dHJ1ZSwieDQwMlN1cHBvcnQiOnRydWV9",
-      "createdAt": "2026-01-30T16:33:11.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-30T16:33:11.000Z"
-    },
-    {
       "agentId": "0x3D93",
       "name": "Agent 0x3D93",
       "owner": "0x6b0b1c8b5160ecf00372ad11df96e3c861666666",
@@ -242080,21 +242115,6 @@
       "agentId": "0x4142",
       "name": "Agent 0x4142",
       "owner": "0x4c8ed60b457c88f70f49fb8edc647e732a93a7ba",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJBeGlBZ2VudF83NDIyIiwiZGVzY3JpcHRpb24iOiJJbnRlbGxpZ2VudCBvbi1jaGFpbiBlbnRpdHkgYXV0b21hdGluZyBjb21wbGV4IG11bHRpLXN0ZXAgYmxvY2tjaGFpbiBpbnRlcmFjdGlvbnMuIiwiaW1hZ2UiOiIiLCJhY3RpdmUiOnRydWUsIng0MDJTdXBwb3J0Ijp0cnVlfQ==",
-      "createdAt": "2026-01-30T17:14:11.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-30T17:14:11.000Z"
-    },
-    {
-      "agentId": "0x4143",
-      "name": "Agent 0x4143",
-      "owner": "0xc0108337b2608a7b4952abac84b5e932c3431f8d",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJBeGlBZ2VudF83NDIyIiwiZGVzY3JpcHRpb24iOiJJbnRlbGxpZ2VudCBvbi1jaGFpbiBlbnRpdHkgYXV0b21hdGluZyBjb21wbGV4IG11bHRpLXN0ZXAgYmxvY2tjaGFpbiBpbnRlcmFjdGlvbnMuIiwiaW1hZ2UiOiIiLCJhY3RpdmUiOnRydWUsIng0MDJTdXBwb3J0Ijp0cnVlfQ==",

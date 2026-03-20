@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24701722,
-  "generatedAt": "2026-03-20T22:42:24.224Z",
+  "blockNumber": 24701772,
+  "generatedAt": "2026-03-20T22:52:38.376Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24701723,
-    "fromBlockFeedback": 24701723,
+    "fromBlockIdentity": 24701773,
+    "fromBlockFeedback": 24701773,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -20175,6 +20175,31 @@
       "scoreV1": 30,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-05T19:25:11.000Z"
+    },
+    {
+      "agentId": "0x1280",
+      "name": "Agent 0x1280",
+      "owner": "0x33ee1e099ebdd946a74b644c767419e8c238a6eb",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-01-29T14:19:35.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T22:36:47.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd53dc3a09e390eb6f06ff8bfeb7b84d0042e2d9a431ea95f26ef7f1f343525ca",
+          "blockNumber": 24701743
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 85,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T22:36:47.000Z"
     },
     {
       "agentId": "0x12AE",
@@ -59185,21 +59210,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:34:35.000Z"
-    },
-    {
-      "agentId": "0x1280",
-      "name": "Agent 0x1280",
-      "owner": "0x33ee1e099ebdd946a74b644c767419e8c238a6eb",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-01-29T14:19:35.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:19:35.000Z"
     },
     {
       "agentId": "0x1281",

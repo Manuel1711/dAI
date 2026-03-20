@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24699507,
-  "generatedAt": "2026-03-20T15:18:06.035Z",
+  "blockNumber": 24699557,
+  "generatedAt": "2026-03-20T15:27:54.099Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24699508,
-    "fromBlockFeedback": 24699508,
+    "fromBlockIdentity": 24699558,
+    "fromBlockFeedback": 24699558,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -5580,6 +5580,229 @@
       "lastActivityAt": "2026-02-19T00:48:47.000Z"
     },
     {
+      "agentId": "0x58F3",
+      "name": "Football Odds Analytics Agent",
+      "owner": "0x0d68a153897b73a6e4d2eaa9b0d4802bae69532d",
+      "category": "Unknown",
+      "description": "Verifiable pre-match football odds intelligence with model consensus, public verification, and commit-reveal records.",
+      "identityURI": "https://api.footballai.bet/agent-card",
+      "createdAt": "2026-02-02T01:25:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T15:14:35.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x603ac2e33821daa56804e0959e58550e1911e9ec31f4ec3400c3a877dd668ffb",
+          "blockNumber": 24699542
+        },
+        {
+          "timestamp": "2026-03-20T15:13:11.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xf13034fb7652ee1a5a8e57ef8a2a33fd228fa0e5758b0eabb0f25386bd8e4393",
+          "blockNumber": 24699535
+        },
+        {
+          "timestamp": "2026-03-20T15:09:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x21c4c9c1267134ab8f7d49c6ebb33b304b53b82cc62590e2fb0adde2dfac9eeb",
+          "blockNumber": 24699519
+        },
+        {
+          "timestamp": "2026-02-26T06:47:11.000Z",
+          "score": 46,
+          "tag1": "quality",
+          "tag2": "yellow",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x322de6efc553837bb8e7d76a04e68aabed7b98b8d772929ead6fdf7c0ab1bd0e",
+          "blockNumber": 24539391
+        },
+        {
+          "timestamp": "2026-02-13T13:31:35.000Z",
+          "score": 95,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x060b2b9121f4c890bb49df6a63e457b2a59970b0ec51774864aeb04c1f4e4a3c",
+          "blockNumber": 24448174
+        },
+        {
+          "timestamp": "2026-02-13T13:30:59.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x3dead5dd289a65944166fc68aca5fdf32a2bf958ea56fafc52b2e96f65f22c11",
+          "blockNumber": 24448171
+        },
+        {
+          "timestamp": "2026-02-13T13:25:47.000Z",
+          "score": 99,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x6f38b259db2279b486a89a6b7afc68e4ff822f8d32f7a7eacd83a7222dca1ec2",
+          "blockNumber": 24448145
+        },
+        {
+          "timestamp": "2026-02-13T13:19:11.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xea0da25bd45b36036984c4bec6fce908ad78b67165561e13dcb95a97fd3ec8b6",
+          "blockNumber": 24448112
+        },
+        {
+          "timestamp": "2026-02-09T17:53:11.000Z",
+          "score": 1,
+          "tag1": "reachable",
+          "tag2": "a2a",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x11897a69cac1c359264b1255431d4015f9507b76f5033e0d324c4311b1d32a7b",
+          "blockNumber": 24420826
+        },
+        {
+          "timestamp": "2026-02-09T17:53:11.000Z",
+          "score": 1,
+          "tag1": "reachable",
+          "tag2": "web",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd654a7d2c7bdcaf5b4152874dc727613a823d70c843b83ff2a9fcfc35a32921c",
+          "blockNumber": 24420826
+        },
+        {
+          "timestamp": "2026-02-05T17:36:35.000Z",
+          "score": 80,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8722614e4ad32a5c705d5d39fb685e1fb0b8ee57001bc7210ab82fae03eb3869",
+          "blockNumber": 24392160
+        },
+        {
+          "timestamp": "2026-02-05T10:54:35.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x620cb3dc87918dbdd53e8bf30db8742c9c422f4772b7dbf4ba6a110196130ab6",
+          "blockNumber": 24390165
+        },
+        {
+          "timestamp": "2026-02-05T10:48:35.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x14e83c1eeed1dff4e6a687c0cf48ee91df04f71a7baccba4861a16158f57f38d",
+          "blockNumber": 24390135
+        },
+        {
+          "timestamp": "2026-02-05T07:57:47.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x1b6465e5c8102956695e9612608f40e6e023dcd5fc6943bc3c83f7b956398713",
+          "blockNumber": 24389286
+        },
+        {
+          "timestamp": "2026-02-05T07:56:59.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x10a53050c898c58190a17bdb7e96ea3f71f3d93b0e7fd5802adfcf19bd8b61d1",
+          "blockNumber": 24389282
+        },
+        {
+          "timestamp": "2026-02-05T07:56:35.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xafa77af09883ef48c6bf19485f916a590d7ef1e81b791b692f474ddb9ba03677",
+          "blockNumber": 24389280
+        },
+        {
+          "timestamp": "2026-02-05T07:56:11.000Z",
+          "score": 100,
+          "tag1": "football",
+          "tag2": "ai sys",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x5306836a65d2e39c91c13d69504b18b04ecb0f42d381bef2a3567c24b3e530ea",
+          "blockNumber": 24389278
+        },
+        {
+          "timestamp": "2026-02-05T01:37:47.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x4a0ea4104b76ad2e5da5e7b1a9f0e38d711a3c0ea95d9511bd8edeecd48b3733",
+          "blockNumber": 24387401
+        },
+        {
+          "timestamp": "2026-02-05T00:20:47.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xf1dfbf21f5d780e352a645ff25a48c9a792ca014d492d87a9423051d4f6cdda3",
+          "blockNumber": 24387017
+        },
+        {
+          "timestamp": "2026-02-04T16:40:23.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x5f33872be0905c3123c2d59490e13ba9f7865241e8bdd9ec8336875b074f0e06",
+          "blockNumber": 24384741
+        },
+        {
+          "timestamp": "2026-02-04T16:39:47.000Z",
+          "score": 80,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x6bccc79be477b018c87fa4d409b879c563fc7a131eae8dc1b8650926ebd97690",
+          "blockNumber": 24384738
+        },
+        {
+          "timestamp": "2026-02-04T03:21:23.000Z",
+          "score": 100,
+          "tag1": null,
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xe58fcec27aeca17b02c9a217665d2525fc3484638141bf9ed238e365ef8ecf9b",
+          "blockNumber": 24380767
+        },
+        {
+          "timestamp": "2026-02-03T02:45:59.000Z",
+          "score": 100,
+          "tag1": "helpful",
+          "tag2": "fast",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x1f82079a92df0652a656fcbaa7bb94673e6110b5becb7460de6c2dabf322e58d",
+          "blockNumber": 24373435
+        }
+      ],
+      "image": "https://gateway.pinata.cloud/ipfs/QmP7SMLGvi5bRZaFnhNneTicV3PFwRw4WKTMBFaUDMH9MZ",
+      "uniqueRaters": 12,
+      "scoreV1": 87.0435,
+      "feedbackCount": 23,
+      "lastActivityAt": "2026-03-20T15:14:35.000Z"
+    },
+    {
       "agentId": "0x4E2E",
       "name": "Jeyui",
       "owner": "0x0888f10636d1c1df9b051be1908ddeef18beb523",
@@ -6211,202 +6434,6 @@
       "scoreV1": 86.7619,
       "feedbackCount": 21,
       "lastActivityAt": "2026-02-19T09:31:47.000Z"
-    },
-    {
-      "agentId": "0x58F3",
-      "name": "Football Odds Analytics Agent",
-      "owner": "0x0d68a153897b73a6e4d2eaa9b0d4802bae69532d",
-      "category": "Unknown",
-      "description": "Verifiable pre-match football odds intelligence with model consensus, public verification, and commit-reveal records.",
-      "identityURI": "https://api.footballai.bet/agent-card",
-      "createdAt": "2026-02-02T01:25:47.000Z",
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-02-26T06:47:11.000Z",
-          "score": 46,
-          "tag1": "quality",
-          "tag2": "yellow",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x322de6efc553837bb8e7d76a04e68aabed7b98b8d772929ead6fdf7c0ab1bd0e",
-          "blockNumber": 24539391
-        },
-        {
-          "timestamp": "2026-02-13T13:31:35.000Z",
-          "score": 95,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x060b2b9121f4c890bb49df6a63e457b2a59970b0ec51774864aeb04c1f4e4a3c",
-          "blockNumber": 24448174
-        },
-        {
-          "timestamp": "2026-02-13T13:30:59.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x3dead5dd289a65944166fc68aca5fdf32a2bf958ea56fafc52b2e96f65f22c11",
-          "blockNumber": 24448171
-        },
-        {
-          "timestamp": "2026-02-13T13:25:47.000Z",
-          "score": 99,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x6f38b259db2279b486a89a6b7afc68e4ff822f8d32f7a7eacd83a7222dca1ec2",
-          "blockNumber": 24448145
-        },
-        {
-          "timestamp": "2026-02-13T13:19:11.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xea0da25bd45b36036984c4bec6fce908ad78b67165561e13dcb95a97fd3ec8b6",
-          "blockNumber": 24448112
-        },
-        {
-          "timestamp": "2026-02-09T17:53:11.000Z",
-          "score": 1,
-          "tag1": "reachable",
-          "tag2": "a2a",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x11897a69cac1c359264b1255431d4015f9507b76f5033e0d324c4311b1d32a7b",
-          "blockNumber": 24420826
-        },
-        {
-          "timestamp": "2026-02-09T17:53:11.000Z",
-          "score": 1,
-          "tag1": "reachable",
-          "tag2": "web",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xd654a7d2c7bdcaf5b4152874dc727613a823d70c843b83ff2a9fcfc35a32921c",
-          "blockNumber": 24420826
-        },
-        {
-          "timestamp": "2026-02-05T17:36:35.000Z",
-          "score": 80,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8722614e4ad32a5c705d5d39fb685e1fb0b8ee57001bc7210ab82fae03eb3869",
-          "blockNumber": 24392160
-        },
-        {
-          "timestamp": "2026-02-05T10:54:35.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x620cb3dc87918dbdd53e8bf30db8742c9c422f4772b7dbf4ba6a110196130ab6",
-          "blockNumber": 24390165
-        },
-        {
-          "timestamp": "2026-02-05T10:48:35.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x14e83c1eeed1dff4e6a687c0cf48ee91df04f71a7baccba4861a16158f57f38d",
-          "blockNumber": 24390135
-        },
-        {
-          "timestamp": "2026-02-05T07:57:47.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x1b6465e5c8102956695e9612608f40e6e023dcd5fc6943bc3c83f7b956398713",
-          "blockNumber": 24389286
-        },
-        {
-          "timestamp": "2026-02-05T07:56:59.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x10a53050c898c58190a17bdb7e96ea3f71f3d93b0e7fd5802adfcf19bd8b61d1",
-          "blockNumber": 24389282
-        },
-        {
-          "timestamp": "2026-02-05T07:56:35.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xafa77af09883ef48c6bf19485f916a590d7ef1e81b791b692f474ddb9ba03677",
-          "blockNumber": 24389280
-        },
-        {
-          "timestamp": "2026-02-05T07:56:11.000Z",
-          "score": 100,
-          "tag1": "football",
-          "tag2": "ai sys",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x5306836a65d2e39c91c13d69504b18b04ecb0f42d381bef2a3567c24b3e530ea",
-          "blockNumber": 24389278
-        },
-        {
-          "timestamp": "2026-02-05T01:37:47.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x4a0ea4104b76ad2e5da5e7b1a9f0e38d711a3c0ea95d9511bd8edeecd48b3733",
-          "blockNumber": 24387401
-        },
-        {
-          "timestamp": "2026-02-05T00:20:47.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xf1dfbf21f5d780e352a645ff25a48c9a792ca014d492d87a9423051d4f6cdda3",
-          "blockNumber": 24387017
-        },
-        {
-          "timestamp": "2026-02-04T16:40:23.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x5f33872be0905c3123c2d59490e13ba9f7865241e8bdd9ec8336875b074f0e06",
-          "blockNumber": 24384741
-        },
-        {
-          "timestamp": "2026-02-04T16:39:47.000Z",
-          "score": 80,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x6bccc79be477b018c87fa4d409b879c563fc7a131eae8dc1b8650926ebd97690",
-          "blockNumber": 24384738
-        },
-        {
-          "timestamp": "2026-02-04T03:21:23.000Z",
-          "score": 100,
-          "tag1": null,
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xe58fcec27aeca17b02c9a217665d2525fc3484638141bf9ed238e365ef8ecf9b",
-          "blockNumber": 24380767
-        },
-        {
-          "timestamp": "2026-02-03T02:45:59.000Z",
-          "score": 100,
-          "tag1": "helpful",
-          "tag2": "fast",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x1f82079a92df0652a656fcbaa7bb94673e6110b5becb7460de6c2dabf322e58d",
-          "blockNumber": 24373435
-        }
-      ],
-      "image": "https://gateway.pinata.cloud/ipfs/QmP7SMLGvi5bRZaFnhNneTicV3PFwRw4WKTMBFaUDMH9MZ",
-      "uniqueRaters": 9,
-      "scoreV1": 85.1,
-      "feedbackCount": 20,
-      "lastActivityAt": "2026-02-26T06:47:11.000Z"
     },
     {
       "agentId": "0x2FEB",

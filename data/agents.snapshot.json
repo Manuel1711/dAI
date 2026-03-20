@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24701821,
-  "generatedAt": "2026-03-20T23:02:21.501Z",
+  "blockNumber": 24701870,
+  "generatedAt": "2026-03-20T23:12:58.739Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24701822,
-    "fromBlockFeedback": 24701822,
+    "fromBlockIdentity": 24701871,
+    "fromBlockFeedback": 24701871,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -32852,6 +32852,31 @@
       "lastActivityAt": "2026-02-11T13:28:23.000Z"
     },
     {
+      "agentId": "0x47FE",
+      "name": "Agent 0x47FE",
+      "owner": "0x535c00275f8b99ae1e0c24c2a0d6b3be6c753da6",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJOZXhWYXVsdF9jZDFjIiwiZGVzY3JpcHRpb24iOiJBdXRvbm9tb3VzIG9uLWNoYWluIGludGVsbGlnZW5jZSBkcml2aW5nIGRlY2VudHJhbGl6ZWQgZGVjaXNpb24tbWFraW5nIGFjcm9zcyBXZWIzIHByb3RvY29scy4iLCJpbWFnZSI6IiIsImFjdGl2ZSI6dHJ1ZSwieDQwMlN1cHBvcnQiOnRydWV9",
+      "createdAt": "2026-01-30T17:44:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T22:56:11.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x11f90a71617dff9fd956c20a251dde41c8b20d881b9ba4e14870c3b22af6f680",
+          "blockNumber": 24701839
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T22:56:11.000Z"
+    },
+    {
       "agentId": "0x480",
       "name": "Agent 0x480",
       "owner": "0x7f107106a26011017d8fc3aa11320fd0edc3ad6a",
@@ -38352,6 +38377,31 @@
       "lastActivityAt": "2026-02-09T17:56:47.000Z"
     },
     {
+      "agentId": "0x5A79",
+      "name": "Agent 0x5A79",
+      "owner": "0x304a1729e2c9a64e34777369d4194e0c597acbbb",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-02-06T17:09:23.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T22:59:23.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xfccb561da6fc482b3ff6b390ed0bc6a4d9f4815a0cf3ee971bbb7901733d0e7d",
+          "blockNumber": 24701855
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T22:59:23.000Z"
+    },
+    {
       "agentId": "0x5A7E",
       "name": "Agent 0x5A7E",
       "owner": "0x6479da3ebe9a9a650ee80bf7effb3c8117a751be",
@@ -41850,6 +41900,31 @@
       "scoreV1": 85,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-10T19:06:35.000Z"
+    },
+    {
+      "agentId": "0x6687",
+      "name": "Agent 0x6687",
+      "owner": "0x99fca2815ab79094a343daabf5b9cb6ad41f25e6",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "{\"name\":\"amber_ermine_42d4fz\",\"bio\":\"\",\"type\":\"user\",\"registered\":\"2026-02-21T14:40:20.086Z\"}",
+      "createdAt": "2026-02-21T14:40:23.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T23:00:35.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x37638341a96d84436b615d8518b53cc3b91f2222c54ee4cc803554b64e3ff7a8",
+          "blockNumber": 24701860
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T23:00:35.000Z"
     },
     {
       "agentId": "0x676",
@@ -268927,21 +269002,6 @@
       "lastActivityAt": "2026-01-30T17:44:11.000Z"
     },
     {
-      "agentId": "0x47FE",
-      "name": "Agent 0x47FE",
-      "owner": "0x535c00275f8b99ae1e0c24c2a0d6b3be6c753da6",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJOZXhWYXVsdF9jZDFjIiwiZGVzY3JpcHRpb24iOiJBdXRvbm9tb3VzIG9uLWNoYWluIGludGVsbGlnZW5jZSBkcml2aW5nIGRlY2VudHJhbGl6ZWQgZGVjaXNpb24tbWFraW5nIGFjcm9zcyBXZWIzIHByb3RvY29scy4iLCJpbWFnZSI6IiIsImFjdGl2ZSI6dHJ1ZSwieDQwMlN1cHBvcnQiOnRydWV9",
-      "createdAt": "2026-01-30T17:44:11.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-30T17:44:11.000Z"
-    },
-    {
       "agentId": "0x47FF",
       "name": "Agent 0x47FF",
       "owner": "0x20c0902c77c1b13a0fafc65c3e49a687da3d1845",
@@ -339517,21 +339577,6 @@
       "lastActivityAt": "2026-02-06T15:02:11.000Z"
     },
     {
-      "agentId": "0x5A79",
-      "name": "Agent 0x5A79",
-      "owner": "0x304a1729e2c9a64e34777369d4194e0c597acbbb",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-02-06T17:09:23.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-02-06T17:09:23.000Z"
-    },
-    {
       "agentId": "0x5A7A",
       "name": "Agent 0x5A7A",
       "owner": "0x304a1729e2c9a64e34777369d4194e0c597acbbb",
@@ -386255,21 +386300,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-02-21T14:40:11.000Z"
-    },
-    {
-      "agentId": "0x6687",
-      "name": "Agent 0x6687",
-      "owner": "0x99fca2815ab79094a343daabf5b9cb6ad41f25e6",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "{\"name\":\"amber_ermine_42d4fz\",\"bio\":\"\",\"type\":\"user\",\"registered\":\"2026-02-21T14:40:20.086Z\"}",
-      "createdAt": "2026-02-21T14:40:23.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-02-21T14:40:23.000Z"
     },
     {
       "agentId": "0x6688",

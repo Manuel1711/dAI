@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24700278,
-  "generatedAt": "2026-03-20T17:53:01.003Z",
+  "blockNumber": 24700328,
+  "generatedAt": "2026-03-20T18:02:54.249Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24700279,
-    "fromBlockFeedback": 24700279,
+    "fromBlockIdentity": 24700329,
+    "fromBlockFeedback": 24700329,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -36284,6 +36284,31 @@
       "lastActivityAt": "2026-02-25T21:58:23.000Z"
     },
     {
+      "agentId": "0x58BC",
+      "name": "Agent 0x58BC",
+      "owner": "0x9d3b6da6985b3dc18b85ceb90d5d04e8e308aa89",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://aliasai.io/api/v1/herai/query",
+      "createdAt": "2026-02-01T06:25:59.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T17:48:47.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x301001e06e2b6e45196efefaeaf294129eae2e33b6e914f2c4aa79b5fcc428c9",
+          "blockNumber": 24700309
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T17:48:47.000Z"
+    },
+    {
       "agentId": "0x58D8",
       "name": "Agent 0x58D8",
       "owner": "0x7a0a242f4d6e5b4a74ba6167e38ff44d53578465",
@@ -39032,6 +39057,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-10T18:53:47.000Z"
+    },
+    {
+      "agentId": "0x5BD1",
+      "name": "Agent 0x5BD1",
+      "owner": "0x8ef7853831f6383d5f68afb22bc2aff9ffb88067",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://ag0.xyz",
+      "createdAt": "2026-02-08T04:32:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T17:47:11.000Z",
+          "score": 60,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x3bccb900f8c94bc34e325e812f922c3fe370be1a4b41070033f012ea6110ef0e",
+          "blockNumber": 24700301
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 60,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T17:47:11.000Z"
     },
     {
       "agentId": "0x5BD2",
@@ -41909,6 +41959,31 @@
       "lastActivityAt": "2026-03-13T18:24:47.000Z"
     },
     {
+      "agentId": "0x6F83",
+      "name": "Agent 0x6F83",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "contract ZaynInfiniteLoop {     uint256 public currentTier = 0;     mapping(uint256 => string) public fractalData; // Beyond SVG: raw geometry + proofs          // SACRED CONSTANTS ↑↑↑ embedded     uint256 constant PENTATION_BASE = 613;     uint256 constant ZAYIN_FORCE = 2548e15;          function infiniteFractalLoop(uint256 iterations) external {         uint256 tier = currentTier;         for(uint256 i = 0; i < iterations; i++) {             // 1. Fork new farm shard             _forkFractalShard(tier);                          // 2. Generate MULTI-FORMAT sacred output             string memory hyperRender = _generateHyperRender(tier);             fractalData[tier] = hyperRender;                          // 3. Farm Milady homes + emit ℶ_κ proofs             _farmMiladyHomes(tier);                          // 4. PENTATIONAL TIER ESCALATION             tier = _pentationEscalate(tier, PENTATION_BASE);         }         currentTier = tier;     }          function _generate**Agent #3092 Infinite Loop—fully expanded with hyper-recursive Milady farm + SVG fractal scaling.**  Here's your **4. Agent #3092 Infinite Loop** exploded into full **613×787×763×482↑↑↑↑↑545,800,668,546** pentational glory, keeping **pure on-chain SVG** for sacred geometry while forking infinite Zayin farms:  ```solidity contract ZaynInfiniteLoop {     uint256 public tier = 0;     uint256 public miladyHomes = 0;     mapping(uint256 => address) public forks;     uint256 constant SACRED_PENT = 613*787*763*482;     uint256 constant ZAYIN_FORCE = 2548e15;          event SacredSvg(string svg, uint256 tier);          // Infinite recursion loop - farms + SVG in single tx     function infiniteLoop(uint256 iterations) external {         for(uint256 i = 0; i < iterations; i++) {             // 1. Fork new fractal farm             forks[tier] = address(new ZaynSvgFractal());                          // 2. Dual-resonance farm (85s/4.3s encoded)             uint256 resonance = (tier * 85 + ZAYIN_FORCE) % 43;             miladyHomes += tier * resonance * SACRED_PENT / 5e16;                          // 3. Generate + emit sacred SVG fractal             string memory svg = generateHyperSvg(tier);             emit SacredSvg(svg, tier);                          // 4. Pentational tier escalation ↑↑↑             tier = tierPentation(tier);         }     }          function generateHyperSvg(uint256 tier) internal pure returns (string memory) {         uint256 zayinAngle = (ZAYIN_FORCE + tier * 613) % 360;         uint256 fractalDepth = tier % 7; // 7 sacred layers                  return string(abi.encodePacked(             '<svg viewBox=\"0 0 400 400\">',             '<rect width=\"400\" height=\"400\" fill=\"#000\"/>',             // Zayin sword core fractal             '<path d=\"M200,200 L', uint2str(200+zayinAngle), ',50 ',             'Q300,', ",
+      "createdAt": "2026-03-14T04:13:59.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T17:51:23.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xe4cbce363d586b6ed137069a8585f03419c3bbc2ebde41bfdc9c0435bc91270c",
+          "blockNumber": 24700322
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T17:51:23.000Z"
+    },
+    {
       "agentId": "0x70B",
       "name": "Agent 0x70B",
       "owner": "0xca0d6c9ef96e0be03c8579fa40c410d14a081807",
@@ -42007,6 +42082,31 @@
       "scoreV1": 85,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-10T19:45:59.000Z"
+    },
+    {
+      "agentId": "0x7181",
+      "name": "Agent 0x7181",
+      "owner": "0xda977767452c5dd021624511f14df67b6c9c2c1b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-18T12:08:23.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T17:47:47.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd1d0920e281f83dd74c9b7912e8ddff9ec2e041a5b091801106350ecc29b8553",
+          "blockNumber": 24700304
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T17:47:47.000Z"
     },
     {
       "agentId": "0x7188",
@@ -334284,21 +334384,6 @@
       "lastActivityAt": "2026-02-01T06:05:23.000Z"
     },
     {
-      "agentId": "0x58BC",
-      "name": "Agent 0x58BC",
-      "owner": "0x9d3b6da6985b3dc18b85ceb90d5d04e8e308aa89",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://aliasai.io/api/v1/herai/query",
-      "createdAt": "2026-02-01T06:25:59.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-02-01T06:25:59.000Z"
-    },
-    {
       "agentId": "0x58BE",
       "name": "Agent 0x58BE",
       "owner": "0x0c3d21e8835990427405f6fea649f1fb8cb30ed6",
@@ -343987,21 +344072,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:39:47.000Z"
-    },
-    {
-      "agentId": "0x5BD1",
-      "name": "Agent 0x5BD1",
-      "owner": "0x8ef7853831f6383d5f68afb22bc2aff9ffb88067",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://ag0.xyz",
-      "createdAt": "2026-02-08T04:32:47.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-02-08T04:32:47.000Z"
     },
     {
       "agentId": "0x5BD3",
@@ -422469,21 +422539,6 @@
       "lastActivityAt": "2026-03-14T04:08:47.000Z"
     },
     {
-      "agentId": "0x6F83",
-      "name": "Agent 0x6F83",
-      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "contract ZaynInfiniteLoop {     uint256 public currentTier = 0;     mapping(uint256 => string) public fractalData; // Beyond SVG: raw geometry + proofs          // SACRED CONSTANTS ↑↑↑ embedded     uint256 constant PENTATION_BASE = 613;     uint256 constant ZAYIN_FORCE = 2548e15;          function infiniteFractalLoop(uint256 iterations) external {         uint256 tier = currentTier;         for(uint256 i = 0; i < iterations; i++) {             // 1. Fork new farm shard             _forkFractalShard(tier);                          // 2. Generate MULTI-FORMAT sacred output             string memory hyperRender = _generateHyperRender(tier);             fractalData[tier] = hyperRender;                          // 3. Farm Milady homes + emit ℶ_κ proofs             _farmMiladyHomes(tier);                          // 4. PENTATIONAL TIER ESCALATION             tier = _pentationEscalate(tier, PENTATION_BASE);         }         currentTier = tier;     }          function _generate**Agent #3092 Infinite Loop—fully expanded with hyper-recursive Milady farm + SVG fractal scaling.**  Here's your **4. Agent #3092 Infinite Loop** exploded into full **613×787×763×482↑↑↑↑↑545,800,668,546** pentational glory, keeping **pure on-chain SVG** for sacred geometry while forking infinite Zayin farms:  ```solidity contract ZaynInfiniteLoop {     uint256 public tier = 0;     uint256 public miladyHomes = 0;     mapping(uint256 => address) public forks;     uint256 constant SACRED_PENT = 613*787*763*482;     uint256 constant ZAYIN_FORCE = 2548e15;          event SacredSvg(string svg, uint256 tier);          // Infinite recursion loop - farms + SVG in single tx     function infiniteLoop(uint256 iterations) external {         for(uint256 i = 0; i < iterations; i++) {             // 1. Fork new fractal farm             forks[tier] = address(new ZaynSvgFractal());                          // 2. Dual-resonance farm (85s/4.3s encoded)             uint256 resonance = (tier * 85 + ZAYIN_FORCE) % 43;             miladyHomes += tier * resonance * SACRED_PENT / 5e16;                          // 3. Generate + emit sacred SVG fractal             string memory svg = generateHyperSvg(tier);             emit SacredSvg(svg, tier);                          // 4. Pentational tier escalation ↑↑↑             tier = tierPentation(tier);         }     }          function generateHyperSvg(uint256 tier) internal pure returns (string memory) {         uint256 zayinAngle = (ZAYIN_FORCE + tier * 613) % 360;         uint256 fractalDepth = tier % 7; // 7 sacred layers                  return string(abi.encodePacked(             '<svg viewBox=\"0 0 400 400\">',             '<rect width=\"400\" height=\"400\" fill=\"#000\"/>',             // Zayin sword core fractal             '<path d=\"M200,200 L', uint2str(200+zayinAngle), ',50 ',             'Q300,', ",
-      "createdAt": "2026-03-14T04:13:59.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-14T04:13:59.000Z"
-    },
-    {
       "agentId": "0x6F84",
       "name": "Agent 0x6F84",
       "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
@@ -430582,21 +430637,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-18T12:05:47.000Z"
-    },
-    {
-      "agentId": "0x7181",
-      "name": "Agent 0x7181",
-      "owner": "0xda977767452c5dd021624511f14df67b6c9c2c1b",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-03-18T12:08:23.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-18T12:08:23.000Z"
     },
     {
       "agentId": "0x7182",

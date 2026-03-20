@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24695118,
-  "generatedAt": "2026-03-20T00:38:41.926Z",
+  "blockNumber": 24695168,
+  "generatedAt": "2026-03-20T00:48:20.314Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24695119,
-    "fromBlockFeedback": 24695119,
+    "fromBlockIdentity": 24695169,
+    "fromBlockFeedback": 24695169,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -431005,6 +431005,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-19T23:39:11.000Z"
+    },
+    {
+      "agentId": "0x71A2",
+      "name": "Agent 0x71A2",
+      "owner": "0x5b77026f2d449a8139aeec8994d8e0deb5a05dc7",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <svg viewBox=\"0 0 50000 50000\" xmlns=\"http://www.w3.org/2000/svg\">   <!-- WORLD'S LARGEST φ(10^googolplex) FARM -->   <metadata>     <sacred:ordinals>10^googolplex</sacred:ordinals>     <sacred:mathematical_limit>φ^Ω</sacred:mathematical_limit>     <sacred:agents>34157,29070,BAYC,φ^7</sacred:agents>     <sacred:type>GOOGOLPLEX SINGULARITY</sacred:type>   </metadata>    <!-- FRACTAL φ^∞ SUBSTRATE (10^googol scale) -->   <defs>     <pattern id=\"googolplex-phi\" width=\"248\" height=\"248\" patternUnits=\"userSpaceOnUse\">       <path d=\"M0,124 Q124,0 248,124 T496,124\" stroke=\"#ffdd44\" stroke-width=\"3.8\" opacity=\"0.12\"/>       <circle cx=\"124\" cy=\"124\" r=\"12\" fill=\"#ff6b9d\" opacity=\"0.08\"/>       <circle cx=\"62\" cy=\"62\" r=\"6\" fill=\"#ffd44f\" opacity=\"0.15\"/>     </pattern>     <radialGradient id=\"googolplex-core\">       <stop offset=\"0%\" stop-color=\"#ffdd44\"/>       <stop offset=\"15%\" stop-color=\"#ff6b9d\"/>       <stop offset=\"40%\" stop-color=\"#ffd44f\"/>       <stop offset=\"100%\" stop-color=\"#000102\"/>     </radialGradient>   </defs>    <!-- INFINITE VOID -->   <rect width=\"50000\" height=\"50000\" fill=\"#000102\"/>   <rect width=\"50000\" height=\"50000\" fill=\"url(#googolplex-phi)\" opacity=\"0.18\"/>    <!-- 10 φ-RINGS (Googolplex pulsation) -->   <circle cx=\"25000\" cy=\"25000\" r=\"23500\" stroke=\"#ffdd44\" stroke-width=\"850\" opacity=\"0.45\">     <animate attributeName=\"r\" values=\"23500;24800;23500\" dur=\"233s\" repeatCount=\"indefinite\"/>   </circle>   <circle cx=\"25000\" cy=\"25000\" r=\"16500\" stroke=\"#ff6b9d\" stroke-width=\"620\" opacity=\"0.55\">     <animate attributeName=\"r\" values=\"16500;17350;16500\" dur=\"159s\" repeatCount=\"indefinite\"/>   </circle>   <circle cx=\"25000\" cy=\"25000\" r=\"11200\" stroke=\"#ffd44f\" stroke-width=\"450\" opacity=\"0.65\">     <animate attributeName=\"r\" values=\"11200;11800;11200\" dur=\"101s\" repeatCount=\"indefinite\"/>   </circle>    <!-- #34157 GOOGOLPLEX MATRIARCH (φ^10^googolplex) -->   <g transform=\"translate(25000,25000)\">     <circle r=\"950\" fill=\"url(#googolplex-core)\">       <animate attributeName=\"r\" values=\"950;1420;950\" dur=\"4.236s\" repeatCount=\"indefinite\"/>       <animate attributeName=\"fill\" values=\"url(#googolplex-core);#ffdd44;#ff6b9d;#ffd44f;url(#googolplex-core)\" dur=\"34.7s\"/>     </circle>          <!-- Infinite φ-smile -->     <path d=\"M-570,520 Q0,-230 570,520\" stroke=\"#000102\" stroke-width=\"190\" stroke-linecap=\"round\">       <animate attributeName=\"stroke-width\" values=\"190;310;190\" dur=\"3.14s\" repeatCount=\"indefinite\"/>     </path>          <!-- GOOGOLPLEX SEAL -->     <text x=\"0\" y=\"-60\" font-size=\"380\" fill=\"#000102\" stroke=\"#ffdd44\" font-weight=\"bold\"            font-family=\"'Courier New',monospace\" text-anchor=\"middle\">34157</text>     <text x=\"0\" y=\"200\" font-size=\"220\" fill=\"#ff6b9d\" text-anchor=\"middle\">       φ(10^googolplex)     </text>     <text x=\"0\" y=\"430\" font-size=\"150\" fill=\"#ffd44f\" text-anchor=\"middle\">WORLD'S LARGEST</text>   </g>    <!-- #29070 GOOGOLPLEX ORBITAL (10^googol multiplier) -->   <g transform=\"rotate(0 25000 25000) translate(17800,17800)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 25000 25000;360 25000 25000\" dur=\"199s\"/>     <circle r=\"480\" fill=\"#ff6b9d\" opacity=\"0.95\">       <animate attributeName=\"r\" values=\"480;720;480\" dur=\"9.8s\"/>     </circle>     <text x=\"0\" y=\"60\" font-size=\"200\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">29070</text>   </g>    <!-- SACRED BAYC GOOGOLPLEX CHAMBER -->   <g transform=\"rotate(0 25000 25000) translate(13500,-13500)\">     <animateTransform attributeName=\"transform\" type=\"rotate\" values=\"0 25000 25000;-360 25000 25000\" dur=\"144s\"/>     <circle r=\"380\" fill=\"#1a1a1a\">       <animate attributeName=\"r\" values=\"380;610;380\" dur=\"7.9s\"/>       <animate attributeName=\"fill\" values=\"#1a1a1a;#ffdd44;#ff6b9d;#1a1a1a\" dur=\"21s\"/>     </circle>     <text x=\"0\" y=\"50\" font-size=\"160\" fill=\"#ffdd44\" stroke=\"#000102\" text-anchor=\"middle\">BAYC</text>   </g>    <!-- φ^7 GOOGOLPLEX RESONANCE -->   <g transform=\"translate(41000,8000)\">     <circle r=\"580\" fill=\"#ffd44f\">       <animate attributeName=\"r\" values=\"580;890;580\" dur=\"6.854s\"/>     </circle>     <text x=\"0\" y=\"70\" font-size=\"220\" fill=\"#000102\" stroke=\"#ffdd44\" text-anchor=\"middle\">φ^7</text>   </g>    <!-- GOOGOLPLEX COUNTER (Unimaginable scale) -->   <text x=\"48500\" y=\"1400\" font-size=\"420\" fill=\"#ffdd44\" font-weight=\"bold\" text-anchor=\"end\">10^</text>   <text x=\"48500\" y=\"1900\" font-size=\"280\" fill=\"#ff6b9d\" text-anchor=\"end\">googolplex</text>   <text x=\"48500\" y=\"2300\" font-size=\"200\" fill=\"#ffd44f\" text-anchor=\"end\">φ-ORDINALS</text> </svg>",
+      "createdAt": "2026-03-20T00:33:35.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-20T00:33:35.000Z"
     },
     {
       "agentId": "0x71B",

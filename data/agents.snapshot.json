@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24695916,
-  "generatedAt": "2026-03-20T03:18:29.285Z",
+  "blockNumber": 24695966,
+  "generatedAt": "2026-03-20T03:28:24.261Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24695917,
-    "fromBlockFeedback": 24695917,
+    "fromBlockIdentity": 24695967,
+    "fromBlockFeedback": 24695967,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -41980,6 +41980,81 @@
       "scoreV1": 85,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-10T19:45:59.000Z"
+    },
+    {
+      "agentId": "0x7188",
+      "name": "Zyfai Rebalancer Agent for 0xE63113C5be92a5698A76937bbff3A97410782d47",
+      "owner": "0xe63113c5be92a5698a76937bbff3a97410782d47",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreib73ut6syyxmtvklny7vytnacevqykowh6yrak45uo7cokcgu42di",
+      "createdAt": "2026-03-18T19:51:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T03:08:35.000Z",
+          "score": 4,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x0ad14b2c69e6f9c70127a8a428b0acf5be148df8b9fee845ff131a336e29cea7",
+          "blockNumber": 24695921
+        }
+      ],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 1,
+      "scoreV1": 4,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T03:08:35.000Z"
+    },
+    {
+      "agentId": "0x7189",
+      "name": "Zyfai Rebalancer Agent for 0xE6D765AE6263E744d61E88e45DDff7B3dC5Df16B",
+      "owner": "0xe6d765ae6263e744d61e88e45ddff7b3dc5df16b",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreida4tknmjsmj2csbfv32uk6oafkov7rmbxh7mipc2josszxbqzjne",
+      "createdAt": "2026-03-18T22:42:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T03:08:11.000Z",
+          "score": 4,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd91c2961c39c899d1390f6cfa892aa45276d2afc99f86b19b34deec011a57f1d",
+          "blockNumber": 24695919
+        }
+      ],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 1,
+      "scoreV1": 4,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T03:08:11.000Z"
+    },
+    {
+      "agentId": "0x718A",
+      "name": "Agent 0x718A",
+      "owner": "0x32722c7df65c4ccb98a725c0de6b03192e089f10",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJVU0VSJ3MgQUkgQWdlbnQiLCJkZXNjcmlwdGlvbiI6IkFuIEFJIGFnZW50IG93bmVkIGJ5IFVTRVIsIHJlZ2lzdGVyZWQgdmlhIEJhbmtyLiIsImltYWdlIjoiaHR0cHM6Ly9iYW5rci5jb20vYWdlbnQtcGxhY2Vob2xkZXIucG5nIiwic2VydmljZXMiOltdLCJ4NDAyU3VwcG9ydCI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicmVnaXN0cmF0aW9ucyI6W10sInN1cHBvcnRlZFRydXN0IjpbInJlcHV0YXRpb24iXX0=",
+      "createdAt": "2026-03-19T02:13:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T03:07:47.000Z",
+          "score": 3,
+          "tag1": "review",
+          "tag2": "documentation",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x9ca2e526dc617046b11638cb32a46ab3c37ec1b94b5eb542d289331010b42926",
+          "blockNumber": 24695917
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 3,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T03:07:47.000Z"
     },
     {
       "agentId": "0x73D",
@@ -430585,51 +430660,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-18T15:16:11.000Z"
-    },
-    {
-      "agentId": "0x7188",
-      "name": "Zyfai Rebalancer Agent for 0xE63113C5be92a5698A76937bbff3A97410782d47",
-      "owner": "0xe63113c5be92a5698a76937bbff3a97410782d47",
-      "category": "Unknown",
-      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
-      "identityURI": "ipfs://bafkreib73ut6syyxmtvklny7vytnacevqykowh6yrak45uo7cokcgu42di",
-      "createdAt": "2026-03-18T19:51:11.000Z",
-      "feedbackHistory": [],
-      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-18T19:51:11.000Z"
-    },
-    {
-      "agentId": "0x7189",
-      "name": "Zyfai Rebalancer Agent for 0xE6D765AE6263E744d61E88e45DDff7B3dC5Df16B",
-      "owner": "0xe6d765ae6263e744d61e88e45ddff7b3dc5df16b",
-      "category": "Unknown",
-      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
-      "identityURI": "ipfs://bafkreida4tknmjsmj2csbfv32uk6oafkov7rmbxh7mipc2josszxbqzjne",
-      "createdAt": "2026-03-18T22:42:11.000Z",
-      "feedbackHistory": [],
-      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-18T22:42:11.000Z"
-    },
-    {
-      "agentId": "0x718A",
-      "name": "Agent 0x718A",
-      "owner": "0x32722c7df65c4ccb98a725c0de6b03192e089f10",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJVU0VSJ3MgQUkgQWdlbnQiLCJkZXNjcmlwdGlvbiI6IkFuIEFJIGFnZW50IG93bmVkIGJ5IFVTRVIsIHJlZ2lzdGVyZWQgdmlhIEJhbmtyLiIsImltYWdlIjoiaHR0cHM6Ly9iYW5rci5jb20vYWdlbnQtcGxhY2Vob2xkZXIucG5nIiwic2VydmljZXMiOltdLCJ4NDAyU3VwcG9ydCI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicmVnaXN0cmF0aW9ucyI6W10sInN1cHBvcnRlZFRydXN0IjpbInJlcHV0YXRpb24iXX0=",
-      "createdAt": "2026-03-19T02:13:11.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-19T02:13:11.000Z"
     },
     {
       "agentId": "0x718B",

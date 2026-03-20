@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24700229,
-  "generatedAt": "2026-03-20T17:43:12.899Z",
+  "blockNumber": 24700278,
+  "generatedAt": "2026-03-20T17:53:01.003Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24700230,
-    "fromBlockFeedback": 24700230,
+    "fromBlockIdentity": 24700279,
+    "fromBlockFeedback": 24700279,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },

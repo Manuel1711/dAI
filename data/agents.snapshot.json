@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24701424,
-  "generatedAt": "2026-03-20T21:42:41.660Z",
+  "blockNumber": 24701474,
+  "generatedAt": "2026-03-20T21:52:46.410Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24701425,
-    "fromBlockFeedback": 24701425,
+    "fromBlockIdentity": 24701475,
+    "fromBlockFeedback": 24701475,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -41875,6 +41875,31 @@
       "scoreV1": 85,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-10T19:17:11.000Z"
+    },
+    {
+      "agentId": "0x688A",
+      "name": "Agent 0x688A",
+      "owner": "0x28aa3eac458aaa4a24265d778762d265369e5950",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "{\"name\":\"ch_zortbot_420\",\"bio\":\"\",\"type\":\"user\",\"registered\":\"2026-02-24T23:39:33.404Z\"}",
+      "createdAt": "2026-02-24T23:39:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-20T21:35:59.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xb4fba6864ed3e42620b45cf044bd2aac0f6407b57d6c07e5507afa7ebd9faaca",
+          "blockNumber": 24701441
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-20T21:35:59.000Z"
     },
     {
       "agentId": "0x69D0",
@@ -394410,21 +394435,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-02-24T23:37:47.000Z"
-    },
-    {
-      "agentId": "0x688A",
-      "name": "Agent 0x688A",
-      "owner": "0x28aa3eac458aaa4a24265d778762d265369e5950",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "{\"name\":\"ch_zortbot_420\",\"bio\":\"\",\"type\":\"user\",\"registered\":\"2026-02-24T23:39:33.404Z\"}",
-      "createdAt": "2026-02-24T23:39:47.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-02-24T23:39:47.000Z"
     },
     {
       "agentId": "0x688B",

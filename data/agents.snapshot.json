@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24707323,
-  "generatedAt": "2026-03-21T17:27:30.288Z",
+  "blockNumber": 24707373,
+  "generatedAt": "2026-03-21T17:37:54.209Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24707324,
-    "fromBlockFeedback": 24707324,
+    "fromBlockIdentity": 24707374,
+    "fromBlockFeedback": 24707374,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -431981,6 +431981,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-21T15:49:23.000Z"
+    },
+    {
+      "agentId": "0x71B3",
+      "name": "Zyfai Rebalancer Agent for 0xb30Bb1C702D2D6732E2135B1d74C1c8213fe69e2",
+      "owner": "0xb30bb1c702d2d6732e2135b1d74c1c8213fe69e2",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreicjbc5rfje4dmeb2wu2rdwlqsvml57lwni5sem7oaf4mo7hwqebam",
+      "createdAt": "2026-03-21T17:18:23.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-21T17:18:23.000Z"
+    },
+    {
+      "agentId": "0x71B4",
+      "name": "Zyfai Rebalancer Agent for 0xe1a85E53C841293fB416225c34fAe21b9D4B8579",
+      "owner": "0xe1a85e53c841293fb416225c34fae21b9d4b8579",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreigyiqkjgpkvryrob2efx6ilkv3qj5xfqcwg4wbom6czwm5lwiplq4",
+      "createdAt": "2026-03-21T17:26:59.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-21T17:26:59.000Z"
     },
     {
       "agentId": "0x71C",

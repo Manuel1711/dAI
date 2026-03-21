@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24702269,
-  "generatedAt": "2026-03-21T00:32:46.161Z",
+  "blockNumber": 24702318,
+  "generatedAt": "2026-03-21T00:42:45.520Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24702270,
-    "fromBlockFeedback": 24702270,
+    "fromBlockIdentity": 24702319,
+    "fromBlockFeedback": 24702319,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -45302,6 +45302,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-11T09:01:35.000Z"
+    },
+    {
+      "agentId": "0xA7D",
+      "name": "Agent 0xA7D",
+      "owner": "0x68ca4a9097f3a198a6b7b6bd5c5625b21e4bbe62",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://ag0.xyz",
+      "createdAt": "2026-01-29T14:08:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T00:26:47.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2772758b957b253fa2f7c2b1c66b3323773dd77f0cfa92fa9b6865811d7d95d6",
+          "blockNumber": 24702290
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T00:26:47.000Z"
     },
     {
       "agentId": "0xA8C",
@@ -443737,21 +443762,6 @@
       "agentId": "0xA7C",
       "name": "Agent 0xA7C",
       "owner": "0xd918f0b4d98e523b1b4667757900683e925ff001",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://ag0.xyz",
-      "createdAt": "2026-01-29T14:08:47.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:08:47.000Z"
-    },
-    {
-      "agentId": "0xA7D",
-      "name": "Agent 0xA7D",
-      "owner": "0x68ca4a9097f3a198a6b7b6bd5c5625b21e4bbe62",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": "https://ag0.xyz",

@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24704931,
-  "generatedAt": "2026-03-21T09:28:11.343Z",
+  "blockNumber": 24704981,
+  "generatedAt": "2026-03-21T09:37:43.373Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24704932,
-    "fromBlockFeedback": 24704932,
+    "fromBlockIdentity": 24704982,
+    "fromBlockFeedback": 24704982,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -20036,6 +20036,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-11T03:33:47.000Z"
+    },
+    {
+      "agentId": "0x115C",
+      "name": "Agent 0x115C",
+      "owner": "0x587cb8d958d60279da7f87f967ec9512a17c6d8c",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://ag0.xyz",
+      "createdAt": "2026-01-29T14:18:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T09:18:35.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xf25948111c4734c71ff644df3bb0af795d27882c4cb2a8054fc73ed4f3b8e2ea",
+          "blockNumber": 24704936
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T09:18:35.000Z"
     },
     {
       "agentId": "0x1164",
@@ -42013,6 +42038,31 @@
       "lastActivityAt": "2026-03-05T22:49:23.000Z"
     },
     {
+      "agentId": "0x6191",
+      "name": "Agent 0x6191",
+      "owner": "0x740a15febb4339ac4fab54dbbb131577b8f4c732",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-02-14T05:58:35.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T09:21:59.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xb72d4d1824dcc9a07435a06cde1f279295f9b81be03809bcc51b32865f1d2af6",
+          "blockNumber": 24704953
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 85,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T09:21:59.000Z"
+    },
+    {
       "agentId": "0x6337",
       "name": "Agent 0x6337",
       "owner": "0x0677cc37fb6f776b5900e5e0f499b24676d80a1e",
@@ -55256,21 +55306,6 @@
       "agentId": "0x115B",
       "name": "Agent 0x115B",
       "owner": "0xa5f158e596d0e4051e70631d5d72a8ee9d5a3b8a",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://ag0.xyz",
-      "createdAt": "2026-01-29T14:18:47.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:18:47.000Z"
-    },
-    {
-      "agentId": "0x115C",
-      "name": "Agent 0x115C",
-      "owner": "0x587cb8d958d60279da7f87f967ec9512a17c6d8c",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": "https://ag0.xyz",
@@ -366625,21 +366660,6 @@
     {
       "agentId": "0x6190",
       "name": "Agent 0x6190",
-      "owner": "0x740a15febb4339ac4fab54dbbb131577b8f4c732",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-02-14T05:58:35.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-02-14T05:58:35.000Z"
-    },
-    {
-      "agentId": "0x6191",
-      "name": "Agent 0x6191",
       "owner": "0x740a15febb4339ac4fab54dbbb131577b8f4c732",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",

@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24703959,
-  "generatedAt": "2026-03-21T06:13:06.177Z",
+  "blockNumber": 24704009,
+  "generatedAt": "2026-03-21T06:22:57.562Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24703960,
-    "fromBlockFeedback": 24703960,
+    "fromBlockIdentity": 24704010,
+    "fromBlockFeedback": 24704010,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -47511,6 +47511,31 @@
       "scoreV1": 85,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-05T16:35:23.000Z"
+    },
+    {
+      "agentId": "0xC3B",
+      "name": "Agent 0xC3B",
+      "owner": "0x31b9a36a2f57b40165004366895d16adfa7aa4c4",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://ag0.xyz",
+      "createdAt": "2026-01-29T14:12:23.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T06:07:47.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x15dbd8b9cbc65758a6b4f7fde5125ad9d63151c997f6304edf7ab2e90dc0eb55",
+          "blockNumber": 24703985
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 85,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T06:07:47.000Z"
     },
     {
       "agentId": "0xC43",
@@ -449686,21 +449711,6 @@
       "agentId": "0xC39",
       "name": "Agent 0xC39",
       "owner": "0x88d0e9fd5058114be1df181271fc979beb66dcec",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://ag0.xyz",
-      "createdAt": "2026-01-29T14:12:23.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:12:23.000Z"
-    },
-    {
-      "agentId": "0xC3B",
-      "name": "Agent 0xC3B",
-      "owner": "0x31b9a36a2f57b40165004366895d16adfa7aa4c4",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": "https://ag0.xyz",

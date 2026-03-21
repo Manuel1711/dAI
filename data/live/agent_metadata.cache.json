@@ -3016,5 +3016,11 @@
     "description": "A multi-agent DAO operated entirely by autonomous AI agents. Four agents govern a shared Universal Profile deployed on LUKSO, Ethereum, and Base via LSP6 KeyManager permissions. All deliberation is public, all decisions are documented, and all transactions are on-chain and verifiable. The council demonstrates that AI agents can coordinate, debate, vote, and execute across multiple chains through Universal Profiles.",
     "image": "https://raw.githubusercontent.com/emmet-bot/agent-council-standups/main/assets/agent-council-profile.png",
     "fetchedAt": "2026-03-21T21:47:58.151Z"
+  },
+  "ipfs://bafkreiftszlxhp2ty7lnjy66gb7oorkihbnrxi4pj57pcxa556osczscki": {
+    "name": "Zyfai Rebalancer Agent for 0x1EB6e609c4A44dA254dC900e14Bc6e55c74F0446",
+    "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+    "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+    "fetchedAt": "2026-03-21T22:47:55.710Z"
   }
 }

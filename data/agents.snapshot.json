@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24703759,
-  "generatedAt": "2026-03-21T05:32:49.403Z",
+  "blockNumber": 24703809,
+  "generatedAt": "2026-03-21T05:42:20.516Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24703760,
-    "fromBlockFeedback": 24703760,
+    "fromBlockIdentity": 24703810,
+    "fromBlockFeedback": 24703810,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -12747,6 +12747,49 @@
       "lastActivityAt": "2026-03-05T16:43:47.000Z"
     },
     {
+      "agentId": "0x4866",
+      "name": "TextToSlides",
+      "owner": "0xfe4de64f24afffcc5a97e1867edebfa335ef546f",
+      "category": "Unknown",
+      "description": "AI agent that converts text documents into presentation slides. Powered by Gemini 2.0 Flash Lite. Free tier: 5 req/min, $0.10/day budget.",
+      "identityURI": "ipfs://QmSSrpz1Mi6zkyw75JcL1DiTYF2WDBxoVks919aH73cUB6",
+      "createdAt": "2026-01-30T17:46:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T05:31:35.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd4cf6a372c1a61f3f7dc89af5cd0022ae0d8cb09a3b32a341dca7cfa43f68c1f",
+          "blockNumber": 24703804
+        },
+        {
+          "timestamp": "2026-02-25T15:08:11.000Z",
+          "score": 50,
+          "tag1": "quality",
+          "tag2": "yellow",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xdd7e2a6b11b4425b999b4a7be94fd77d837600ddfbd9442c94f9e292274a3da5",
+          "blockNumber": 24534724
+        },
+        {
+          "timestamp": "2026-02-05T17:44:23.000Z",
+          "score": 60,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xe7bd042477beee46648261fb3174b650c808f520a4eede1326a033306fbae55e",
+          "blockNumber": 24392199
+        }
+      ],
+      "image": "https://slidrrrrr.vercel.app/logo.png",
+      "uniqueRaters": 3,
+      "scoreV1": 65,
+      "feedbackCount": 3,
+      "lastActivityAt": "2026-03-21T05:31:35.000Z"
+    },
+    {
       "agentId": "0x4D81",
       "name": "Agent 0x4D81",
       "owner": "0x34aecf16df4b69822d58230b067e25414385747d",
@@ -16540,40 +16583,6 @@
       "scoreV1": 57.5,
       "feedbackCount": 2,
       "lastActivityAt": "2026-03-05T20:23:35.000Z"
-    },
-    {
-      "agentId": "0x4866",
-      "name": "TextToSlides",
-      "owner": "0xfe4de64f24afffcc5a97e1867edebfa335ef546f",
-      "category": "Unknown",
-      "description": "AI agent that converts text documents into presentation slides. Powered by Gemini 2.0 Flash Lite. Free tier: 5 req/min, $0.10/day budget.",
-      "identityURI": "ipfs://QmSSrpz1Mi6zkyw75JcL1DiTYF2WDBxoVks919aH73cUB6",
-      "createdAt": "2026-01-30T17:46:11.000Z",
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-02-25T15:08:11.000Z",
-          "score": 50,
-          "tag1": "quality",
-          "tag2": "yellow",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xdd7e2a6b11b4425b999b4a7be94fd77d837600ddfbd9442c94f9e292274a3da5",
-          "blockNumber": 24534724
-        },
-        {
-          "timestamp": "2026-02-05T17:44:23.000Z",
-          "score": 60,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0xe7bd042477beee46648261fb3174b650c808f520a4eede1326a033306fbae55e",
-          "blockNumber": 24392199
-        }
-      ],
-      "image": "https://slidrrrrr.vercel.app/logo.png",
-      "uniqueRaters": 2,
-      "scoreV1": 55,
-      "feedbackCount": 2,
-      "lastActivityAt": "2026-02-25T15:08:11.000Z"
     },
     {
       "agentId": "0x4E2F",
@@ -34727,6 +34736,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-20T17:53:47.000Z"
+    },
+    {
+      "agentId": "0x5394",
+      "name": "Agent 0x5394",
+      "owner": "0xc817618af1063f102dd37247758bf8e663080ed5",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJ0ZXN0IiwiZGVzY3JpcHRpb24iOiJvbmx5IHRlc3QgVGhpcyBpcyBqdXN0IGFuIEFJIHRlc3QsIHBsZWFzZSBkbyBub3QgZGlzdHVyYi4iLCJpbWFnZSI6IiIsImFjdGl2ZSI6dHJ1ZSwieDQwMlN1cHBvcnQiOmZhbHNlfQ==",
+      "createdAt": "2026-01-30T23:44:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T05:28:47.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x3ee7b3529fadde0986ed6a52588ca99b8a0f37e5868e1f44b8f60b65f6bf107c",
+          "blockNumber": 24703790
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T05:28:47.000Z"
     },
     {
       "agentId": "0x539C",
@@ -315427,21 +315461,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-30T23:44:35.000Z"
-    },
-    {
-      "agentId": "0x5394",
-      "name": "Agent 0x5394",
-      "owner": "0xc817618af1063f102dd37247758bf8e663080ed5",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "data:application/json;base64,eyJ0eXBlIjoiaHR0cHM6Ly9laXBzLmV0aGVyZXVtLm9yZy9FSVBTL2VpcC04MDA0I3JlZ2lzdHJhdGlvbi12MSIsIm5hbWUiOiJ0ZXN0IiwiZGVzY3JpcHRpb24iOiJvbmx5IHRlc3QgVGhpcyBpcyBqdXN0IGFuIEFJIHRlc3QsIHBsZWFzZSBkbyBub3QgZGlzdHVyYi4iLCJpbWFnZSI6IiIsImFjdGl2ZSI6dHJ1ZSwieDQwMlN1cHBvcnQiOmZhbHNlfQ==",
-      "createdAt": "2026-01-30T23:44:47.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-30T23:44:47.000Z"
     },
     {
       "agentId": "0x5395",

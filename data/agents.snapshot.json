@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24704158,
-  "generatedAt": "2026-03-21T06:52:58.676Z",
+  "blockNumber": 24704208,
+  "generatedAt": "2026-03-21T07:02:45.168Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24704159,
-    "fromBlockFeedback": 24704159,
+    "fromBlockIdentity": 24704209,
+    "fromBlockFeedback": 24704209,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -47561,6 +47561,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-11T13:01:59.000Z"
+    },
+    {
+      "agentId": "0xC44",
+      "name": "Agent 0xC44",
+      "owner": "0x88d0e9fd5058114be1df181271fc979beb66dcec",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://ag0.xyz",
+      "createdAt": "2026-01-29T14:12:23.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T06:48:11.000Z",
+          "score": 85,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xbf66389dd5428408a39c82439596197849ea45983ed1608a907ca1070ec67da8",
+          "blockNumber": 24704186
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 85,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T06:48:11.000Z"
     },
     {
       "agentId": "0xC45",
@@ -449834,21 +449859,6 @@
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": null,
-      "createdAt": "2026-01-29T14:12:23.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:12:23.000Z"
-    },
-    {
-      "agentId": "0xC44",
-      "name": "Agent 0xC44",
-      "owner": "0x88d0e9fd5058114be1df181271fc979beb66dcec",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://ag0.xyz",
       "createdAt": "2026-01-29T14:12:23.000Z",
       "feedbackHistory": [],
       "image": null,

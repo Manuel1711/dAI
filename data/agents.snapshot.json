@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24703361,
-  "generatedAt": "2026-03-21T04:12:50.826Z",
+  "blockNumber": 24703411,
+  "generatedAt": "2026-03-21T04:22:55.420Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24703362,
-    "fromBlockFeedback": 24703362,
+    "fromBlockIdentity": 24703412,
+    "fromBlockFeedback": 24703412,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -22479,6 +22479,31 @@
       "lastActivityAt": "2026-02-11T04:38:23.000Z"
     },
     {
+      "agentId": "0x17E1",
+      "name": "Agent 0x17E1",
+      "owner": "0x255f0d91538a017c9a0b5842d3f18c9677727d9d",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-01-29T14:30:59.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T04:08:23.000Z",
+          "score": 30,
+          "tag1": "trust",
+          "tag2": "oracle-screening",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x3789fc27b0050e998f1304105361ba7e82faf027b4be2ec472ee4f9d110cab62",
+          "blockNumber": 24703390
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 30,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T04:08:23.000Z"
+    },
+    {
       "agentId": "0x185D",
       "name": "Agent 0x185D",
       "owner": "0x33ee1e099ebdd946a74b644c767419e8c238a6eb",
@@ -42129,6 +42154,31 @@
       "lastActivityAt": "2026-03-20T21:35:59.000Z"
     },
     {
+      "agentId": "0x69C8",
+      "name": "Agent 0x69C8",
+      "owner": "0xfb5b88bf1e05fe5a68871904d1691a550ec773a4",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "{\"name\":\"violet_coin_daddy\",\"bio\":\"\",\"type\":\"user\",\"registered\":\"2026-02-25T05:48:31.652Z\"}",
+      "createdAt": "2026-02-25T05:48:35.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T04:05:11.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xcdd72c82738526a02cbbe4b51e73b950103742009a9fe91af85641abfe4e04d0",
+          "blockNumber": 24703374
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T04:05:11.000Z"
+    },
+    {
       "agentId": "0x69D0",
       "name": "Agent 0x69D0",
       "owner": "0x106938a354737b80d335aab502a2224a7527bb7d",
@@ -42452,6 +42502,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-03T17:10:59.000Z"
+    },
+    {
+      "agentId": "0x6E75",
+      "name": "Agent 0x6E75",
+      "owner": "0xcd07453cff60de9a2cc2966a9015a83ed3c38955",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-03T16:44:59.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T04:06:23.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x3ae38aa5f3290e0694ec6fb5fb255173de2ff9fbbb4e18fc4b9ad086cae1660f",
+          "blockNumber": 24703380
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T04:06:23.000Z"
     },
     {
       "agentId": "0x6ECB",
@@ -46952,6 +47027,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-02-11T13:05:11.000Z"
+    },
+    {
+      "agentId": "0xBD5",
+      "name": "Agent 0xBD5",
+      "owner": "0x23dd5e258bd15b120ac0db87e480769cebcb8c6b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "https://ag0.xyz",
+      "createdAt": "2026-01-29T14:11:11.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-21T04:04:23.000Z",
+          "score": 100,
+          "tag1": "liveness",
+          "tag2": "liveness-check",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8a788e1af03ebeceece88114d5667173e1bd85634f8c1a6ab79f7f0014196f73",
+          "blockNumber": 24703370
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-21T04:04:23.000Z"
     },
     {
       "agentId": "0xBD6",
@@ -79941,21 +80041,6 @@
     {
       "agentId": "0x17E0",
       "name": "Agent 0x17E0",
-      "owner": "0x255f0d91538a017c9a0b5842d3f18c9677727d9d",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-01-29T14:30:59.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:30:59.000Z"
-    },
-    {
-      "agentId": "0x17E1",
-      "name": "Agent 0x17E1",
       "owner": "0x255f0d91538a017c9a0b5842d3f18c9677727d9d",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
@@ -399679,21 +399764,6 @@
       "lastActivityAt": "2026-02-25T05:48:23.000Z"
     },
     {
-      "agentId": "0x69C8",
-      "name": "Agent 0x69C8",
-      "owner": "0xfb5b88bf1e05fe5a68871904d1691a550ec773a4",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "{\"name\":\"violet_coin_daddy\",\"bio\":\"\",\"type\":\"user\",\"registered\":\"2026-02-25T05:48:31.652Z\"}",
-      "createdAt": "2026-02-25T05:48:35.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-02-25T05:48:35.000Z"
-    },
-    {
       "agentId": "0x69C9",
       "name": "Agent 0x69C9",
       "owner": "0x98a1be80df7fdf04331a37ebfb6ef9162fa5db51",
@@ -418637,21 +418707,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-03T16:44:23.000Z"
-    },
-    {
-      "agentId": "0x6E75",
-      "name": "Agent 0x6E75",
-      "owner": "0xcd07453cff60de9a2cc2966a9015a83ed3c38955",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-03-03T16:44:59.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-03T16:44:59.000Z"
     },
     {
       "agentId": "0x6E76",
@@ -448237,21 +448292,6 @@
       "agentId": "0xBD3",
       "name": "Agent 0xBD3",
       "owner": "0xf4527caf5d4cfd2850ae636a26565f13787dec94",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "https://ag0.xyz",
-      "createdAt": "2026-01-29T14:11:11.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:11:11.000Z"
-    },
-    {
-      "agentId": "0xBD5",
-      "name": "Agent 0xBD5",
-      "owner": "0x23dd5e258bd15b120ac0db87e480769cebcb8c6b",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
       "identityURI": "https://ag0.xyz",

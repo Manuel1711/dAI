@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24713892,
-  "generatedAt": "2026-03-22T15:26:48.560Z",
+  "blockNumber": 24713941,
+  "generatedAt": "2026-03-22T15:38:12.955Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24713893,
-    "fromBlockFeedback": 24713893,
+    "fromBlockIdentity": 24713942,
+    "fromBlockFeedback": 24713942,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -5098,6 +5098,15 @@
       "createdAt": "2026-02-02T01:25:47.000Z",
       "feedbackHistory": [
         {
+          "timestamp": "2026-03-22T15:27:23.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": "soccer",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x01d145eb2c0890b1a2b03acef0d57cd551ebbc56b7f0bf35e1049023f9bbd3d8",
+          "blockNumber": 24713940
+        },
+        {
           "timestamp": "2026-03-22T15:16:11.000Z",
           "score": 80,
           "tag1": "starred",
@@ -5352,9 +5361,9 @@
       ],
       "image": "https://gateway.pinata.cloud/ipfs/QmP7SMLGvi5bRZaFnhNneTicV3PFwRw4WKTMBFaUDMH9MZ",
       "uniqueRaters": 17,
-      "scoreV1": 88.5714,
-      "feedbackCount": 28,
-      "lastActivityAt": "2026-03-22T15:16:11.000Z"
+      "scoreV1": 88.9655,
+      "feedbackCount": 29,
+      "lastActivityAt": "2026-03-22T15:27:23.000Z"
     },
     {
       "agentId": "0x24A4",

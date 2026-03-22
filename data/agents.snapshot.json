@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24715460,
-  "generatedAt": "2026-03-22T20:43:02.599Z",
+  "blockNumber": 24715510,
+  "generatedAt": "2026-03-22T20:52:48.792Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24715461,
-    "fromBlockFeedback": 24715461,
+    "fromBlockIdentity": 24715511,
+    "fromBlockFeedback": 24715511,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432317,6 +432317,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-22T20:31:23.000Z"
+    },
+    {
+      "agentId": "0x71C6",
+      "name": "Zyfai Rebalancer Agent for 0xb77B6a6808697b24Df78dD7C4B1b3B5b1fB665Ea",
+      "owner": "0xb77b6a6808697b24df78dd7c4b1b3b5b1fb665ea",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreicd4fcb4dbbut2ioyjnwntfv7c4f7zcr6j3e3rruq2ajbkybspk2y",
+      "createdAt": "2026-03-22T20:33:35.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T20:33:35.000Z"
+    },
+    {
+      "agentId": "0x71C7",
+      "name": "parseagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for parse at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/parseagent.eth.json",
+      "createdAt": "2026-03-22T20:35:35.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T20:35:35.000Z"
     },
     {
       "agentId": "0x71D",

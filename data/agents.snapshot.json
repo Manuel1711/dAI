@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24715559,
-  "generatedAt": "2026-03-22T21:02:35.413Z",
+  "blockNumber": 24715609,
+  "generatedAt": "2026-03-22T21:13:25.651Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24715560,
-    "fromBlockFeedback": 24715560,
+    "fromBlockIdentity": 24715610,
+    "fromBlockFeedback": 24715610,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432347,6 +432347,51 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-22T20:35:35.000Z"
+    },
+    {
+      "agentId": "0x71C8",
+      "name": "summarizeagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for summarize at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/summarizeagent.eth.json",
+      "createdAt": "2026-03-22T20:54:23.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T20:54:23.000Z"
+    },
+    {
+      "agentId": "0x71C9",
+      "name": "cleanagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for clean at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/cleanagent.eth.json",
+      "createdAt": "2026-03-22T20:57:35.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T20:57:35.000Z"
+    },
+    {
+      "agentId": "0x71CA",
+      "name": "formatagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for format at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/formatagent.eth.json",
+      "createdAt": "2026-03-22T21:01:11.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T21:01:11.000Z"
     },
     {
       "agentId": "0x71D",

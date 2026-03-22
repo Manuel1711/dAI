@@ -3094,5 +3094,23 @@
     "description": "CommandLayer commons agent for parse at v1.1.0.",
     "image": "https://commandlayer.org/og-image.png",
     "fetchedAt": "2026-03-22T20:52:48.752Z"
+  },
+  "https://commandlayer.org/erc8004/summarizeagent.eth.json": {
+    "name": "summarizeagent.eth",
+    "description": "CommandLayer commons agent for summarize at v1.1.0.",
+    "image": "https://commandlayer.org/og-image.png",
+    "fetchedAt": "2026-03-22T21:13:25.461Z"
+  },
+  "https://commandlayer.org/erc8004/cleanagent.eth.json": {
+    "name": "cleanagent.eth",
+    "description": "CommandLayer commons agent for clean at v1.1.0.",
+    "image": "https://commandlayer.org/og-image.png",
+    "fetchedAt": "2026-03-22T21:13:25.533Z"
+  },
+  "https://commandlayer.org/erc8004/formatagent.eth.json": {
+    "name": "formatagent.eth",
+    "description": "CommandLayer commons agent for format at v1.1.0.",
+    "image": "https://commandlayer.org/og-image.png",
+    "fetchedAt": "2026-03-22T21:13:25.592Z"
   }
 }

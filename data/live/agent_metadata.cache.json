@@ -3118,5 +3118,11 @@
     "description": "CommandLayer commons agent for explain at v1.1.0.",
     "image": "https://commandlayer.org/og-image.png",
     "fetchedAt": "2026-03-22T21:23:02.052Z"
+  },
+  "https://commandlayer.org/erc8004/fetchagent.eth.json": {
+    "name": "fetchagent.eth",
+    "description": "CommandLayer commons agent for fetch at v1.1.0.",
+    "image": "https://commandlayer.org/og-image.png",
+    "fetchedAt": "2026-03-22T21:52:48.488Z"
   }
 }

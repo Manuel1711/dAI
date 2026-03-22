@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24715759,
-  "generatedAt": "2026-03-22T21:42:46.906Z",
+  "blockNumber": 24715808,
+  "generatedAt": "2026-03-22T21:52:48.546Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24715760,
-    "fromBlockFeedback": 24715760,
+    "fromBlockIdentity": 24715809,
+    "fromBlockFeedback": 24715809,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432437,6 +432437,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-22T21:15:59.000Z"
+    },
+    {
+      "agentId": "0x71CE",
+      "name": "fetchagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for fetch at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/fetchagent.eth.json",
+      "createdAt": "2026-03-22T21:36:59.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T21:36:59.000Z"
     },
     {
       "agentId": "0x71D",

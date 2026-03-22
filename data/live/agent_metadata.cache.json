@@ -3112,5 +3112,11 @@
     "description": "CommandLayer commons agent for format at v1.1.0.",
     "image": "https://commandlayer.org/og-image.png",
     "fetchedAt": "2026-03-22T21:13:25.592Z"
+  },
+  "https://commandlayer.org/erc8004/explainagent.eth.json": {
+    "name": "explainagent.eth",
+    "description": "CommandLayer commons agent for explain at v1.1.0.",
+    "image": "https://commandlayer.org/og-image.png",
+    "fetchedAt": "2026-03-22T21:23:02.052Z"
   }
 }

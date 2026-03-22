@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24715411,
-  "generatedAt": "2026-03-22T20:32:23.583Z",
+  "blockNumber": 24715460,
+  "generatedAt": "2026-03-22T20:43:02.599Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24715412,
-    "fromBlockFeedback": 24715412,
+    "fromBlockIdentity": 24715461,
+    "fromBlockFeedback": 24715461,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432302,6 +432302,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-22T20:11:47.000Z"
+    },
+    {
+      "agentId": "0x71C5",
+      "name": "classifyagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for classify at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/classifyagent.eth.json",
+      "createdAt": "2026-03-22T20:31:23.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T20:31:23.000Z"
     },
     {
       "agentId": "0x71D",

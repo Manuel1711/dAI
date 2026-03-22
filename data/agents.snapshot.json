@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24713793,
-  "generatedAt": "2026-03-22T15:08:06.543Z",
+  "blockNumber": 24713842,
+  "generatedAt": "2026-03-22T15:18:11.340Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24713794,
-    "fromBlockFeedback": 24713794,
+    "fromBlockIdentity": 24713843,
+    "fromBlockFeedback": 24713843,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -5357,6 +5357,15 @@
       "createdAt": "2026-02-02T01:25:47.000Z",
       "feedbackHistory": [
         {
+          "timestamp": "2026-03-22T14:59:47.000Z",
+          "score": 99,
+          "tag1": "starred",
+          "tag2": "Model",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x62051227b5bde99df7765b8ad7aabb302b075aac377705dbcd7a5676ef52c48e",
+          "blockNumber": 24713804
+        },
+        {
           "timestamp": "2026-03-22T14:57:11.000Z",
           "score": 99,
           "tag1": "starred",
@@ -5592,10 +5601,10 @@
         }
       ],
       "image": "https://gateway.pinata.cloud/ipfs/QmP7SMLGvi5bRZaFnhNneTicV3PFwRw4WKTMBFaUDMH9MZ",
-      "uniqueRaters": 15,
-      "scoreV1": 88.5,
-      "feedbackCount": 26,
-      "lastActivityAt": "2026-03-22T14:57:11.000Z"
+      "uniqueRaters": 16,
+      "scoreV1": 88.8889,
+      "feedbackCount": 27,
+      "lastActivityAt": "2026-03-22T14:59:47.000Z"
     },
     {
       "agentId": "0x58A2",

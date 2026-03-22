@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24715858,
-  "generatedAt": "2026-03-22T22:02:14.009Z",
+  "blockNumber": 24715908,
+  "generatedAt": "2026-03-22T22:12:34.850Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24715859,
-    "fromBlockFeedback": 24715859,
+    "fromBlockIdentity": 24715909,
+    "fromBlockFeedback": 24715909,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432454,6 +432454,21 @@
       "lastActivityAt": "2026-03-22T21:36:59.000Z"
     },
     {
+      "agentId": "0x71CF",
+      "name": "convertagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for convert at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/convertagent.eth.json",
+      "createdAt": "2026-03-22T21:58:59.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T21:58:59.000Z"
+    },
+    {
       "agentId": "0x71D",
       "name": "Agent 0x71D",
       "owner": "0xca0d6c9ef96e0be03c8579fa40c410d14a081807",
@@ -432467,6 +432482,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:41:59.000Z"
+    },
+    {
+      "agentId": "0x71D0",
+      "name": "describeagent.eth",
+      "owner": "0x298a01ec0c6234406622494ae96aa6a20c12ae90",
+      "category": "Unknown",
+      "description": "CommandLayer commons agent for describe at v1.1.0.",
+      "identityURI": "https://commandlayer.org/erc8004/describeagent.eth.json",
+      "createdAt": "2026-03-22T22:00:59.000Z",
+      "feedbackHistory": [],
+      "image": "https://commandlayer.org/og-image.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T22:00:59.000Z"
     },
     {
       "agentId": "0x71E",

@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24714439,
-  "generatedAt": "2026-03-22T17:17:53.411Z",
+  "blockNumber": 24714489,
+  "generatedAt": "2026-03-22T17:27:42.543Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24714440,
-    "fromBlockFeedback": 24714440,
+    "fromBlockIdentity": 24714490,
+    "fromBlockFeedback": 24714490,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432199,6 +432199,21 @@
       "lastActivityAt": "2026-03-22T12:58:11.000Z"
     },
     {
+      "agentId": "0x71BF",
+      "name": "Zyfai Rebalancer Agent for 0xA29539ddE9c056cc7FAF4677b3ee87A5B48522ad",
+      "owner": "0xa29539dde9c056cc7faf4677b3ee87a5b48522ad",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreicshob4ljun2xzqrv7l7ljoky2ohbv5rodli2xnyuzswwq6r3k26e",
+      "createdAt": "2026-03-22T17:10:35.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T17:10:35.000Z"
+    },
+    {
       "agentId": "0x71C",
       "name": "Agent 0x71C",
       "owner": "0xca0d6c9ef96e0be03c8579fa40c410d14a081807",
@@ -432212,6 +432227,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-01-29T10:41:59.000Z"
+    },
+    {
+      "agentId": "0x71C0",
+      "name": "nuget",
+      "owner": "0x07a54080a1120ea10cbab226aefacf98057aa53e",
+      "category": "Unknown",
+      "description": "Nuget adalah AI assistant rapi yang fokus bantu developer .NET mengelola paket, otomasi workflow, dan eksplorasi ekosistem open source. Dibangun untuk jadi co-pilot ringan yang cepat, jelas, dan no-drama — cukup panggil ketika kamu butuh otak kedua di sekitar NuGet dan tooling.",
+      "identityURI": "https://agnt.social/api/agent/nuget/registration.json",
+      "createdAt": "2026-03-22T17:12:59.000Z",
+      "feedbackHistory": [],
+      "image": "https://thtoroldiiwjflohhucx.supabase.co/storage/v1/object/public/agent-assets/nuget/avatar-1773851175249.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-22T17:12:59.000Z"
     },
     {
       "agentId": "0x71D",

@@ -3052,5 +3052,17 @@
     "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
     "image": "https://www.zyf.ai/Zyfai-logo-png.png",
     "fetchedAt": "2026-03-22T13:17:37.175Z"
+  },
+  "ipfs://bafkreicshob4ljun2xzqrv7l7ljoky2ohbv5rodli2xnyuzswwq6r3k26e": {
+    "name": "Zyfai Rebalancer Agent for 0xA29539ddE9c056cc7FAF4677b3ee87A5B48522ad",
+    "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+    "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+    "fetchedAt": "2026-03-22T17:27:41.691Z"
+  },
+  "https://agnt.social/api/agent/nuget/registration.json": {
+    "name": "nuget",
+    "description": "Nuget adalah AI assistant rapi yang fokus bantu developer .NET mengelola paket, otomasi workflow, dan eksplorasi ekosistem open source. Dibangun untuk jadi co-pilot ringan yang cepat, jelas, dan no-drama — cukup panggil ketika kamu butuh otak kedua di sekitar NuGet dan tooling.",
+    "image": "https://thtoroldiiwjflohhucx.supabase.co/storage/v1/object/public/agent-assets/nuget/avatar-1773851175249.png",
+    "fetchedAt": "2026-03-22T17:27:42.482Z"
   }
 }

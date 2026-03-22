@@ -3136,5 +3136,11 @@
     "description": "CommandLayer commons agent for describe at v1.1.0.",
     "image": "https://commandlayer.org/og-image.png",
     "fetchedAt": "2026-03-22T22:12:34.795Z"
+  },
+  "ipfs://bafkreih6f27na7nrmkhzbpzim5nud4wr47bjamuylajep4phcopci6macm": {
+    "name": "Zyfai Rebalancer Agent for 0x4C3Db090a2143F093D89301Ef790AC98584fE7Fd",
+    "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+    "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+    "fetchedAt": "2026-03-22T23:02:29.301Z"
   }
 }

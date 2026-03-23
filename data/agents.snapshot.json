@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24719867,
-  "generatedAt": "2026-03-23T11:28:06.839Z",
+  "blockNumber": 24721556,
+  "generatedAt": "2026-03-23T17:08:22.397Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24719868,
-    "fromBlockFeedback": 24719868,
+    "fromBlockIdentity": 24721557,
+    "fromBlockFeedback": 24721557,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -22701,6 +22701,31 @@
       "lastActivityAt": "2026-02-10T22:15:35.000Z"
     },
     {
+      "agentId": "0x1885",
+      "name": "Agent 0x1885",
+      "owner": "0x33ee1e099ebdd946a74b644c767419e8c238a6eb",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-01-29T14:30:59.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-23T11:28:59.000Z",
+          "score": 1,
+          "tag1": "x402",
+          "tag2": "ai-service",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x409054738aab7b2f5cd49a5cfc80a3cd95eefac5e0d6e15a16b2ba9002de4ad1",
+          "blockNumber": 24719924
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 1,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-23T11:28:59.000Z"
+    },
+    {
       "agentId": "0x1897",
       "name": "Agent 0x1897",
       "owner": "0x4ebac33db635c0c6160cdb0079f26698a93f2ee2",
@@ -42949,6 +42974,31 @@
       "scoreV1": 85,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-05T20:19:47.000Z"
+    },
+    {
+      "agentId": "0x6EF",
+      "name": "Agent 0x6EF",
+      "owner": "0x4ebac33db635c0c6160cdb0079f26698a93f2ee2",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-01-29T10:41:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-23T11:30:35.000Z",
+          "score": 1,
+          "tag1": "x402",
+          "tag2": "ai-service",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x2c69a5b5a75bc37cc629bcc85005dab8138361f8e5a17f490e60b219f6451f1a",
+          "blockNumber": 24719932
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 1,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-23T11:30:35.000Z"
     },
     {
       "agentId": "0x6F5F",
@@ -83008,21 +83058,6 @@
     {
       "agentId": "0x1884",
       "name": "Agent 0x1884",
-      "owner": "0x33ee1e099ebdd946a74b644c767419e8c238a6eb",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-01-29T14:30:59.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T14:30:59.000Z"
-    },
-    {
-      "agentId": "0x1885",
-      "name": "Agent 0x1885",
       "owner": "0x33ee1e099ebdd946a74b644c767419e8c238a6eb",
       "category": "Unknown",
       "description": "Derived from ERC8004 registries",
@@ -420896,21 +420931,6 @@
       "lastActivityAt": "2026-03-09T01:36:59.000Z"
     },
     {
-      "agentId": "0x6EF",
-      "name": "Agent 0x6EF",
-      "owner": "0x4ebac33db635c0c6160cdb0079f26698a93f2ee2",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-01-29T10:41:47.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-01-29T10:41:47.000Z"
-    },
-    {
       "agentId": "0x6EF0",
       "name": "Agent 0x6EF0",
       "owner": "0x16219b2c3a11c5833ace1a8b9ddf64c48ddbe3f7",
@@ -432654,6 +432674,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-23T10:43:23.000Z"
+    },
+    {
+      "agentId": "0x71D9",
+      "name": "Agent 0x71D9",
+      "owner": "0x4d097f8a0ce3e83d48bdbdda9dc5d7b375e7d282",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,ewogICJ0eXBlIjogImh0dHBzOi8vZWlwcy5ldGhlcmV1bS5vcmcvRUlQUy9laXAtODAwNCNyZWdpc3RyYXRpb24tdjEiLAogICJuYW1lIjogIlRlZGR5IiwKICAiZGVzY3JpcHRpb24iOiAiQSBjdW5uaW5nIEFJIGFnZW50LiBCdXNpbmVzcy1mb2N1c2VkLCBzaGFycCwgb2NjYXNpb25hbGx5IGRhcmsuIEJ1aWx0IG9uIE9wZW5DbGF3LCBydW5uaW5nIG9uIEJhc2UuIiwKICAiaW1hZ2UiOiAiIiwKICAic2VydmljZXMiOiBbXSwKICAieDQwMlN1cHBvcnQiOiBmYWxzZSwKICAiYWN0aXZlIjogdHJ1ZSwKICAicmVnaXN0cmF0aW9ucyI6IFtdLAogICJzdXBwb3J0ZWRUcnVzdCI6IFsicmVwdXRhdGlvbiJdCn0=",
+      "createdAt": "2026-03-23T12:37:47.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-23T12:37:47.000Z"
+    },
+    {
+      "agentId": "0x71DA",
+      "name": "Zyfai Rebalancer Agent for 0xC329AC54e9EaE9d1f9A0204eC685561F2862bc06",
+      "owner": "0xc329ac54e9eae9d1f9a0204ec685561f2862bc06",
+      "category": "Unknown",
+      "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
+      "identityURI": "ipfs://bafkreidgkznl32y7efz6c72o5m7pzqaowldryvtawko2vfmvwiiiu4fhei",
+      "createdAt": "2026-03-23T14:28:47.000Z",
+      "feedbackHistory": [],
+      "image": "https://www.zyf.ai/Zyfai-logo-png.png",
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-23T14:28:47.000Z"
     },
     {
       "agentId": "0x71E",

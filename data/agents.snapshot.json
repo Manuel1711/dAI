@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24718647,
-  "generatedAt": "2026-03-23T07:23:01.992Z",
+  "blockNumber": 24718696,
+  "generatedAt": "2026-03-23T07:32:53.561Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24718648,
-    "fromBlockFeedback": 24718648,
+    "fromBlockIdentity": 24718697,
+    "fromBlockFeedback": 24718697,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432609,6 +432609,21 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-23T05:52:35.000Z"
+    },
+    {
+      "agentId": "0x71D6",
+      "name": "AgentAuditor",
+      "owner": "0xe64b58a592e0ff8fb617e39c494dd5205f25178a",
+      "category": "Unknown",
+      "description": "Real-time trust scoring for onchain AI agents. Analyzes transaction patterns, fund flows, and contract interactions across 6 EVM chains to produce a 0-100 trust score with behavioral profiling.",
+      "identityURI": "ipfs://QmR9qtGfuKfhdetcmGRY3HDpq8JAWEj7ixXGFkMEhddp9c",
+      "createdAt": "2026-03-23T07:13:35.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-23T07:13:35.000Z"
     },
     {
       "agentId": "0x71E",

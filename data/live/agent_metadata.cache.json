@@ -3142,5 +3142,11 @@
     "description": "A ZK powered rebalancer agent that finds the best yet low risk yield opportunities for you across various bluechip protocols on multiple chains, such as Base, Arbitrum, Plasma, etc.",
     "image": "https://www.zyf.ai/Zyfai-logo-png.png",
     "fetchedAt": "2026-03-22T23:02:29.301Z"
+  },
+  "ipfs://QmR9qtGfuKfhdetcmGRY3HDpq8JAWEj7ixXGFkMEhddp9c": {
+    "name": "AgentAuditor",
+    "description": "Real-time trust scoring for onchain AI agents. Analyzes transaction patterns, fund flows, and contract interactions across 6 EVM chains to produce a 0-100 trust score with behavioral profiling.",
+    "image": null,
+    "fetchedAt": "2026-03-23T07:32:53.504Z"
   }
 }

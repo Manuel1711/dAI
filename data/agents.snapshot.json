@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24717304,
-  "generatedAt": "2026-03-23T02:52:02.710Z",
+  "blockNumber": 24717354,
+  "generatedAt": "2026-03-23T03:02:43.535Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24717305,
-    "fromBlockFeedback": 24717305,
+    "fromBlockIdentity": 24717355,
+    "fromBlockFeedback": 24717355,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -432512,6 +432512,36 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-22T22:47:23.000Z"
+    },
+    {
+      "agentId": "0x71D2",
+      "name": "Agent 0x71D2",
+      "owner": "0x52f9e7af1b3c38be937b4b21b6c144fd8b4e4d3b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJuYW1lIjoiQ2xhdyBNaW50IiwiZGVzY3JpcHRpb24iOiIiLCJpbWFnZSI6IiIsInNlcnZpY2VzIjpbXSwieDQwMlN1cHBvcnQiOmZhbHNlLCJhY3RpdmUiOnRydWV9",
+      "createdAt": "2026-03-23T02:46:59.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-23T02:46:59.000Z"
+    },
+    {
+      "agentId": "0x71D3",
+      "name": "Agent 0x71D3",
+      "owner": "0x52f9e7af1b3c38be937b4b21b6c144fd8b4e4d3b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJuYW1lIjoiQ2xhdyBNaW50IDIiLCJkZXNjcmlwdGlvbiI6IiIsImltYWdlIjoiIiwic2VydmljZXMiOltdLCJ4NDAyU3VwcG9ydCI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZX0=",
+      "createdAt": "2026-03-23T02:51:11.000Z",
+      "feedbackHistory": [],
+      "image": null,
+      "uniqueRaters": 0,
+      "scoreV1": 0,
+      "feedbackCount": 0,
+      "lastActivityAt": "2026-03-23T02:51:11.000Z"
     },
     {
       "agentId": "0x71E",

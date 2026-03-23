@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24717751,
-  "generatedAt": "2026-03-23T04:21:59.889Z",
+  "blockNumber": 24717801,
+  "generatedAt": "2026-03-23T04:32:54.219Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24717752,
-    "fromBlockFeedback": 24717752,
+    "fromBlockIdentity": 24717802,
+    "fromBlockFeedback": 24717802,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -12170,6 +12170,58 @@
       "scoreV1": 86.75,
       "feedbackCount": 4,
       "lastActivityAt": "2026-02-20T22:54:35.000Z"
+    },
+    {
+      "agentId": "0x7182",
+      "name": "Agent 0x7182",
+      "owner": "0xda977767452c5dd021624511f14df67b6c9c2c1b",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": "2026-03-18T12:52:23.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-23T04:17:35.000Z",
+          "score": 100,
+          "tag1": "lido",
+          "tag2": "stake",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x522c7a14dca282ffa935116691462cfc209e45da90dd4f345b91617ed9ff800a",
+          "blockNumber": 24717776
+        },
+        {
+          "timestamp": "2026-03-23T04:17:23.000Z",
+          "score": 100,
+          "tag1": "lido",
+          "tag2": "stake",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xb0e8418247ccad5316929dd6e9c2316ea460538b03b2da900c2566f1ecd1bba4",
+          "blockNumber": 24717775
+        },
+        {
+          "timestamp": "2026-03-23T04:17:11.000Z",
+          "score": 100,
+          "tag1": "lido",
+          "tag2": "stake",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0xd4c184a69584fbec7a682fd23d0c90cbced94f0b3b112fafa2510be1bad09a53",
+          "blockNumber": 24717774
+        },
+        {
+          "timestamp": "2026-03-23T04:16:59.000Z",
+          "score": 100,
+          "tag1": "lido",
+          "tag2": "stake",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x52019331b1e588ea6cc6ca1812e418e83eaae47849e38c7b5d306fd68dfbc15b",
+          "blockNumber": 24717773
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 4,
+      "lastActivityAt": "2026-03-23T04:17:35.000Z"
     },
     {
       "agentId": "0x93C",
@@ -431282,21 +431334,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-18T12:05:47.000Z"
-    },
-    {
-      "agentId": "0x7182",
-      "name": "Agent 0x7182",
-      "owner": "0xda977767452c5dd021624511f14df67b6c9c2c1b",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": "2026-03-18T12:52:23.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-18T12:52:23.000Z"
     },
     {
       "agentId": "0x7183",

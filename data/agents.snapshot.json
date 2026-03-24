@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24725842,
-  "generatedAt": "2026-03-24T07:28:02.039Z",
+  "blockNumber": 24725892,
+  "generatedAt": "2026-03-24T07:38:10.992Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "mode": "one-shot",
@@ -9,8 +9,8 @@
     "confirmations": 12,
     "chunkSize": 1000,
     "maxChunksPerTick": 50,
-    "fromBlockIdentity": 24725843,
-    "fromBlockFeedback": 24725843,
+    "fromBlockIdentity": 24725893,
+    "fromBlockFeedback": 24725893,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -42924,6 +42924,31 @@
       "scoreV1": 100,
       "feedbackCount": 1,
       "lastActivityAt": "2026-03-21T04:06:23.000Z"
+    },
+    {
+      "agentId": "0x6E81",
+      "name": "Agent 0x6E81",
+      "owner": "0x4f5caa4fa9dd7f92a687582b0e09234bef49f80a",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": "data:application/json;base64,eyJuYW1lIjoiRVJDLTgwMDQgRXhwZXJpbWVudCBBZ2VudCIsImRlc2NyaXB0aW9uIjoi5a6e6aqM55So5Luj55CG77yM55So5LqO5rWL6K+VIEVSQy04MDA0IOi6q+S7veazqOWGjOagh+WHhiIsInNlcnZpY2VzIjpbXX0=",
+      "createdAt": "2026-03-04T05:16:47.000Z",
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-24T07:21:35.000Z",
+          "score": 100,
+          "tag1": "mcp",
+          "tag2": "mood-booster",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x9a7851b168683477badc4e7362cb8e893d15c29d08027c1aadd4415a87b4b565",
+          "blockNumber": 24725862
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 1,
+      "lastActivityAt": "2026-03-24T07:21:35.000Z"
     },
     {
       "agentId": "0x6ECB",
@@ -419204,21 +419229,6 @@
       "scoreV1": 0,
       "feedbackCount": 0,
       "lastActivityAt": "2026-03-04T04:48:11.000Z"
-    },
-    {
-      "agentId": "0x6E81",
-      "name": "Agent 0x6E81",
-      "owner": "0x4f5caa4fa9dd7f92a687582b0e09234bef49f80a",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": "data:application/json;base64,eyJuYW1lIjoiRVJDLTgwMDQgRXhwZXJpbWVudCBBZ2VudCIsImRlc2NyaXB0aW9uIjoi5a6e6aqM55So5Luj55CG77yM55So5LqO5rWL6K+VIEVSQy04MDA0IOi6q+S7veazqOWGjOagh+WHhiIsInNlcnZpY2VzIjpbXX0=",
-      "createdAt": "2026-03-04T05:16:47.000Z",
-      "feedbackHistory": [],
-      "image": null,
-      "uniqueRaters": 0,
-      "scoreV1": 0,
-      "feedbackCount": 0,
-      "lastActivityAt": "2026-03-04T05:16:47.000Z"
     },
     {
       "agentId": "0x6E82",

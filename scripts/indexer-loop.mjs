@@ -1,12 +1,43 @@
 import fs from 'fs';
 import path from 'path';
 
+// ---------------------------------------------------------------------------
+// Chain config — driven by --chain <name> CLI arg or CHAIN env var
+// Supported: ethereum (default), base
+// ---------------------------------------------------------------------------
+const CHAIN_ARG = (() => {
+  const idx = process.argv.indexOf('--chain');
+  return idx !== -1 ? process.argv[idx + 1] : (process.env.CHAIN || 'ethereum');
+})();
+
+const CHAIN_DEFAULTS = {
+  ethereum: {
+    rpcEnv: 'ETH_RPC_URL',
+    network: 'ethereum-mainnet',
+    liveDirName: 'live',
+    snapshotFile: 'agents.snapshot.json',
+    liteSnapshotFile: 'agents.snapshot.lite.json',
+    chainScope: 'ethereum',
+  },
+  base: {
+    rpcEnv: 'BASE_RPC_URL',
+    network: 'base-mainnet',
+    liveDirName: 'live-base',
+    snapshotFile: 'agents.base.snapshot.json',
+    liteSnapshotFile: 'agents.base.snapshot.lite.json',
+    chainScope: 'base',
+  },
+};
+
+const CHAIN = CHAIN_DEFAULTS[CHAIN_ARG];
+if (!CHAIN) { console.error(`Unknown --chain "${CHAIN_ARG}". Supported: ${Object.keys(CHAIN_DEFAULTS).join(', ')}`); process.exit(1); }
+
 const ROOT = path.resolve(process.cwd());
 const DATA_DIR = path.join(ROOT, 'data');
-const LIVE_DIR = path.join(DATA_DIR, 'live');
+const LIVE_DIR = path.join(DATA_DIR, CHAIN.liveDirName);
 
 const CFG = {
-  rpcUrl: process.env.ETH_RPC_URL || '',
+  rpcUrl: process.env[CHAIN.rpcEnv] || process.env.RPC_URL || '',
   pollMs: Number(process.env.POLL_MS || 60000),
   confirmations: Number(process.env.CONFIRMATIONS || 5),
   chunkSize: Number(process.env.BLOCK_CHUNK || 2000),
@@ -16,18 +47,18 @@ const CFG = {
   feedbackRegistry: (process.env.FEEDBACK_REGISTRY || '0x8004BAa17C55a88189AE136b182e5fdA19dE9b63').toLowerCase(),
 };
 
-if (!CFG.rpcUrl) { console.error('Missing ETH_RPC_URL env'); process.exit(1); }
+if (!CFG.rpcUrl) { console.error(`Missing ${CHAIN.rpcEnv} env`); process.exit(1); }
 const ONCE = process.argv.includes('--once');
 const FULL_REINDEX_ONCE = ONCE && (process.env.FULL_REINDEX_ONCE || '1') !== '0';
-const METADATA_FETCH_CAP = Number(process.env.METADATA_FETCH_CAP || (ONCE ? 150 : 40));
+const METADATA_FETCH_CAP = Number(process.env.METADATA_FETCH_CAP || (ONCE ? 150 : 0));
 let oneShotPrepared = false;
 fs.mkdirSync(LIVE_DIR, { recursive: true });
 
-const checkpointsPath = path.join(LIVE_DIR, 'checkpoints.json');
-const identityJsonlPath = path.join(LIVE_DIR, 'identity.events.jsonl');
-const feedbackJsonlPath = path.join(LIVE_DIR, 'feedback.events.jsonl');
-const ownersCachePath = path.join(LIVE_DIR, 'owners.cache.json');
-const blockTimesCachePath = path.join(LIVE_DIR, 'block_times.cache.json');
+const checkpointsPath      = path.join(LIVE_DIR, 'checkpoints.json');
+const identityJsonlPath    = path.join(LIVE_DIR, 'identity.events.jsonl');
+const feedbackJsonlPath    = path.join(LIVE_DIR, 'feedback.events.jsonl');
+const ownersCachePath      = path.join(LIVE_DIR, 'owners.cache.json');
+const blockTimesCachePath  = path.join(LIVE_DIR, 'block_times.cache.json');
 const agentMetadataCachePath = path.join(LIVE_DIR, 'agent_metadata.cache.json');
 
 const readJson = (p, fb) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return fb; } };
@@ -79,34 +110,12 @@ function parseIdentityRegistered(log) {
   const t = log.topics || [];
   const w = words(log.data);
   const agentURI = decodeAbiString(w, 0);
-  return {
-    kind: 'identity_registered',
-    blockNumber: hexToInt(log.blockNumber),
-    transactionHash: log.transactionHash,
-    logIndex: hexToInt(log.logIndex),
-    eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`,
-    agentId: safeUint(t[1]),
-    owner: safeAddr(t[2]),
-    agentURI,
-    rawData: log.data,
-    ingestedAt: new Date().toISOString(),
-  };
+  return { kind: 'identity_registered', blockNumber: hexToInt(log.blockNumber), transactionHash: log.transactionHash, logIndex: hexToInt(log.logIndex), eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`, agentId: safeUint(t[1]), owner: safeAddr(t[2]), agentURI, rawData: log.data, ingestedAt: new Date().toISOString() };
 }
 
 function parseIdentityTransfer(log) {
   const t = log.topics || [];
-  return {
-    kind: 'identity_transfer',
-    blockNumber: hexToInt(log.blockNumber),
-    transactionHash: log.transactionHash,
-    logIndex: hexToInt(log.logIndex),
-    eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`,
-    from: safeAddr(t[1]),
-    to: safeAddr(t[2]),
-    agentId: safeUint(t[3]),
-    rawData: log.data,
-    ingestedAt: new Date().toISOString(),
-  };
+  return { kind: 'identity_transfer', blockNumber: hexToInt(log.blockNumber), transactionHash: log.transactionHash, logIndex: hexToInt(log.logIndex), eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`, from: safeAddr(t[1]), to: safeAddr(t[2]), agentId: safeUint(t[3]), rawData: log.data, ingestedAt: new Date().toISOString() };
 }
 
 function parseFeedbackNew(log) {
@@ -117,44 +126,13 @@ function parseFeedbackNew(log) {
   const endpoint = decodeAbiString(w, 5);
   const feedbackURI = decodeAbiString(w, 6);
   const feedbackHash = w[7] ? ('0x' + w[7].toLowerCase()) : null;
-  return {
-    kind: 'feedback_new',
-    blockNumber: hexToInt(log.blockNumber),
-    transactionHash: log.transactionHash,
-    logIndex: hexToInt(log.logIndex),
-    eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`,
-    agentId: safeUint(t[1]),
-    clientAddress: safeAddr(t[2]),
-    indexedTag1Hash: t[3] || null,
-    indexedTag1: tag1,
-    feedbackIndex: w[0] ? safeUint('0x' + w[0]) : null,
-    valueRaw: w[1] ? safeUint('0x' + w[1]) : null,
-    valueDecimals: w[2] ? Number(BigInt('0x' + w[2])) : null,
-    tag1,
-    tag2,
-    endpoint,
-    feedbackURI,
-    feedbackHash,
-    rawData: log.data,
-    ingestedAt: new Date().toISOString(),
-  };
+  return { kind: 'feedback_new', blockNumber: hexToInt(log.blockNumber), transactionHash: log.transactionHash, logIndex: hexToInt(log.logIndex), eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`, agentId: safeUint(t[1]), clientAddress: safeAddr(t[2]), indexedTag1Hash: t[3] || null, indexedTag1: tag1, feedbackIndex: w[0] ? safeUint('0x' + w[0]) : null, valueRaw: w[1] ? safeUint('0x' + w[1]) : null, valueDecimals: w[2] ? Number(BigInt('0x' + w[2])) : null, tag1, tag2, endpoint, feedbackURI, feedbackHash, rawData: log.data, ingestedAt: new Date().toISOString() };
 }
 
 function parseFeedbackRevoked(log) {
   const t = log.topics || [];
   const w = words(log.data);
-  return {
-    kind: 'feedback_revoked',
-    blockNumber: hexToInt(log.blockNumber),
-    transactionHash: log.transactionHash,
-    logIndex: hexToInt(log.logIndex),
-    eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`,
-    agentId: safeUint(t[1]),
-    clientAddress: safeAddr(t[2]),
-    feedbackIndex: w[0] ? safeUint('0x' + w[0]) : null,
-    rawData: log.data,
-    ingestedAt: new Date().toISOString(),
-  };
+  return { kind: 'feedback_revoked', blockNumber: hexToInt(log.blockNumber), transactionHash: log.transactionHash, logIndex: hexToInt(log.logIndex), eventKey: `${log.transactionHash}:${hexToInt(log.logIndex)}`, agentId: safeUint(t[1]), clientAddress: safeAddr(t[2]), feedbackIndex: w[0] ? safeUint('0x' + w[0]) : null, rawData: log.data, ingestedAt: new Date().toISOString() };
 }
 
 function readJsonl(p) {
@@ -167,55 +145,40 @@ function pad64(hexNoPrefix) { return hexNoPrefix.padStart(64, '0'); }
 async function resolveOwnerByAgentId(agentIdHex) {
   try {
     const id = BigInt(agentIdHex).toString(16);
-    const callData = '0x6352211e' + pad64(id); // ownerOf(uint256)
+    const callData = '0x6352211e' + pad64(id);
     const out = await rpc('eth_call', [{ to: CFG.identityRegistry, data: callData }, 'latest']);
     if (!out || out === '0x') return null;
     const h = out.replace(/^0x/, '').toLowerCase();
     if (h.length < 40) return null;
     const addr = '0x' + h.slice(-40);
     return /^0x[0-9a-f]{40}$/.test(addr) ? addr : null;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
 async function fillMissingOwners(agents) {
   const cache = readJson(ownersCachePath, {});
   let unresolved = agents.filter((a) => !a.owner);
-
-  for (const a of unresolved) {
-    const cached = cache[a.agentId];
-    if (cached) a.owner = cached;
-  }
-
+  for (const a of unresolved) { const cached = cache[a.agentId]; if (cached) a.owner = cached; }
   unresolved = agents.filter((a) => !a.owner);
   const cap = ONCE ? unresolved.length : Math.min(unresolved.length, 200);
   for (let i = 0; i < cap; i += 1) {
     const a = unresolved[i];
     const owner = await resolveOwnerByAgentId(a.agentId);
-    if (owner) {
-      a.owner = owner;
-      cache[a.agentId] = owner;
-    }
+    if (owner) { a.owner = owner; cache[a.agentId] = owner; }
   }
-
   writeJson(ownersCachePath, cache);
 }
 
 async function resolveBlockTimestamps(blockNumbers) {
   const cache = readJson(blockTimesCachePath, {});
   const missing = [...new Set(blockNumbers.filter((b) => Number.isFinite(b) && b >= 0))].filter((b) => cache[String(b)] == null);
-
   for (const b of missing) {
     try {
       const blk = await rpc('eth_getBlockByNumber', [toHex(b), false]);
       const ts = blk?.timestamp ? hexToInt(blk.timestamp) : null;
       if (ts != null && Number.isFinite(ts)) cache[String(b)] = ts;
-    } catch {
-      // keep null; caller will fallback
-    }
+    } catch { /* keep null */ }
   }
-
   writeJson(blockTimesCachePath, cache);
   return cache;
 }
@@ -246,11 +209,7 @@ async function fetchJsonSafe(url, timeoutMs = 10000) {
     const res = await fetch(url, { signal: ctl.signal });
     if (!res.ok) return null;
     return await res.json();
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(t);
-  }
+  } catch { return null; } finally { clearTimeout(t); }
 }
 
 async function hydrateAgentMetadata(agents) {
@@ -266,21 +225,13 @@ async function hydrateAgentMetadata(agents) {
       if (!a.image && cached.image) a.image = cached.image;
       continue;
     }
-
     if (fetched >= METADATA_FETCH_CAP) continue;
     const metaUrl = ipfsToHttp(key);
     const j = await fetchJsonSafe(metaUrl);
     if (!j || typeof j !== 'object') continue;
-
     fetched += 1;
-    const md = {
-      name: typeof j.name === 'string' ? j.name : null,
-      description: typeof j.description === 'string' ? j.description : null,
-      image: typeof j.image === 'string' ? ipfsToHttp(j.image) : null,
-      fetchedAt: new Date().toISOString(),
-    };
+    const md = { name: typeof j.name === 'string' ? j.name : null, description: typeof j.description === 'string' ? j.description : null, image: typeof j.image === 'string' ? ipfsToHttp(j.image) : null, fetchedAt: new Date().toISOString() };
     cache[key] = md;
-
     if (!a.name && md.name) a.name = md.name;
     if ((!a.description || a.description === 'Derived from ERC8004 registries') && md.description) a.description = md.description;
     if (!a.image && md.image) a.image = md.image;
@@ -291,6 +242,25 @@ async function hydrateAgentMetadata(agents) {
 async function buildMaterializedView(checkpoints) {
   const byAgent = new Map();
   const seen = new Set();
+
+  // For chains with a static base snapshot, seed byAgent from it first
+  const baseSnapshotPath = path.join(DATA_DIR, CHAIN.snapshotFile);
+  if (fs.existsSync(baseSnapshotPath)) {
+    try {
+      const base = JSON.parse(fs.readFileSync(baseSnapshotPath, 'utf8'));
+      for (const a of (base.agents || [])) {
+        const aid = normalizeAgentId(a.agentId);
+        if (!aid) continue;
+        byAgent.set(aid, {
+          ...a,
+          agentId: aid,
+          feedbackHistory: Array.isArray(a.feedbackHistory) ? a.feedbackHistory : [],
+          raters: new Set((a.feedbackHistory || []).map(f => f.clientAddress).filter(Boolean)),
+        });
+      }
+    } catch { /* if base snapshot unreadable, rebuild from scratch */ }
+  }
+
   const identityRows = readJsonl(identityJsonlPath);
   const feedbackRows = readJsonl(feedbackJsonlPath);
   const allBlocks = [...identityRows, ...feedbackRows].map((r) => Number(r.blockNumber)).filter((n) => Number.isFinite(n) && n >= 0);
@@ -299,7 +269,6 @@ async function buildMaterializedView(checkpoints) {
   for (const row of identityRows) {
     if (!row.eventKey || seen.has(`i:${row.eventKey}`)) continue;
     seen.add(`i:${row.eventKey}`);
-
     if (row.kind === 'identity_registered' || row.kind === 'identity_transfer') {
       const aid = normalizeAgentId(row.agentId);
       if (!aid) continue;
@@ -326,25 +295,15 @@ async function buildMaterializedView(checkpoints) {
     if (!row.eventKey || seen.has(`f:${row.eventKey}`)) continue;
     seen.add(`f:${row.eventKey}`);
     if (row.kind !== 'feedback_new') continue;
-
     const aid = normalizeAgentId(row.agentId);
     if (!aid) continue;
     const revKey = `${aid}:${(row.clientAddress || '').toLowerCase()}:${row.feedbackIndex || ''}`;
     if (revoked.has(revKey)) continue;
-
     const a = byAgent.get(aid) || { agentId: aid, name: null, owner: null, category: 'Unknown', description: 'Derived from ERC8004 registries', identityURI: null, createdAt: null, feedbackHistory: [], raters: new Set(), image: null };
     const n = Number(row.valueRaw);
     const scaled = Number.isFinite(n) ? (row.valueDecimals != null && row.valueDecimals > 0 ? n / (10 ** row.valueDecimals) : n) : null;
     if (scaled != null && Number.isFinite(scaled)) {
-      a.feedbackHistory.push({
-        timestamp: blockIsoFromCache(row.blockNumber, blockTsCache),
-        score: scaled,
-        tag1: row.tag1 || null,
-        tag2: row.tag2 || null,
-        comment: 'on-chain NewFeedback',
-        txHash: row.transactionHash,
-        blockNumber: row.blockNumber,
-      });
+      a.feedbackHistory.push({ timestamp: blockIsoFromCache(row.blockNumber, blockTsCache), score: scaled, tag1: row.tag1 || null, tag2: row.tag2 || null, comment: 'on-chain NewFeedback', txHash: row.transactionHash, blockNumber: row.blockNumber });
       if (row.clientAddress) a.raters.add(row.clientAddress.toLowerCase());
     }
     byAgent.set(aid, a);
@@ -361,12 +320,14 @@ async function buildMaterializedView(checkpoints) {
     return { ...a, name: a.name || `Agent ${a.agentId}`, raters: undefined, uniqueRaters: a.raters.size, scoreV1: Number(avg.toFixed(4)), feedbackCount: a.feedbackHistory.length, lastActivityAt: a.feedbackHistory[0]?.timestamp || a.createdAt || null };
   }).sort((a, b) => b.feedbackCount - a.feedbackCount || a.agentId.localeCompare(b.agentId));
 
-  writeJson(path.join(DATA_DIR, 'agents.snapshot.json'), {
-    network: 'ethereum-mainnet',
+  const snapshotPath = path.join(DATA_DIR, CHAIN.snapshotFile);
+  writeJson(snapshotPath, {
+    network: CHAIN.network,
     blockNumber: checkpoints.lastSafeBlock || null,
     generatedAt: new Date().toISOString(),
     scoreFormula: 'scoreV1 = arithmetic mean(feedback.score)',
     indexer: {
+      chain: CHAIN_ARG,
       mode: ONCE ? 'one-shot' : 'continuous',
       pollMs: CFG.pollMs,
       confirmations: CFG.confirmations,
@@ -378,6 +339,21 @@ async function buildMaterializedView(checkpoints) {
       deployBlockFeedback: checkpoints.feedbackDeployBlock,
     },
     agents,
+  });
+
+  // Always rebuild lite snapshot after full snapshot
+  const liteAgents = agents.map(({ feedbackHistory, blockNumber, ...rest }) => {
+    const fh = feedbackHistory || [];
+    const uniqueRaters = new Set(fh.map(f => f.clientAddress || f.rater)).size;
+    return { ...rest, uniqueRaters, chainScope: CHAIN.chainScope };
+  });
+  writeJson(path.join(DATA_DIR, CHAIN.liteSnapshotFile), {
+    network: CHAIN.network,
+    chainId: CHAIN_ARG === 'base' ? 8453 : 1,
+    blockNumber: checkpoints.lastSafeBlock || null,
+    generatedAt: new Date().toISOString(),
+    agentCount: liteAgents.length,
+    agents: liteAgents,
   });
 }
 
@@ -392,7 +368,7 @@ async function pumpTopic({ address, fromStart, safe, topic, parser, outPath }) {
   while (from <= safe && chunks < cap) {
     const to = Math.min(from + CFG.chunkSize - 1, safe);
     const logs = await fetchLogsRange(address, from, to, topic);
-    appendJsonl(outPath, logs.map(parser));
+    if (Array.isArray(logs)) appendJsonl(outPath, logs.map(parser));
     from = to + 1;
     chunks += 1;
   }
@@ -423,7 +399,6 @@ async function tick(topics) {
 
   cp.identityFromBlock = await pumpTopic({ address: CFG.identityRegistry, fromStart: cp.identityFromBlock, safe, topic: topics.REGISTERED, parser: parseIdentityRegistered, outPath: identityJsonlPath });
   cp.identityFromBlock = await pumpTopic({ address: CFG.identityRegistry, fromStart: idStart, safe: cp.identityFromBlock - 1, topic: topics.TRANSFER, parser: parseIdentityTransfer, outPath: identityJsonlPath });
-
   cp.feedbackFromBlock = await pumpTopic({ address: CFG.feedbackRegistry, fromStart: cp.feedbackFromBlock, safe, topic: topics.NEW_FEEDBACK, parser: parseFeedbackNew, outPath: feedbackJsonlPath });
   cp.feedbackFromBlock = await pumpTopic({ address: CFG.feedbackRegistry, fromStart: fbStart, safe: cp.feedbackFromBlock - 1, topic: topics.FEEDBACK_REVOKED, parser: parseFeedbackRevoked, outPath: feedbackJsonlPath });
 
@@ -433,7 +408,7 @@ async function tick(topics) {
 
   await buildMaterializedView(cp);
   const lag = Math.max(0, safe - Math.min(cp.identityFromBlock, cp.feedbackFromBlock));
-  console.log(`[tick] safe=${safe} deploy(identity=${cp.identityDeployBlock},feedback=${cp.feedbackDeployBlock}) next(identity=${cp.identityFromBlock},feedback=${cp.feedbackFromBlock}) lag=${lag}`);
+  console.log(`[${CHAIN_ARG}] safe=${safe} next(id=${cp.identityFromBlock},fb=${cp.feedbackFromBlock}) lag=${lag}`);
 }
 
 (async function main() {
@@ -444,11 +419,11 @@ async function tick(topics) {
     FEEDBACK_REVOKED: await topic0('FeedbackRevoked(uint256,address,uint64)'),
   };
 
-  console.log(`Starting ERC8004 indexer (${ONCE ? 'one-shot' : 'continuous'})`);
+  console.log(`[${CHAIN_ARG}] ERC8004 indexer starting (${ONCE ? 'one-shot' : 'continuous'})`);
   if (ONCE) { await tick(topics); return; }
 
   while (true) {
-    try { await tick(topics); } catch (e) { console.error('[tick:error]', e.message); }
+    try { await tick(topics); } catch (e) { console.error(`[${CHAIN_ARG}:error]`, e.message); }
     await new Promise((r) => setTimeout(r, CFG.pollMs));
   }
 })();

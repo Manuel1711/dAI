@@ -9,7 +9,18 @@ REPO = Path(__file__).resolve().parents[1]
 DATA_LIVE = REPO / 'data' / 'live' / 'feedback.events.jsonl'
 OUT_DIR = REPO / 'data' / 'analytics'
 
-TAG_SOURCE_PATH = Path('/home/manuel/.openclaw/workspace/workspaces/erc8004-specialist/working/analysis/tag/tag_source.py')
+
+def resolve_first_existing(paths: list[Path]) -> Path:
+    for path in paths:
+        if path.exists():
+            return path
+    raise FileNotFoundError('None of the candidate paths exist:\n' + '\n'.join(str(p) for p in paths))
+
+
+TAG_SOURCE_PATH = resolve_first_existing([
+    Path('/home/manuel/.openclaw/workspace/workspaces/erc8004-specialist/working/analysis/tag/source/tag_source.py'),
+    Path('/home/manuel/.openclaw/workspace/workspaces/erc8004-specialist/working/analysis/tag/tag_source.py'),
+])
 
 
 def load_tag_source(path: Path):

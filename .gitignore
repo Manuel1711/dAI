@@ -1,2 +1,4 @@
 ops-api/.env
 ops-api/audit.log
+data/live/*.jsonl
+data/live-base/*.jsonl

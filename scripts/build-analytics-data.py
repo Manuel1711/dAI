@@ -5,7 +5,19 @@ import importlib.util
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-EMPIRICS_SOURCE = Path('/home/manuel/.openclaw/workspace/workspaces/erc8004-specialist/working/analysis/empirics/empirics_source.py')
+
+
+def resolve_first_existing(paths: list[Path]) -> Path:
+    for path in paths:
+        if path.exists():
+            return path
+    raise FileNotFoundError('None of the candidate paths exist:\n' + '\n'.join(str(p) for p in paths))
+
+
+EMPIRICS_SOURCE = resolve_first_existing([
+    Path('/home/manuel/.openclaw/workspace/workspaces/erc8004-specialist/working/analysis/empirics/source/empirics_source.py'),
+    Path('/home/manuel/.openclaw/workspace/workspaces/erc8004-specialist/working/analysis/empirics/empirics_source.py'),
+])
 IDENTITY_EVENTS = ROOT / 'data/live/identity.events.jsonl'
 SNAPSHOT = ROOT / 'data/agents.snapshot.json'
 OUT_DIR = ROOT / 'data/analytics'

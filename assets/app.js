@@ -167,8 +167,11 @@ async function enrichAgentsMetadataClient(agents, cap = 240, concurrency = 12){
   await Promise.all(Array.from({ length: Math.max(1, Math.min(concurrency, 16)) }, () => worker()));
 }
 
-async function loadSnapshot() {
-  const data = await fetchJson('./data/agents.snapshot.json');
+async function loadSnapshot(chain) {
+  const file = chain === 'base'
+    ? './data/agents.base.snapshot.lite.json'
+    : './data/agents.snapshot.json';
+  const data = await fetchJson(file);
   await enrichAgentsMetadataClient(data?.agents || []);
   return data;
 }
@@ -331,9 +334,33 @@ window.renderAgents = async function renderAgents(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
-  const data = await loadSnapshot();
+  // --- Chain selector setup ---
+  const chainEl = document.getElementById('chain-filter');
+  if (chainEl && !chainEl.options.length) {
+    [['ethereum', 'Ethereum'], ['base', 'Base']].forEach(([v, l]) => {
+      const o = document.createElement('option'); o.value = v; o.textContent = l; chainEl.appendChild(o);
+    });
+  }
+  let selectedChain = chainEl ? chainEl.value || 'ethereum' : 'ethereum';
+
   const tagMap = await loadTagMap();
-  const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+  let enriched = [];
+
+  async function loadChain(chain) {
+    const data = await loadSnapshot(chain);
+    enriched = (data?.agents || []).map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+    renderTopFeedbackTiles();
+    renderLatestDeployedTiles();
+    renderRows(true);
+  }
+
+  if (chainEl) {
+    chainEl.addEventListener('change', () => {
+      selectedChain = chainEl.value;
+      loadChain(selectedChain);
+    });
+  }
+
   const searchEl = document.getElementById('search');
   const sortEl = document.getElementById('sort');
   const metaEl = document.getElementById('agents-meta');
@@ -484,9 +511,8 @@ window.renderAgents = async function renderAgents(){
 
   searchEl.addEventListener('input', () => renderRows(true));
   sortEl.addEventListener('change', () => renderRows(true));
-  renderTopFeedbackTiles();
-  renderLatestDeployedTiles();
-  renderRows(true);
+
+  await loadChain(selectedChain);
   initFancyUI();
 }
 

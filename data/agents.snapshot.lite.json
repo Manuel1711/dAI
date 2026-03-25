@@ -1,8 +1,8 @@
 {
   "network": "ethereum-mainnet",
   "chainId": 1,
-  "blockNumber": 24733650,
-  "generatedAt": "2026-03-25T09:24:38.200Z",
+  "blockNumber": 24733737,
+  "generatedAt": "2026-03-25T09:42:05.879Z",
   "agentCount": 23251,
   "agents": [
     {
@@ -63,6 +63,36 @@
       "scoreV1": 91.05,
       "feedbackCount": 20,
       "lastActivityAt": "2026-02-19T09:31:47.000Z",
+      "chainScope": "ethereum"
+    },
+    {
+      "agentId": "0x70FB",
+      "name": "Agent 0x70FB",
+      "owner": "0x44a3d4b120f7d4f403e99062934a788c61f1aec6",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": null,
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 19,
+      "lastActivityAt": "2026-03-24T17:58:59.000Z",
+      "chainScope": "ethereum"
+    },
+    {
+      "agentId": "0x71E1",
+      "name": "Agent 0x71E1",
+      "owner": "0xe6967ba1973bdeaaaf2601f67e0929deb9edca8a",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": null,
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 75,
+      "feedbackCount": 19,
+      "lastActivityAt": "2026-03-24T17:52:35.000Z",
       "chainScope": "ethereum"
     },
     {
@@ -168,36 +198,6 @@
       "scoreV1": 95.4286,
       "feedbackCount": 7,
       "lastActivityAt": "2026-02-20T13:55:35.000Z",
-      "chainScope": "ethereum"
-    },
-    {
-      "agentId": "0x70FB",
-      "name": "Agent 0x70FB",
-      "owner": "0x44a3d4b120f7d4f403e99062934a788c61f1aec6",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": null,
-      "image": null,
-      "uniqueRaters": 1,
-      "scoreV1": 100,
-      "feedbackCount": 7,
-      "lastActivityAt": "2026-03-24T17:58:59.000Z",
-      "chainScope": "ethereum"
-    },
-    {
-      "agentId": "0x71E1",
-      "name": "Agent 0x71E1",
-      "owner": "0xe6967ba1973bdeaaaf2601f67e0929deb9edca8a",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": null,
-      "image": null,
-      "uniqueRaters": 1,
-      "scoreV1": 75,
-      "feedbackCount": 7,
-      "lastActivityAt": "2026-03-24T17:52:35.000Z",
       "chainScope": "ethereum"
     },
     {

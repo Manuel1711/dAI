@@ -1,7 +1,7 @@
 {
   "network": "ethereum-mainnet",
-  "blockNumber": 24733650,
-  "generatedAt": "2026-03-25T09:24:38.061Z",
+  "blockNumber": 24733737,
+  "generatedAt": "2026-03-25T09:42:05.762Z",
   "scoreFormula": "scoreV1 = arithmetic mean(feedback.score)",
   "indexer": {
     "chain": "ethereum",
@@ -10,8 +10,8 @@
     "confirmations": 5,
     "chunkSize": 500,
     "maxChunksPerTick": 20,
-    "fromBlockIdentity": 24733651,
-    "fromBlockFeedback": 24733651,
+    "fromBlockIdentity": 24733738,
+    "fromBlockFeedback": 24733738,
     "deployBlockIdentity": 24339871,
     "deployBlockFeedback": 24339873
   },
@@ -2025,6 +2025,380 @@
       "lastActivityAt": "2026-02-19T09:31:47.000Z"
     },
     {
+      "agentId": "0x70FB",
+      "name": "Agent 0x70FB",
+      "owner": "0x44a3d4b120f7d4f403e99062934a788c61f1aec6",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": null,
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        },
+        {
+          "timestamp": "2026-03-24T17:58:59.000Z",
+          "score": 100,
+          "tag1": "starred",
+          "tag2": null,
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
+          "blockNumber": 24729042
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 100,
+      "feedbackCount": 19,
+      "lastActivityAt": "2026-03-24T17:58:59.000Z"
+    },
+    {
+      "agentId": "0x71E1",
+      "name": "Agent 0x71E1",
+      "owner": "0xe6967ba1973bdeaaaf2601f67e0929deb9edca8a",
+      "category": "Unknown",
+      "description": "Derived from ERC8004 registries",
+      "identityURI": null,
+      "createdAt": null,
+      "feedbackHistory": [
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        },
+        {
+          "timestamp": "2026-03-24T17:52:35.000Z",
+          "score": 75,
+          "tag1": "review",
+          "tag2": "service_quality",
+          "comment": "on-chain NewFeedback",
+          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
+          "blockNumber": 24729010
+        }
+      ],
+      "image": null,
+      "uniqueRaters": 1,
+      "scoreV1": 75,
+      "feedbackCount": 19,
+      "lastActivityAt": "2026-03-24T17:52:35.000Z"
+    },
+    {
       "agentId": "0x58F3",
       "name": "Football Odds Analytics Agent",
       "owner": "0x0d68a153897b73a6e4d2eaa9b0d4802bae69532d",
@@ -2675,164 +3049,6 @@
       "scoreV1": 95.4286,
       "feedbackCount": 7,
       "lastActivityAt": "2026-02-20T13:55:35.000Z"
-    },
-    {
-      "agentId": "0x70FB",
-      "name": "Agent 0x70FB",
-      "owner": "0x44a3d4b120f7d4f403e99062934a788c61f1aec6",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": null,
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-03-24T17:58:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
-          "blockNumber": 24729042
-        },
-        {
-          "timestamp": "2026-03-24T17:58:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
-          "blockNumber": 24729042
-        },
-        {
-          "timestamp": "2026-03-24T17:58:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
-          "blockNumber": 24729042
-        },
-        {
-          "timestamp": "2026-03-24T17:58:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
-          "blockNumber": 24729042
-        },
-        {
-          "timestamp": "2026-03-24T17:58:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
-          "blockNumber": 24729042
-        },
-        {
-          "timestamp": "2026-03-24T17:58:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
-          "blockNumber": 24729042
-        },
-        {
-          "timestamp": "2026-03-24T17:58:59.000Z",
-          "score": 100,
-          "tag1": "starred",
-          "tag2": null,
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x852cb76760e451f7abc96ddd87ad99dfbf26e1a7981ba10c817b89dcaed657d7",
-          "blockNumber": 24729042
-        }
-      ],
-      "image": null,
-      "uniqueRaters": 1,
-      "scoreV1": 100,
-      "feedbackCount": 7,
-      "lastActivityAt": "2026-03-24T17:58:59.000Z"
-    },
-    {
-      "agentId": "0x71E1",
-      "name": "Agent 0x71E1",
-      "owner": "0xe6967ba1973bdeaaaf2601f67e0929deb9edca8a",
-      "category": "Unknown",
-      "description": "Derived from ERC8004 registries",
-      "identityURI": null,
-      "createdAt": null,
-      "feedbackHistory": [
-        {
-          "timestamp": "2026-03-24T17:52:35.000Z",
-          "score": 75,
-          "tag1": "review",
-          "tag2": "service_quality",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
-          "blockNumber": 24729010
-        },
-        {
-          "timestamp": "2026-03-24T17:52:35.000Z",
-          "score": 75,
-          "tag1": "review",
-          "tag2": "service_quality",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
-          "blockNumber": 24729010
-        },
-        {
-          "timestamp": "2026-03-24T17:52:35.000Z",
-          "score": 75,
-          "tag1": "review",
-          "tag2": "service_quality",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
-          "blockNumber": 24729010
-        },
-        {
-          "timestamp": "2026-03-24T17:52:35.000Z",
-          "score": 75,
-          "tag1": "review",
-          "tag2": "service_quality",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
-          "blockNumber": 24729010
-        },
-        {
-          "timestamp": "2026-03-24T17:52:35.000Z",
-          "score": 75,
-          "tag1": "review",
-          "tag2": "service_quality",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
-          "blockNumber": 24729010
-        },
-        {
-          "timestamp": "2026-03-24T17:52:35.000Z",
-          "score": 75,
-          "tag1": "review",
-          "tag2": "service_quality",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
-          "blockNumber": 24729010
-        },
-        {
-          "timestamp": "2026-03-24T17:52:35.000Z",
-          "score": 75,
-          "tag1": "review",
-          "tag2": "service_quality",
-          "comment": "on-chain NewFeedback",
-          "txHash": "0x8b4b1622a30d30cc741b30becae651d7618abc6e3b54eec6d89ee3314f657fea",
-          "blockNumber": 24729010
-        }
-      ],
-      "image": null,
-      "uniqueRaters": 1,
-      "scoreV1": 75,
-      "feedbackCount": 7,
-      "lastActivityAt": "2026-03-24T17:52:35.000Z"
     },
     {
       "agentId": "0x24A6",

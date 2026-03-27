@@ -290,16 +290,15 @@ async function refreshGlobalSyncBlock() {
   const el = document.getElementById('global-sync-block');
   if (!el) return;
   try {
-    // Load 84-byte meta file instead of full 18MB snapshot — instant
-    const [meta, cp] = await Promise.all([
-      fetchJson('./data/agents.snapshot.meta.json'),
+    const [snapshot, cp] = await Promise.all([
+      loadSnapshot(),
       loadCheckpoint()
     ]);
-    const generatedAt = meta?.generatedAt ? new Date(meta.generatedAt) : null;
+    const generatedAt = snapshot?.generatedAt ? new Date(snapshot.generatedAt) : null;
     const ageMin = generatedAt ? Math.max(0, Math.floor((Date.now() - generatedAt.getTime()) / 60000)) : null;
     const live = Number.isFinite(ageMin) ? ageMin <= 20 : false;
 
-    const block = meta?.blockNumber ?? cp?.lastSafeBlock ?? '-';
+    const block = snapshot?.blockNumber ?? cp?.lastSafeBlock ?? '-';
     const stamp = generatedAt && !Number.isNaN(generatedAt.getTime()) ? generatedAt.toLocaleString() : '-';
 
     el.classList.toggle('live', !!live);
@@ -331,8 +330,8 @@ function initFancyUI(){
 }
 
 async function fetchJson(path) {
-  const isSnapshot = path.includes('agents.snapshot');
-  const res = await fetch(path, { cache: isSnapshot ? 'default' : 'no-store' });
+  const bust = `${path}${path.includes('?') ? '&' : '?'}v=${Date.now()}`;
+  const res = await fetch(bust, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed loading ${path}`);
   return res.json();
 }
@@ -440,15 +439,20 @@ async function enrichAgentsMetadataClient(agents, cap = 240, concurrency = 12){
 }
 
 // Load pre-built server-side metadata cache (avoids live IPFS/HTTP fetches in browser)
-let serverMetadataCache = null;
-async function loadServerMetadataCache() {
-  if (serverMetadataCache !== null) return serverMetadataCache;
+const serverMetadataCacheByChain = Object.create(null);
+function normalizeChainScope(chain) {
+  return String(chain || '').toLowerCase() === 'base' ? 'base' : 'ethereum';
+}
+async function loadServerMetadataCache(chain = 'ethereum') {
+  const scope = normalizeChainScope(chain);
+  if (serverMetadataCacheByChain[scope]) return serverMetadataCacheByChain[scope];
+  const file = scope === 'base' ? './data/metadata-cache.base.json' : './data/metadata-cache.json';
   try {
-    const res = await fetch('./data/metadata-cache.json', { cache: 'default' });
-    if (res.ok) serverMetadataCache = await res.json();
-    else serverMetadataCache = {};
-  } catch { serverMetadataCache = {}; }
-  return serverMetadataCache;
+    const res = await fetch(file, { cache: 'default' });
+    if (res.ok) serverMetadataCacheByChain[scope] = await res.json();
+    else serverMetadataCacheByChain[scope] = {};
+  } catch { serverMetadataCacheByChain[scope] = {}; }
+  return serverMetadataCacheByChain[scope];
 }
 
 // Apply server cache to agents before client hydration
@@ -463,19 +467,22 @@ function applyServerMetadataCache(agents, cache) {
   }
 }
 
-async function loadSnapshot() {
-  const [data, cache] = await Promise.all([
-    fetchJson('./data/agents.snapshot.json'),
-    loadServerMetadataCache()
-  ]);
-  // Apply server-side cache first (zero extra fetches)
+async function loadSnapshot(chain = 'ethereum', opts = {}) {
+  const scope = normalizeChainScope(chain);
+  const full = !!opts.full;
+  const file = scope === 'base'
+    ? (full ? './data/agents.base.snapshot.json' : './data/agents.base.snapshot.lite.json')
+    : (full ? './data/agents.snapshot.json' : './data/agents.snapshot.lite.json');
+  const cache = await loadServerMetadataCache(scope);
+  const data = await fetchJson(file);
   applyServerMetadataCache(data?.agents, cache);
-  // Only hydrate remaining uncached agents client-side — small fallback cap (server cache handles the bulk)
   await enrichAgentsMetadataClient(data?.agents || [], 30, 4);
   return data;
 }
-async function loadCheckpoint() {
-  try { return await fetchJson('./data/live/checkpoints.json'); } catch { return null; }
+async function loadCheckpoint(chain = 'ethereum') {
+  const scope = normalizeChainScope(chain);
+  const file = scope === 'base' ? './data/live-base/checkpoints.json' : './data/live/checkpoints.json';
+  try { return await fetchJson(file); } catch { return null; }
 }
 async function loadTagMap() {
   try {
@@ -547,6 +554,21 @@ function agentIdToNumber(agentId){
 }
 function displayAgentId(agentId){
   return agentIdToNumber(agentId) || String(agentId || '-');
+}
+function canonicalAgentId(agentId){
+  if (agentId === null || agentId === undefined) return null;
+  const s = String(agentId).trim();
+  if (!s) return null;
+  try { return '0x' + BigInt(s).toString(16).toUpperCase(); } catch { return null; }
+}
+function resolveAgentChain(agent, fallback = 'ethereum') {
+  const aScope = String(agent?.chainScope || '').toLowerCase();
+  if (aScope === 'base' || aScope === 'ethereum') return aScope;
+  return normalizeChainScope(fallback);
+}
+function buildAgentHref(agent, fallback = 'ethereum') {
+  const chain = resolveAgentChain(agent, fallback);
+  return `./agent.html?id=${encodeURIComponent(agent?.agentId || '')}&chain=${encodeURIComponent(chain)}`;
 }
 function deriveStatus(a){
   const t = new Date(a.lastActivityAt || a.createdAt || 0).getTime();
@@ -664,13 +686,37 @@ window.renderAgents = async function renderAgents(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
+  // Populate chain selector
+  const chainEl = document.getElementById('chain-filter');
+  if (chainEl && !chainEl.options.length) {
+    [['ethereum','Ethereum'],['base','Base']].forEach(([v,l]) => {
+      const o = document.createElement('option'); o.value = v; o.textContent = l; chainEl.appendChild(o);
+    });
+  }
+  let selectedChain = normalizeChainScope(new URLSearchParams(location.search).get('chain') || localStorage.getItem('chainScope') || (chainEl?.value || 'ethereum'));
+  if (chainEl) chainEl.value = selectedChain;
+
   showLoader('agents-top-feedback',    'Loading top agents…');
   showLoader('agents-latest-deployed', 'Loading latest agents…');
   showLoader('agents-table',           'Loading agent list…', '29k+ agents on-chain');
 
-  const data = await loadSnapshot();
   const tagMap = await loadTagMap();
-  const enriched = data.agents.map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+  let enriched = [];
+
+  async function loadChain(chain) {
+    const scope = normalizeChainScope(chain);
+    localStorage.setItem('chainScope', scope);
+    const data = await loadSnapshot(scope);
+    enriched = (data?.agents || []).map((a) => ({ ...a, _metrics: deriveAgentMetrics(a, tagMap) }));
+    renderTopFeedbackTiles();
+    renderLatestDeployedTiles();
+    renderRows(true);
+  }
+
+  if (chainEl) {
+    chainEl.addEventListener('change', () => { selectedChain = chainEl.value; loadChain(selectedChain); });
+  }
+
   const searchEl = document.getElementById('search');
   const sortEl = document.getElementById('sort');
   const metaEl = document.getElementById('agents-meta');
@@ -679,6 +725,8 @@ window.renderAgents = async function renderAgents(){
   const latestDeployedEl = document.getElementById('agents-latest-deployed');
   const PAGE_SIZE = 20;
   let currentPage = 1;
+
+  await loadChain(selectedChain);
 
   function renderTopFeedbackTiles() {
     if (!topFeedbackEl) return;
@@ -693,7 +741,7 @@ window.renderAgents = async function renderAgents(){
       const score = Number(a._metrics?.scoreMain || 0).toFixed(2);
       const img = pickAgentImage(a);
       return `
-        <a class='agent-tile top-feedback-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}' title='Open agent ${a.name || a.agentId}'>
+        <a class='agent-tile top-feedback-tile' href='${buildAgentHref(a, selectedChain)}' title='Open agent ${a.name || a.agentId}'>
           <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
           <div style='min-width:0;flex:1;'>
             <div class='agent-tile-title'>#${idx+1} ${a.name || a.agentId}</div>
@@ -721,7 +769,7 @@ window.renderAgents = async function renderAgents(){
       const img = pickAgentImage(a);
       const fb = Number(a.feedbackCount || 0);
       return `
-        <a class='agent-tile latest-deployed-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}' title='Open agent ${a.name || a.agentId}'>
+        <a class='agent-tile latest-deployed-tile' href='${buildAgentHref(a, selectedChain)}' title='Open agent ${a.name || a.agentId}'>
           <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
           <div style='min-width:0;flex:1;'>
             <div class='agent-tile-title'>#${idx+1} ${a.name || a.agentId}</div>
@@ -770,7 +818,7 @@ window.renderAgents = async function renderAgents(){
         <div class='agent-cell'>
           <img class='agent-avatar' src='${img}' alt='${(a.name||a.agentId)}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
           <div>
-            <a href='./agent.html?id=${encodeURIComponent(a.agentId)}'>${a.name || a.agentId}</a><br><small>${displayAgentId(a.agentId)}</small>
+            <a href='${buildAgentHref(a, selectedChain)}'>${a.name || a.agentId}</a><br><small>${displayAgentId(a.agentId)}</small>
             <div class='agent-desc'>${(a.description || '').slice(0, 120) || 'No description yet'}</div>
           </div>
         </div>
@@ -831,12 +879,19 @@ window.renderAgentDetail = async function renderAgentDetail(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
-  const id = new URLSearchParams(location.search).get('id');
-  const data = await loadSnapshot();
+  const qp = new URLSearchParams(location.search);
+  const id = qp.get('id');
+  const chain = normalizeChainScope(qp.get('chain') || localStorage.getItem('chainScope') || 'ethereum');
+  const data = await loadSnapshot(chain, { full: true });
   const tagMap = await loadTagMap();
-  const a = data.agents.find((x)=>x.agentId===id);
+  const idCanon = canonicalAgentId(id);
+  const a = data.agents.find((x) => {
+    if (String(x.agentId) === String(id)) return true;
+    const xCanon = canonicalAgentId(x.agentId);
+    return !!(idCanon && xCanon && xCanon === idCanon);
+  });
   if (!a) {
-    document.getElementById('agent-root').innerHTML = '<div class="card"><p>Agent not found</p></div>';
+    document.getElementById('agent-root').innerHTML = `<div class="card"><p>Agent not found on ${chain}</p></div>`;
     return;
   }
 
@@ -870,6 +925,7 @@ window.renderAgentDetail = async function renderAgentDetail(){
               <h2>${displayName}</h2>
               <span class='badge'>ID #${numericId}</span>
               <span class='badge'>${a.category || 'Unknown'}</span>
+              <span class='badge'>${chain}</span>
               ${statusPill(status)}
             </div>
             <p class='agent-hero-desc'>${a.description || 'No description provided for this agent yet.'}</p>
@@ -921,7 +977,7 @@ window.renderPipeline = async function renderPipeline(){
   document.getElementById('nav').innerHTML = NAV;
   setActiveNav();
 
-  const cp = await loadCheckpoint();
+  const cp = await loadCheckpoint(chain);
   if (!cp) {
     document.getElementById('pipeline-kpis').innerHTML = `<div class='card'><h3>No checkpoint yet</h3><p>Run indexer to populate data/live/checkpoints.json</p></div>`;
     return;
@@ -1983,7 +2039,7 @@ window.renderAnalytics = async function renderAnalytics(){
         const fb = Number(a.feedbackCount || 0);
         const w = Math.max(6, Math.round((fb / maxFb) * 100));
         const img = pickAgentImage(a);
-        return `<a class='agent-tile' href='./agent.html?id=${encodeURIComponent(a.agentId)}'>
+        return `<a class='agent-tile' href='${buildAgentHref(a, 'ethereum')}'>
           <img class='agent-avatar' src='${img}' alt='${a.name || a.agentId}' loading='lazy' referrerpolicy='no-referrer' onerror="this.onerror=null;this.src='${fallbackAvatar(""+a.agentId)}'" />
           <div>
             <div class='agent-tile-title'>${a.name || ('#' + displayAgentId(a.agentId))}</div>

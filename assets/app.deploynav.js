@@ -609,8 +609,12 @@ function deriveAgentMetrics(agent, tagMap) {
     .sort((a,b) => b.count - a.count)
     .slice(0, 8);
 
+  // Fall back to pre-computed scoreV1 when feedbackHistory is absent (lite snapshot)
+  const scoreMain = nonCharacteristic.length > 0
+    ? Number(avg(nonCharacteristic).toFixed(2))
+    : Number(agent.scoreV1 || 0);
   return {
-    scoreMain: Number(avg(nonCharacteristic).toFixed(2)),
+    scoreMain,
     scoreMainCount: nonCharacteristic.length,
     characteristicCount: characteristics.reduce((s,x)=>s+x.count,0),
     characteristics,

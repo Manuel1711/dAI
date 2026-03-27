@@ -55,6 +55,10 @@ node scripts/build-metadata-cache-base.mjs || echo "[$(date -u +%Y-%m-%dT%H:%M:%
 # Lite snapshot Ethereum
 python3 scripts/build-snapshot-lite.py || echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] snapshot-lite warn"
 
+# Rebuild BASE snapshot from JSONL (deduped, compact — avoids GitHub 100MB limit)
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] rebuilding base snapshot..."
+node scripts/rebuild-snapshot-base.mjs || echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] rebuild-base warn"
+
 # Commit/push only if changed
 CHANGED_FILES=(
   data/agents.snapshot.json data/agents.snapshot.lite.json data/agents.snapshot.meta.json
